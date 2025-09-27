@@ -1,0 +1,11 @@
+from pydantic import BaseModel
+from typing import TypeAlias, Literal
+
+based_on_const: TypeAlias = Literal[
+    "parent-id",
+    "child-to-parent",
+]
+
+class CategoryFilterInput(BaseModel):
+    id: int | None = None
+    based_on: based_on_const = "parent-id"
