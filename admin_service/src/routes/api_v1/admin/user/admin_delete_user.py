@@ -16,7 +16,7 @@ from src.infra.exceptions.exceptions import AppBaseException
         **ResponseMessage.HTTP_500_INTERNAL_SERVER_ERROR("Internal server error"),
     }
 )
-async def delete_user(
+async def admin_delete_user(
     user_id: str = Query(None),
     username: str = Query(None),
     auth_service: IAuthService = Depends(get_auth_service),

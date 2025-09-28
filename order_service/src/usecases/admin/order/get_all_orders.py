@@ -3,7 +3,7 @@ from src.models.schemas.filter.filter_order_input import FilterOrderInput
 from src.domain.schemas.order.order_model import OrderModel
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
-class GetAllOrders:
+class AdminGetAllOrders:
     
     def __init__(
         self,

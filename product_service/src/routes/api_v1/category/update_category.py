@@ -16,7 +16,7 @@ from src.infra.exceptions.exceptions import AppBaseException
         **ResponseMessage.HTTP_500_INTERNAL_SERVER_ERROR("Internal server error"),
     }
 )
-async def update_category(
+async def update_one_category(
     category: UpdateCategoryInput = Query(...),
     category_repo: ICategoryRepo = Depends(get_category_repo),
     user: UserModel = Depends(admin_auth_depend),

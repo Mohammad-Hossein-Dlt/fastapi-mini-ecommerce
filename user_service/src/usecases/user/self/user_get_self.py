@@ -1,26 +1,24 @@
 from src.infra.external_api.interface.Iauth_service import IAuthService
+from src.domain.schemas.auth.auth_credentials import AuthCredentials
 from src.domain.schemas.user.user_model import UserModel
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
-class AdminGetUser:
+class UserGetSelf:
     
     def __init__(
         self,
         auth_service: IAuthService,
-    ):
-        
-        self.auth_service = auth_service    
+    ):  
+        self.auth_service = auth_service
     
-    async def execute(
+    def execute(
         self,
-        access_token: str,
-        user_id: str | None = None,
-        username: str | None = None,
+        credentials: AuthCredentials,
     ) -> UserModel:
         
         try:
-            user: UserModel = await self.auth_service.admin_get_user(access_token, user_id, username)
-            return user
+            response = self.auth_service.user_get_self(credentials)        
+            return UserModel.model_validate(response)
         except AppBaseException:
             raise
         except:

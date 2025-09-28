@@ -2,7 +2,7 @@ from ._router import router
 from fastapi import Query, Depends, HTTPException
 from src.routes.http_response.responses import ResponseMessage
 from src.models.schemas.filter.filter_order_input import FilterOrderInput
-from src.usecases.admin.order.get_all_orders import GetAllOrders
+from src.usecases.admin.order.get_all_orders import AdminGetAllOrders
 from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
 from src.routes.depends.order_repo_depend import get_admin_order_repo
 from src.routes.depends.auth_depend import admin_auth_depend
@@ -22,7 +22,7 @@ async def get_all_orders(
     user: UserModel = Depends(admin_auth_depend),
 ):
     try:
-        get_all_orders_usecase = GetAllOrders(order_repo)
+        get_all_orders_usecase = AdminGetAllOrders(order_repo)
         orders = await get_all_orders_usecase.execute(filter_order)
         return [ order.model_dump(mode="json") for order in orders ]
     except AppBaseException as ex:

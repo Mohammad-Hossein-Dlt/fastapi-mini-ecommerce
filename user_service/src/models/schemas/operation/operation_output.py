@@ -1,8 +1,9 @@
 from pydantic import BaseModel, ConfigDict
-from typing import Any
 
-class SimpleOutput(BaseModel):
-    message: Any
+class OperationOutput(BaseModel):
+    id: str | None = None
+    request: str
+    status: bool
     
     model_config = ConfigDict(
         from_attributes=True,

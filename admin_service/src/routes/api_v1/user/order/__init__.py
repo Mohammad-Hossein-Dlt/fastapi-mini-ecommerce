@@ -1,9 +1,9 @@
 from . import (
     _router,
     place_order,
+    update_order,
     get_order,
     get_all_orders,
-    update_order,
 )
 
 __all__ = [

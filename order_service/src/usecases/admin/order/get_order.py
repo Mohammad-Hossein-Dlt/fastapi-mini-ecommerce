@@ -2,7 +2,7 @@ from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
 from src.domain.schemas.order.order_model import OrderModel
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
-class GetOrder:
+class AdminGetOrder:
     
     def __init__(
         self,

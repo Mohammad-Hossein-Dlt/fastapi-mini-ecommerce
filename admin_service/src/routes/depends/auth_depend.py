@@ -6,7 +6,6 @@ from .external_api_services_depend import get_auth_service
 from src.domain.schemas.user.user_model import UserModel
 from src.usecases.admin.self.admin_get_self import AdminGetSelf
 from src.repo.interface.Iauth_repo import IAuthRepo
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
 from .auth_repo_depend import get_auth_repo
 from src.infra.exceptions.exceptions import AppBaseException, InvalidTokenException
 from typing import Annotated

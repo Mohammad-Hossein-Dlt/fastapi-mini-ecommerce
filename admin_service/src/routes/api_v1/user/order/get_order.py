@@ -15,7 +15,7 @@ from src.infra.exceptions.exceptions import AppBaseException
         **ResponseMessage.HTTP_500_INTERNAL_SERVER_ERROR("Internal server error"),
     }
 )
-async def get_order(
+async def get_one_order(
     order_id: str,
     order_service: IOrderService = Depends(get_order_service),
     user: UserModel = Depends(admin_auth_depend),

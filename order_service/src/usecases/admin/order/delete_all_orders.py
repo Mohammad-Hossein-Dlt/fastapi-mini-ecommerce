@@ -3,7 +3,7 @@ from src.models.schemas.filter.filter_order_input import FilterOrderInput
 from src.models.schemas.operation.operation_output import OperationOutput
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
-class DeleteAllOrders:
+class AdminDeleteAllOrders:
     
     def __init__(
         self,

@@ -15,7 +15,7 @@ from src.infra.exceptions.exceptions import AppBaseException
         **ResponseMessage.HTTP_500_INTERNAL_SERVER_ERROR("Internal server error"),
     }
 )
-async def delete_category(
+async def delete_one_category(
     category_id: str = Query(...),
     category_repo: ICategoryRepo = Depends(get_category_repo),
     user: UserModel = Depends(admin_auth_depend),

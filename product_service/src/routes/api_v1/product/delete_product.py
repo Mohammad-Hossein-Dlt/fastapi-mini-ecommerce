@@ -15,7 +15,7 @@ from src.infra.exceptions.exceptions import AppBaseException
         **ResponseMessage.HTTP_500_INTERNAL_SERVER_ERROR("Internal server error"),
     }
 )
-async def delete_product(
+async def delete_one_product(
     product_id: str = Query(...),
     product_repo: IProductRepo = Depends(get_product_repo),
     user: UserModel = Depends(admin_auth_depend),

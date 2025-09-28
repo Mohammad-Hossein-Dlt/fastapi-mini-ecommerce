@@ -207,7 +207,7 @@ class OrderService(IOrderService):
         order: UpdateOrderInput,
     ) -> dict:
        
-        target_url = self.base_url + "/update/one"
+        target_url = self.base_url + "/user/update/one"
         
         headers = {
             "Authorization": f"{credentials.token_type.title()} {credentials.access_token}"

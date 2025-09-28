@@ -6,7 +6,6 @@ from src.infra.external_api.interface.Icategory_service import ICategoryService
 from src.routes.depends.external_api_services_depend import get_category_service
 from src.domain.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import admin_auth_depend
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
 from src.usecases.admin.category.get_all_categories import GetAllCategories
 from src.infra.exceptions.exceptions import AppBaseException
 

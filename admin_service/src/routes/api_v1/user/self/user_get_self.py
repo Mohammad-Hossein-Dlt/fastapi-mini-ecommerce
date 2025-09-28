@@ -16,7 +16,7 @@ from src.infra.exceptions.exceptions import AppBaseException
         **ResponseMessage.HTTP_500_INTERNAL_SERVER_ERROR("Internal server error"),
     }
 )
-async def get_user(
+async def user_get_self(
     auth_service: IAuthService = Depends(get_auth_service),
     user: UserModel = Depends(admin_auth_depend),
 ):

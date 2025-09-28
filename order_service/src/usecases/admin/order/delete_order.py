@@ -2,7 +2,7 @@ from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
 from src.models.schemas.operation.operation_output import OperationOutput
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
-class DeleteOrder:
+class AdminDeleteOrder:
     
     def __init__(
         self,

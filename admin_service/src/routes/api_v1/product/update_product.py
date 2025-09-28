@@ -16,7 +16,7 @@ from src.infra.exceptions.exceptions import AppBaseException
         **ResponseMessage.HTTP_500_INTERNAL_SERVER_ERROR("Internal server error"),
     }
 )
-async def update_product(
+async def update_one_product(
     product: UpdateProductInput = Query(...),
     product_service: IProductService = Depends(get_product_service),
     user: UserModel = Depends(admin_auth_depend),

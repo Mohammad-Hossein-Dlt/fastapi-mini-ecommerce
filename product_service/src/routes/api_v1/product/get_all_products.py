@@ -18,7 +18,7 @@ from src.infra.exceptions.exceptions import AppBaseException
         **ResponseMessage.HTTP_500_INTERNAL_SERVER_ERROR("Internal server error"),
     }
 )
-async def get_all_categories(
+async def get_all_products(
     filter: ProductFilterInput = Query(...),
     product_repo: IProductRepo = Depends(get_product_repo),
     category_repo: ICategoryRepo = Depends(get_category_repo),
