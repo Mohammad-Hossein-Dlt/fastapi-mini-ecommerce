@@ -2,9 +2,7 @@
 
 [How dose it deploy?](#how-dose-it-deploy)
 
-ENV File Parameters
-
-Put it next to the app
+`.env` file parameters, put it next to the services
 
 ```
 EXTERNAL_FASTAPI_PORT = 80
@@ -37,12 +35,6 @@ JWT_SECRET = 5fd4a7c9-7b61-49bf-8aea-ae8c53727290
 JWT_ALGORITHM = HS256
 JWT_EXPIRATION_MINUTES = 2
 JWT_REFRESH_EXPIRATION_MINUTES = 4
-```
-
-To Run
-
-```
-fastapi dev app/src/main.py
 ```
 
 ## App architecture description
