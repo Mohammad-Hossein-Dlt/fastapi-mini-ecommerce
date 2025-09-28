@@ -11,8 +11,12 @@ EXTERNAL_FASTAPI_PORT = 80
 INTERNAL_FASTAPI_PORT = 8000
 
 AUTH_BASE_URL = http://nginx/auth/api/v1
+PRODUCT_BASE_URL = http://nginx/product/api/v1
+ORDER_BASE_URL = http://nginx/order/api/v1
 
-DB_STACK = mongo_db # postgresql, mongo_db
+AUTH_DB_STACK = mongo_db # postgresql, mongo_db
+PRODUCT_DB_STACK = postgresql # postgresql, mongo_db
+ORDER_DB_STACK = mongo_db # postgresql, mongo_db
 
 MONGO_HOST = mongo-db
 MONGO_PORT = 27017

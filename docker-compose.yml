@@ -5,22 +5,22 @@ services:
     image: nginx:latest
     restart: always
     depends_on:
-      - auth-service1
-      - auth-service2
-      - todo-list-service1
-      - todo-list-service2
+      - auth-service
+      - product-service
+      - order-service
+      - admin-service
+      - user-service
     ports:
       - ${EXTERNAL_FASTAPI_PORT}:80
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
 
-  # Auth service -> 2 node
-  auth-service1:
+  auth-service:
     working_dir: /app
     build:
       context: ./auth_service
       dockerfile: Dockerfile
-    container_name: auth_service1
+    container_name: auth_service
     restart: always
     env_file:
       - .env
@@ -31,12 +31,12 @@ services:
       - ${INTERNAL_FASTAPI_PORT}
     command: ["fastapi", "run", "./src/main.py", "--port", "${INTERNAL_FASTAPI_PORT}"]
 
-  auth-service2:
+  product-service:
     working_dir: /app
     build:
-      context: ./auth_service
+      context: ./product_service
       dockerfile: Dockerfile
-    container_name: auth_service2
+    container_name: product_service
     restart: always
     env_file:
       - .env
@@ -47,13 +47,12 @@ services:
       - ${INTERNAL_FASTAPI_PORT}
     command: ["fastapi", "run", "./src/main.py", "--port", "${INTERNAL_FASTAPI_PORT}"]
 
-  # Todo-list service -> 2 node
-  todo-list-service1:
+  order-service:
     working_dir: /app
     build:
-      context: ./todo_list_service
+      context: ./order_service
       dockerfile: Dockerfile
-    container_name: todo_list_service1
+    container_name: order_service
     restart: always
     env_file:
       - .env
@@ -64,12 +63,28 @@ services:
       - ${INTERNAL_FASTAPI_PORT}
     command: ["fastapi", "run", "./src/main.py", "--port", "${INTERNAL_FASTAPI_PORT}"]
 
-  todo-list-service2:
+  admin-service:
     working_dir: /app
     build:
-      context: ./todo_list_service
+      context: ./admin_service
       dockerfile: Dockerfile
-    container_name: todo_list_service2
+    container_name: admin_service
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - mongo-db
+      - postgres-db
+    expose:
+      - ${INTERNAL_FASTAPI_PORT}
+    command: ["fastapi", "run", "./src/main.py", "--port", "${INTERNAL_FASTAPI_PORT}"]
+
+  user-service:
+    working_dir: /app
+    build:
+      context: ./user_service
+      dockerfile: Dockerfile
+    container_name: user_service
     restart: always
     env_file:
       - .env
