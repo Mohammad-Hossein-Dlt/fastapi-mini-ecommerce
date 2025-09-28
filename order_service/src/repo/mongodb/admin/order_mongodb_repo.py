@@ -2,7 +2,6 @@ from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
 from src.domain.schemas.order.order_model import OrderModel
 from src.infra.db.mongodb.collections.order_collection import OrderCollection
 from src.models.schemas.filter.filter_order_input import FilterOrderInput
-from beanie.operators import And
 from src.infra.utils.convert_id import convert_id
 from src.infra.exceptions.exceptions import EntityNotFoundError
 
@@ -43,10 +42,8 @@ class AdminOrderMongodbRepo(IAdminOrderRepo):
         
         try:
             
-            await OrderCollection.find_one(
-                And(
-                    OrderCollection.id == order.id,
-                )
+            await OrderCollection.find(
+                OrderCollection.id == order.id,
             ).update(
                 {
                     "$set": order.model_dump(exclude_unset=True, exclude_none=True, exclude={"id", "user_id"}),

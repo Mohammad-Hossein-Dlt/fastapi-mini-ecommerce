@@ -18,8 +18,8 @@ class CategoryPgRepo(ICategoryRepo):
         self,
         category: CategoryModel,
     ) -> CategoryModel:
+        
         new_category = CategoryDBModel(**category.model_dump(exclude_none=True))
-
         self.db.add(new_category)
         self.db.commit()
 
@@ -47,14 +47,14 @@ class CategoryPgRepo(ICategoryRepo):
         
         async def get_parent(
             parent_id: str | None = None,
-        ) -> CategoryDBModel | None:
+        ) -> CategoryModel | None:
             try:
                 return await self.get_category_by_id(parent_id)
             except:
                 return None
         
         async def get_categories(
-            category: CategoryDBModel = None,
+            category: CategoryModel = None,
         ) -> list[CategoryModel]:
                                  
             result: list[CategoryModel] = []
@@ -71,15 +71,16 @@ class CategoryPgRepo(ICategoryRepo):
 
             if parent and parent.parent_id:
                 result.extend( await get_categories(parent) )
-                result.reverse()
                 return result
             elif parent:
-                result.append(parent)
                 return result
             else:
                 return result
                 
-        return await get_categories()
+        categories = await get_categories()
+        categories.reverse()
+        
+        return categories
     
     async def get_parent_to_child(
         self,

@@ -22,7 +22,6 @@ async def lifespan(app: FastAPI):
             db_name=settings.POSTGRES_DB
         )
         create_tables(engine)
-        
         set_app_state(app, AppStates.DB_CLIENT, sql_client)
         
     if settings.PRODUCT_DB_STACK == "mongo_db":

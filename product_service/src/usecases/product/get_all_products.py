@@ -25,15 +25,15 @@ class GetAllProducts:
             products_list: list[ProductModel] = await self.product_repo.get_all_products(product_filter)
             
             for product in products_list:
-                category_filter = CategoryFilterInput(id=product.category_id, based_on="child-to-parent")
+                category_filter = CategoryFilterInput(id=str(product.category_id), based_on="child-to-parent")
                 categories_list: list[CategoryModel] = await self.category_repo.get_child_to_parent(category_filter)
                 
                 related_categories = []
                 for category in categories_list:
                     related_categories.append(
                         {
-                            "id": category.id,
-                            "parent_id": category.parent_id,
+                            "id": str(category.id) if category.id else None,
+                            "parent_id": str(category.parent_id) if category.parent_id else None,
                             "name": category.name,
                         }
                     )

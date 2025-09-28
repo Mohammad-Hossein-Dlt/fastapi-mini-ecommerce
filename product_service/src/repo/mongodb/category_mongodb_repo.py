@@ -1,102 +1,162 @@
 from src.repo.interface.Icategory_repo import ICategoryRepo
 from src.domain.schemas.category.category_model import CategoryModel
-from src.infra.db.mongodb.collections.task_collection import TaskCollection
-from bson.objectid import ObjectId
-from beanie.operators import And
+from src.infra.db.mongodb.collections.category_collection import CategoryCollection
+from src.models.schemas.filter.categories_filter_input import CategoryFilterInput
 from src.infra.exceptions.exceptions import EntityNotFoundError
+from src.infra.utils.convert_id import convert_id
 
-class TaskMongodbRepo(ICategoryRepo):
+class CategoryMongodbRepo(ICategoryRepo):
         
-    async def insert_task(
+    async def insert_category(
         self,
-        task: CategoryModel,
+        category: CategoryModel,
     ) -> CategoryModel:
-        new_task = await TaskCollection.insert(
-            TaskCollection(**task.model_dump(exclude={"id"})),
+        
+        new_category = await CategoryCollection.insert(
+            CategoryCollection(**category.model_dump(exclude={"id"})),
         )
         
-        return CategoryModel.model_validate(new_task, from_attributes=True)
-    
-    async def get_all_tasks(
+        return CategoryModel.model_validate(new_category, from_attributes=True)
+        
+    async def get_categories_with_filter(
         self,
-        user_id: str,
+        filter: CategoryFilterInput,
     ) ->  list[CategoryModel]:
         
         try:
-            tasks = await TaskCollection.find(
-                TaskCollection.user_id == ObjectId(user_id),
-            ).to_list()
+            if filter.based_on == "parent-id":
+                return await self.get_parent_to_child(filter)
+            elif filter.based_on == "child-to-parent":
+                return await self.get_child_to_parent(filter)
+        except EntityNotFoundError:
+            raise EntityNotFoundError(status_code=404, message="There are no categories")
+        
+    async def get_child_to_parent(
+        self,
+        filter: CategoryFilterInput,
+    ) ->  list[CategoryModel]:
+        
+        async def get_parent(
+            parent_id: str | None = None,
+        ) -> CategoryModel | None:
+            try:
+                return await self.get_category_by_id(parent_id)
+            except:
+                return None
+        
+        async def get_categories(
+            category: CategoryModel = None,
+        ) -> list[CategoryModel]:
+                                 
+            result: list[CategoryModel] = []
             
-            return [ CategoryModel.model_validate(t, from_attributes=True) for t in tasks ]
-        except:
-            raise EntityNotFoundError(status_code=404, message="User not found")
+            if not category:
+                category = await get_parent(filter.id)
+            
+            if not category:
+                return result    
+                        
+            result.append(category)
+                            
+            parent = await get_parent(category.parent_id)
+
+            if parent and parent.parent_id:
+                result.extend( await get_categories(parent) )
+                return result
+            elif parent:
+                result.append(parent)
+                return result
+            else:
+                return result
+                
+        categories = await get_categories()
+        categories.reverse()
+        
+        return categories
     
-    async def get_task_by_id(
+    async def get_parent_to_child(
         self,
-        task_id: str,
-        user_id: str,
+        filter: CategoryFilterInput,
+    ) -> list[CategoryModel]:
+        
+        parents_list = await self.get_categories_with_parent_id(filter.id)
+            
+        for parent in parents_list:
+            children = await self.get_categories_with_parent_id(parent.id)
+            
+            if children:
+                setattr(parent, "children", children)
+                
+        return parents_list
+                    
+    async def get_categories_with_parent_id(
+        self,
+        parent_id: str
+    ) -> list[CategoryModel]:
+
+        parent_id = convert_id(parent_id)
+        
+        categories_list = await CategoryCollection.find_many(
+            CategoryCollection.parent_id == parent_id,
+        ).to_list()
+        
+        return [ CategoryModel.model_validate(category, from_attributes=True) for category in categories_list ]
+    
+    async def get_category_by_id(
+        self,
+        category_id: str,
     ) ->  CategoryModel:
         
         try:
-            task = await TaskCollection.find_one(
-                TaskCollection.id == ObjectId(task_id),
-                TaskCollection.user_id == ObjectId(user_id),
+                                    
+            category_id = convert_id(category_id)
+            category = await CategoryCollection.find_one(
+                CategoryCollection.id == category_id,
             )
-            return CategoryModel.model_validate(task, from_attributes=True)
+            
+            return CategoryModel.model_validate(category, from_attributes=True)
         except:
-            raise EntityNotFoundError(status_code=404, message="User or task not found")
+            raise EntityNotFoundError(status_code=404, message="Category not found")
     
-    async def update_task(
+    async def update_category(
         self,
-        task: CategoryModel,
+        category: CategoryModel,
     ) ->  CategoryModel:
         
-        try:
-            await TaskCollection.find_one(
-                And(
-                    TaskCollection.id == ObjectId(task.id),
-                    TaskCollection.user_id == ObjectId(task.user_id),
-                )
+        try:               
+            
+            to_update: dict = category.model_dump_to_update(exclude_unset=True, by_alias=True)     
+            await CategoryCollection.find(
+                CategoryCollection.id == category.id,
             ).update(
                 {
-                    "$set": task.model_dump(exclude_unset=True, exclude_none=True, exclude={"id", "user_id"}),
+                    "$set": to_update,
                 },
             )
-            
-            return await self.get_task_by_id(task.id, task.user_id)
-        except:
-            raise EntityNotFoundError(status_code=404, message="User or task not found")
+                        
+            return await self.get_category_by_id(category.id)
+        except EntityNotFoundError:
+            raise
     
-    async def delete_all_task(
+    async def delete_all_categories(
         self,
-        user_id: str,
+    ) -> bool:
+        try:
+            delete_categories = await CategoryCollection.delete_all()
+            return bool(delete_categories.deleted_count) 
+        except:
+            raise EntityNotFoundError(status_code=404, message="Category not found")
+        
+    async def delete_category(
+        self,
+        category_id: str,
     ) -> bool:
         
         try:
-            tasks = TaskCollection.find(
-                TaskCollection.user_id == ObjectId(user_id),
-            )                
-            
-            delete_tasks = await tasks.delete()
-            
-            return bool(delete_tasks.deleted_count)
+            category_id = convert_id(category_id)
+            delete_category = await CategoryCollection.find(
+                CategoryCollection.id == category_id,
+            ).delete()                       
+            return bool(delete_category.deleted_count)
         except:
-            raise EntityNotFoundError(status_code=404, message="User not found")
-    
-    async def delete_task(
-        self,
-        task_id: str,
-        user_id: str,
-    ) -> bool:
-        
-        try:
-            task = TaskCollection.find(
-                TaskCollection.id == ObjectId(task_id),
-                TaskCollection.user_id == ObjectId(user_id),
-            )                
-            
-            delete_task = await task.delete()
-            
-            return bool(delete_task.deleted_count)
-        except:
-            raise EntityNotFoundError(status_code=404, message="User or task not found")
+            raise EntityNotFoundError(status_code=404, message="Category not found")

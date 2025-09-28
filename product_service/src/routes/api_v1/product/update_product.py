@@ -5,6 +5,8 @@ from src.models.schemas.product.update_product_input import UpdateProductInput
 from src.usecases.product.update_product import UpdateProduct
 from src.repo.interface.Iproduct_repo import IProductRepo
 from src.routes.depends.product_repo_depend import get_product_repo
+from src.repo.interface.Icategory_repo import ICategoryRepo
+from src.routes.depends.category_repo_depend import get_category_repo
 from src.domain.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import admin_auth_depend
 from src.infra.exceptions.exceptions import AppBaseException
@@ -19,10 +21,11 @@ from src.infra.exceptions.exceptions import AppBaseException
 async def update_one_product(
     product: UpdateProductInput = Query(...),
     product_repo: IProductRepo = Depends(get_product_repo),
+    category_repo: ICategoryRepo = Depends(get_category_repo),
     user: UserModel = Depends(admin_auth_depend),
 ):
     try:
-        update_product_usecase = UpdateProduct(product_repo)
+        update_product_usecase = UpdateProduct(product_repo, category_repo)
         output = await update_product_usecase.execute(product)
         return output.model_dump(mode="json")
     except AppBaseException as ex:

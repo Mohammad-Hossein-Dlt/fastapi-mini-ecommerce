@@ -1,7 +1,7 @@
 from src.repo.interface.Icategory_repo import ICategoryRepo
 from src.models.schemas.category.update_category_input import UpdateCategoryInput
 from src.domain.schemas.category.category_model import CategoryModel
-from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
+from src.infra.exceptions.exceptions import AppBaseException, EntityNotFoundError, InvalidRequestException, OperationFailureException
 
 class UpdateCategory:
     
@@ -16,6 +16,15 @@ class UpdateCategory:
         category: UpdateCategoryInput,
     ) -> CategoryModel:
         
+        if category.parent_id and category.parent_id != category.id:
+            try:
+                parent: CategoryModel = await self.category_repo.get_category_by_id(category.parent_id)
+                category.parent_id = parent.id
+            except EntityNotFoundError as ex:
+                raise EntityNotFoundError(ex.status_code, "Parent not found")
+        elif category.parent_id == category.id:
+                raise InvalidRequestException(400, "Parent-id cannot be equal to id")
+                
         try:
             category = CategoryModel.model_validate(category, from_attributes=True)
             return await self.category_repo.update_category(category)
