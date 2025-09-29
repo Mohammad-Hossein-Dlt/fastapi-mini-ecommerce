@@ -46,7 +46,7 @@ class CategoryPgRepo(ICategoryRepo):
     ) ->  list[CategoryModel]:
         
         async def get_parent(
-            parent_id: str | None = None,
+            parent_id: int | None = None,
         ) -> CategoryModel | None:
             try:
                 return await self.get_category_by_id(parent_id)
@@ -99,7 +99,7 @@ class CategoryPgRepo(ICategoryRepo):
                     
     async def get_categories_with_parent_id(
         self,
-        parent_id: str
+        parent_id: int,
     ) -> list[CategoryModel]:
 
         categories_list = self.db.query(
@@ -114,7 +114,7 @@ class CategoryPgRepo(ICategoryRepo):
     
     async def get_category_by_id(
         self,
-        category_id: str,
+        category_id: int,
     ) ->  CategoryModel:
         
         try:
@@ -135,9 +135,8 @@ class CategoryPgRepo(ICategoryRepo):
     ) ->  CategoryModel:
         
         try:
-            to_update: dict = category.model_dump(exclude_unset=True, mode="json")
-            if category.name is None:
-                to_update.pop("name")
+            
+            to_update: dict = category.custom_model_dump(exclude_unset=True)
  
             self.db.query(
                 CategoryDBModel   
@@ -178,7 +177,7 @@ class CategoryPgRepo(ICategoryRepo):
         
     async def delete_category(
         self,
-        category_id: str,
+        category_id: int,
     ) -> bool:
         
         try:

@@ -5,5 +5,5 @@ class CreateProductInput(BaseModel):
     name: str | None = None
     description: str | None = None
     price: float | None = None
-    stock: int | None = None
+    stock: float | None = None
 

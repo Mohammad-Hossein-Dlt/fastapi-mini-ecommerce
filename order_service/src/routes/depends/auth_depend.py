@@ -38,7 +38,9 @@ async def admin_auth_depend(
         
     get_user_usecase = AdminGetSelf(auth_service)
     try:
-        return get_user_usecase.execute(token)
+        user = get_user_usecase.execute(token)
+        user.token = bearer_token.credentials
+        return user
     except AppBaseException as get_user_ex:
         raise HTTPException(status_code=get_user_ex.status_code, detail=get_user_ex.message)
     

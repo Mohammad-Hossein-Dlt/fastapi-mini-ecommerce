@@ -13,17 +13,17 @@ async def lifespan(app: FastAPI):
     sql_client: Session = Session()
     mongo_client: AsyncIOMotorClient = AsyncIOMotorClient()
     
-    # if settings.DB_STACK == "postgresql":
-    #     sql_client, engine = init_sql_client(
-    #         host=settings.POSTGRES_HOST,
-    #         port=settings.POSTGRES_PORT,
-    #         username=settings.POSTGRES_USER,
-    #         password=settings.POSTGRES_PASSWORD,
-    #         db_name=settings.POSTGRES_DB
-    #     )
-    #     create_tables(engine)
+    if settings.ORDER_DB_STACK == "postgresql":
+        sql_client, engine = init_sql_client(
+            host=settings.POSTGRES_HOST,
+            port=settings.POSTGRES_PORT,
+            username=settings.POSTGRES_USER,
+            password=settings.POSTGRES_PASSWORD,
+            db_name=settings.POSTGRES_DB
+        )
+        create_tables(engine)
         
-    #     set_app_state(app, AppStates.DB_CLIENT, sql_client)
+        set_app_state(app, AppStates.DB_CLIENT, sql_client)
         
     if settings.ORDER_DB_STACK == "mongo_db":
         mongo_client = await init_mongodb(

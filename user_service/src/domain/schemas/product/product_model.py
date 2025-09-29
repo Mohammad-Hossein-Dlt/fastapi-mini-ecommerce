@@ -1,16 +1,15 @@
-from pydantic import BaseModel, ConfigDict
+from src.infra.utils.custom_base_model import CustomBaseModel
+from beanie import PydanticObjectId
 from datetime import datetime
 
-class ProductModel(BaseModel):
-    id: int | None = None
-    category_id: int | None = None
+class ProductModel(CustomBaseModel):
+    
+    id: int | PydanticObjectId | None = None
+    category_id: int | PydanticObjectId | None = None
     name: str | None = None
     description: str | None = None
     price: float | None = None
-    stock: int | None = None
+    stock: float | None = None
     created_at: datetime | None = None
     updated_at: datetime | None = None
     
-    model_config = ConfigDict(
-        extra='allow',
-    )

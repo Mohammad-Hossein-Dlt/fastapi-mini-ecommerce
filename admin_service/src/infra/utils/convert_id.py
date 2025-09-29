@@ -1,6 +1,6 @@
 from bson.objectid import ObjectId
 
-def convert_id(
+def convert_object_id(
     _id: str | None,
 ) -> ObjectId | int | str | None:
     
@@ -12,14 +12,5 @@ def convert_id(
     except:
         pass
     
-    try:
-        return int(_id)
-    except:
-        pass
-        
-    try:
-        return str(_id)
-    except:
-        pass
-    
-    return None
+    return _id
+

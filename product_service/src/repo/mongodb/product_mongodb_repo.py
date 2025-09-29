@@ -3,7 +3,7 @@ from src.domain.schemas.product.product_model import ProductModel
 from src.infra.db.mongodb.collections.product_collection import ProductCollection
 from src.models.schemas.filter.products_filter_input import ProductFilterInput
 from src.infra.exceptions.exceptions import EntityNotFoundError
-from src.infra.utils.convert_id import convert_id
+from src.infra.utils.convert_id import convert_object_id
 
 class ProductMongodbRepo(IProductRepo):
         
@@ -36,7 +36,7 @@ class ProductMongodbRepo(IProductRepo):
     ) ->  ProductModel:
         
         try:
-            product_id = convert_id(product_id)
+            product_id = convert_object_id(product_id)
             product = await ProductCollection.find_one(
                 ProductCollection.id == product_id,
             )
@@ -52,7 +52,13 @@ class ProductMongodbRepo(IProductRepo):
         
         try:
             
-            to_update: dict = product.model_dump_to_update(exclude_unset=True)
+            to_update: dict = product.custom_model_dump(
+                exclude_unset=True,
+                exclude={
+                    "id",
+                },
+                db_stack="no-sql",
+            )
                 
             await ProductCollection.find(
                 ProductCollection.id == product.id,
@@ -84,7 +90,7 @@ class ProductMongodbRepo(IProductRepo):
     ) -> bool:
         
         try:
-            product_id = convert_id(product_id)
+            product_id = convert_object_id(product_id)
             delete_product = await ProductCollection.find(
                 ProductCollection.id == product_id,
             ).delete()                       

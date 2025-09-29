@@ -141,9 +141,7 @@ class OrderService(IOrderService):
         headers = {
             "Authorization": f"{credentials.token_type.title()} {credentials.access_token}"
         }
-        
-        print(target_url)
-        
+                
         response = requests.post(target_url, headers=headers, params=order.model_dump(mode="json"))
         
         if response.status_code in self.allowed_status_codes:

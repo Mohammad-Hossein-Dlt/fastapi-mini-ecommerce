@@ -1,33 +1,23 @@
 from beanie import Document, PydanticObjectId
 from bson import ObjectId
-from pydantic import model_validator, Field
+from pydantic import Field
 from src.domain.schemas.order.order_model import OrderModel
 from src.domain.enums import Status
 from src.models.schemas.filter.filter_order_input import FilterOrderInput
-from src.infra.utils.convert_id import convert_id
+from src.infra.utils.convert_id import convert_object_id
 
 class OrderCollection(OrderModel, Document):
     
     id: PydanticObjectId = Field(default_factory=ObjectId)
     user_id: int | PydanticObjectId
     product_id: int | PydanticObjectId
-    quantity: int | None = None
-    description: str | None = None
     status: Status
     
     class Settings:
         name = "Orders"
-        
-    @model_validator(mode="before")
-    def map_id(cls, values: dict) -> dict:
-
-        if "_id" in values:
-            values["id"] = values.pop("_id")
-        return values
-    
 
     @classmethod
-    def create_query_by_filter(
+    def create_filter_query(
         cls,
         filter_order: FilterOrderInput,
     ):
@@ -36,10 +26,10 @@ class OrderCollection(OrderModel, Document):
         
 
         if filter_order.user_id:
-            query[str(cls.user_id)] = convert_id(filter_order.user_id)       
+            query[str(cls.user_id)] = convert_object_id(filter_order.user_id)       
 
         if filter_order.product_id:
-            query[str(cls.product_id)] = convert_id(filter_order.product_id)
+            query[str(cls.product_id)] = convert_object_id(filter_order.product_id)
 
         if filter_order.statuses:
             query[str(cls.status)] = {"$in": filter_order.statuses}

@@ -3,7 +3,7 @@ from src.domain.schemas.category.category_model import CategoryModel
 from src.infra.db.mongodb.collections.category_collection import CategoryCollection
 from src.models.schemas.filter.categories_filter_input import CategoryFilterInput
 from src.infra.exceptions.exceptions import EntityNotFoundError
-from src.infra.utils.convert_id import convert_id
+from src.infra.utils.convert_id import convert_object_id
 
 class CategoryMongodbRepo(ICategoryRepo):
         
@@ -94,7 +94,7 @@ class CategoryMongodbRepo(ICategoryRepo):
         parent_id: str
     ) -> list[CategoryModel]:
 
-        parent_id = convert_id(parent_id)
+        parent_id = convert_object_id(parent_id)
         
         categories_list = await CategoryCollection.find_many(
             CategoryCollection.parent_id == parent_id,
@@ -109,11 +109,11 @@ class CategoryMongodbRepo(ICategoryRepo):
         
         try:
                                     
-            category_id = convert_id(category_id)
+            category_id = convert_object_id(category_id)
             category = await CategoryCollection.find_one(
                 CategoryCollection.id == category_id,
             )
-            
+                        
             return CategoryModel.model_validate(category, from_attributes=True)
         except:
             raise EntityNotFoundError(status_code=404, message="Category not found")
@@ -125,7 +125,18 @@ class CategoryMongodbRepo(ICategoryRepo):
         
         try:               
             
-            to_update: dict = category.model_dump_to_update(exclude_unset=True, by_alias=True)     
+            to_update: dict = category.custom_model_dump(
+                exclude_unset=True,
+                exclude={
+                    "id",
+                },
+                db_stack="no-sql",
+            )
+            
+            print(to_update)
+            
+            print(type(category.id))
+            
             await CategoryCollection.find(
                 CategoryCollection.id == category.id,
             ).update(
@@ -153,7 +164,7 @@ class CategoryMongodbRepo(ICategoryRepo):
     ) -> bool:
         
         try:
-            category_id = convert_id(category_id)
+            category_id = convert_object_id(category_id)
             delete_category = await CategoryCollection.find(
                 CategoryCollection.id == category_id,
             ).delete()                       

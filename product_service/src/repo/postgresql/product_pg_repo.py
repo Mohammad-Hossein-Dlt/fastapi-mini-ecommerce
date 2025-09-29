@@ -44,7 +44,7 @@ class ProductPgRepo(IProductRepo):
     
     async def get_product_by_id(
         self,
-        product_id: str,
+        product_id: int,
     ) ->  ProductModel:
         
         try:
@@ -66,9 +66,7 @@ class ProductPgRepo(IProductRepo):
         
         try:
             
-            to_update: dict = product.model_dump(exclude_unset=True, mode="json")
-            if product.name is None:
-                to_update.pop("name")
+            to_update: dict = product.custom_model_dump(exclude_unset=True)
 
             self.db.query(
                 ProductDBModel   
@@ -114,7 +112,7 @@ class ProductPgRepo(IProductRepo):
     
     async def delete_product(
         self,
-        product_id: str,
+        product_id: int,
     ) -> bool:
         
         try:

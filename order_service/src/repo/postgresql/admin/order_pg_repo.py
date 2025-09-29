@@ -1,11 +1,18 @@
+from sqlalchemy.orm import Session
 from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
 from src.domain.schemas.order.order_model import OrderModel
-from src.infra.db.mongodb.collections.order_collection import OrderCollection
+from src.infra.db.postgresql.models.order_db_model import OrderDBModel
 from src.models.schemas.filter.filter_order_input import FilterOrderInput
-from src.infra.utils.convert_id import convert_object_id
 from src.infra.exceptions.exceptions import EntityNotFoundError
 
-class AdminOrderMongodbRepo(IAdminOrderRepo):
+class AdminPgRepo(IAdminOrderRepo):
+    
+    def __init__(
+        self,
+        db: Session,
+    ):
+        
+        self.db = db
         
     async def get_all_orders(
         self,
@@ -13,11 +20,12 @@ class AdminOrderMongodbRepo(IAdminOrderRepo):
     ) ->  list[OrderModel]:
         
         try:
-            query = OrderCollection.create_filter_query(filter_order)
-            orders = await OrderCollection.find(query).to_list()
+            query = OrderDBModel.create_filter_query(filter_order)
+            orders = self.db.execute(query).scalars().all()
                         
             return [ OrderModel.model_validate(t, from_attributes=True) for t in orders ]
         except:
+            self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="There are no orders")
     
     async def get_order_by_id(
@@ -26,13 +34,16 @@ class AdminOrderMongodbRepo(IAdminOrderRepo):
     ) ->  OrderModel:
         
         try:
-            order_id = convert_object_id(order_id)
-            order = await OrderCollection.find_one(
-                OrderCollection.id == order_id,
-            )
+
+            order = self.db.query(
+                OrderDBModel
+            ).where(
+                OrderDBModel.id == order_id
+            ).first()
             
             return OrderModel.model_validate(order, from_attributes=True)
         except:
+            self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Order not found")
     
     async def modify_order(
@@ -50,19 +61,25 @@ class AdminOrderMongodbRepo(IAdminOrderRepo):
                     "user_id",
                     "product_id",
                 },
-                db_stack="no-sql",
+                db_stack="sql",
+            )
+                                    
+            self.db.query(
+                OrderDBModel
+            ).where(
+                OrderDBModel.id == order.id
+            ).update(
+                to_update,
+                synchronize_session='fetch',
             )
             
-            await OrderCollection.find(
-                OrderCollection.id == order.id,
-            ).update(
-                {
-                    "$set": to_update,
-                },
-            )
+            self.db.commit()
                         
             return await self.get_order_by_id(order.id)
+        except EntityNotFoundError:
+            raise
         except:
+            self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Order not found")
     
     async def delete_all_orders(
@@ -71,11 +88,22 @@ class AdminOrderMongodbRepo(IAdminOrderRepo):
     ) -> bool:
         
         try:
-            query = OrderCollection.create_filter_query(filter_order)
-            result = await OrderCollection.find(query).delete()
+            orders = await self.get_all_orders(filter_order)
             
-            return bool(result.deleted_count)
+            if orders:
+                for order in orders:
+                    order = self.db.merge(OrderDBModel(**order.model_dump()))
+                    if isinstance(order, OrderDBModel):
+                        self.db.delete(order)
+                
+                self.db.commit()        
+                return True 
+            else:
+                return False
+        except EntityNotFoundError:
+            raise
         except:
+            self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="There are no orders")
     
     async def delete_order(
@@ -84,13 +112,18 @@ class AdminOrderMongodbRepo(IAdminOrderRepo):
     ) -> bool:
         
         try:
-            
-            order_id = convert_object_id(order_id)
-            
-            result = await OrderCollection.find(
-                OrderCollection.id == order_id,
-            ).delete()    
-                        
-            return bool(result.deleted_count)
+            order = await self.get_order_by_id(order_id)
+            if order:
+                order = self.db.merge(OrderDBModel(**order.model_dump()))
+                
+            if isinstance(order, OrderDBModel):
+                self.db.delete(order)
+                self.db.commit()
+                return True
+            else:
+                return False
+        except EntityNotFoundError:
+            raise
         except:
+            self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Order not found")
