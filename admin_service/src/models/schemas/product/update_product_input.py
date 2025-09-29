@@ -1,9 +1,9 @@
 from pydantic import BaseModel
 
 class UpdateProductInput(BaseModel):
-    id: int
-    category_id: int | None = None
+    id: str
+    category_id: str | None = None
     name: str | None = None
     description: str | None = None
     price: float | None = None
-    stock: int | None = None
+    stock: float | None = None

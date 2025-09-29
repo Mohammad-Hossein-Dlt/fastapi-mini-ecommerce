@@ -1,4 +1,4 @@
-from pydantic import BaseModel, model_validator, field_validator
+from pydantic import BaseModel, model_validator, field_validator, field_serializer
 from bson.objectid import ObjectId
 from typing import TypeAlias, Literal, ClassVar, Any
 
@@ -25,6 +25,12 @@ class CustomBaseModel(BaseModel):
     def object_id_validator(cls, var):
         if ObjectId.is_valid(var):
             return ObjectId(var)
+        return var
+    
+    @field_serializer("*")
+    def object_id_serializer(self, var):
+        if ObjectId.is_valid(var):
+            return str(var)
         return var
 
     def custom_model_dump(

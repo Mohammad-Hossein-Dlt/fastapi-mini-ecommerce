@@ -31,11 +31,7 @@ class GetAllProducts:
                 related_categories = []
                 for category in categories_list:
                     related_categories.append(
-                        {
-                            "id": str(category.id) if category.id else None,
-                            "parent_id": str(category.parent_id) if category.parent_id else None,
-                            "name": category.name,
-                        }
+                        category.model_dump(include={"id", "parent_id", "name"}, mode="json"),
                     )
                 
                 setattr(product, "related_categories", related_categories)

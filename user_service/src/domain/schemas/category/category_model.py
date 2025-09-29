@@ -1,6 +1,8 @@
 from src.infra.utils.custom_base_model import CustomBaseModel
+from pydantic import Field
 from beanie import PydanticObjectId
 from datetime import datetime
+from typing import Self
 
 class CategoryModel(CustomBaseModel):
     
@@ -9,4 +11,6 @@ class CategoryModel(CustomBaseModel):
     name: str | None = None
     created_at: datetime | None = None
     updated_at: datetime | None = None
+    
+    children: list[Self] = Field(default=[])
     

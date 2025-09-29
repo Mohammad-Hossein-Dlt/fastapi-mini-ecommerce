@@ -1,7 +1,6 @@
 from src.infra.external_api.interface.Iproduct_service import IProductService
 from src.models.schemas.filter.products_filter_input import ProductFilterInput
 from src.domain.schemas.product.product_model import ProductModel
-from src.domain.schemas.category.category_model import CategoryModel
 from src.domain.schemas.auth.auth_credentials import AuthCredentials
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
@@ -21,7 +20,7 @@ class GetAllProducts:
         
         try:
             response: dict = self.product_service.get_all(credentials, product_filter)
-            return [ CategoryModel.model_validate(p) for p in response ]
+            return [ ProductModel.model_validate(p) for p in response ]
         except AppBaseException:
             raise
         except:

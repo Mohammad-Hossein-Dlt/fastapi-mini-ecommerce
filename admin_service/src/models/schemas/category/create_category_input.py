@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
 class CreateCategoryInput(BaseModel):
-    parent_id: int | None = None
+    parent_id: str | None = None
     name: str
 
