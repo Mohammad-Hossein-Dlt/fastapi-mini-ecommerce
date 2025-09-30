@@ -108,7 +108,7 @@ jobs:
 
       - name: Restart Nginx
         run: |
-          kubectl rollout restart deployment nginx-service
+          kubectl rollout restart deployment/nginx-service
 
       # 8. Verify Pods
       - name: Check Pods status
