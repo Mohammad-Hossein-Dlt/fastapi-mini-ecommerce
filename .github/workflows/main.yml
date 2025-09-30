@@ -119,7 +119,7 @@ jobs:
         run: |
           kubectl get svc
 
-      - name: Send request to Auth service
+      - name: Send request to auth-service
         run: |
           check_service=$(curl -s http://localhost/auth/api/v1/user/self/get)
           echo "$check_service"
