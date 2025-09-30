@@ -1,0 +1,77 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. دریافت سورس‌کد
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. لاگین به DockerHub
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 3. بیلد و پوش ایمیج‌های FastAPI
+      - name: Build and Push auth
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/auth:latest ./auth_service
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/auth:latest
+
+      - name: Build and Push product
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/product:latest ./product_service
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/product:latest
+
+      - name: Build and Push order
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/order:latest ./order_service
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/order:latest
+
+      - name: Build and Push admin
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/admin:latest ./admin_service
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/admin:latest
+
+      - name: Build and Push user
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/user:latest ./user_service
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/user:latest
+
+      # 4. نصب kubectl
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: "latest"
+
+      # 5. ست کردن kubeconfig
+      - name: Configure kubeconfig
+        run: |
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config
+
+      # 6. ساخت یا آپدیت ConfigMap از .env
+      - name: Apply ConfigMap from .env
+        run: |
+          kubectl create configmap app-config --from-env-file=.env -o yaml --dry-run=client | kubectl apply -f -
+
+      - name: Apply nginx ConfigMap from file
+        run: |
+          kubectl create configmap nginx-config --from-file=nginx.conf -o yaml --dry-run=client | kubectl apply -f -
+
+      # 8. اعمال تمام فایل‌های Kubernetes
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/
+
+      - name: Restart nginx to pick up new config
+        run: |
+          kubectl rollout restart deployment/nginx-deployment
