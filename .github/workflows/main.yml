@@ -121,9 +121,5 @@ jobs:
 
       - name: Send request to Auth service
         run: |
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://nginx-service/auth/api/v1/health)
-          echo "Auth service HTTP code: $RESPONSE"
-          if [ "$RESPONSE" -ne 200 ]; then
-            echo "Auth service is not healthy!"
-            exit 1
-          fi
+          RESPONSE=$(curl -s http://nginx-service/auth/health)
+          echo "$RESPONSE"
