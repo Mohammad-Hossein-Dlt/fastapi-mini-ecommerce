@@ -10,18 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. دریافت سورس‌کد
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. لاگین به DockerHub
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # 3. بیلد و پوش ایمیج‌های FastAPI
       - name: Build and Push auth
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/auth:latest ./auth_service
@@ -47,18 +44,16 @@ jobs:
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/user:latest ./user_service
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/user:latest
 
-      # 4. نصب kubectl
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
         with:
           version: "latest"
 
-      # 5. ست کردن kubeconfig
       - name: Configure kubeconfig
         run: |
+          mkdir -p $HOME/.kube
           echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config
 
-      # 6. ساخت یا آپدیت ConfigMap از .env
       - name: Apply ConfigMap from .env
         run: |
           kubectl create configmap app-config --from-env-file=.env -o yaml --dry-run=client | kubectl apply -f -
@@ -67,7 +62,6 @@ jobs:
         run: |
           kubectl create configmap nginx-config --from-file=nginx.conf -o yaml --dry-run=client | kubectl apply -f -
 
-      # 8. اعمال تمام فایل‌های Kubernetes
       - name: Deploy to Kubernetes
         run: |
           kubectl apply -f k8s/
