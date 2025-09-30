@@ -23,7 +23,7 @@ async def place_order(
 ):
     try:
         place_order_usecase = PlaceOrder(order_service)
-        order = await place_order_usecase.execute(user.credentials, order)
-        return order.model_dump(mode="json")
+        output = await place_order_usecase.execute(user.credentials, order)
+        return output.model_dump(mode="json")
     except AppBaseException as ex:
         raise HTTPException(status_code=ex.status_code, detail=str(ex))

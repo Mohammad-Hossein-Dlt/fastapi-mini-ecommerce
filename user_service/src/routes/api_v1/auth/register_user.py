@@ -20,6 +20,7 @@ async def register_user(
 ):
     try:
         create_user_usecase = RegisterUser(auth_service)
-        return create_user_usecase.execute(user_data)
+        output = await create_user_usecase.execute(user_data)
+        return output.model_dump(mode="json")
     except AppBaseException as ex:
         raise HTTPException(status_code=ex.status_code, detail=str(ex))

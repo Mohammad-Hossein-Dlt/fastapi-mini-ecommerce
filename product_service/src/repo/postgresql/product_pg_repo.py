@@ -66,7 +66,13 @@ class ProductPgRepo(IProductRepo):
         
         try:
             
-            to_update: dict = product.custom_model_dump(exclude_unset=True)
+            to_update: dict = product.custom_model_dump(
+                exclude_unset=True,
+                exclude={
+                    "id",
+                },
+                db_stack="sql",
+            )
 
             self.db.query(
                 ProductDBModel   

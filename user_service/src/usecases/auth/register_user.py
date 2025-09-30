@@ -11,7 +11,7 @@ class RegisterUser:
         
         self.auth_service = auth_service
             
-    def execute(
+    async def execute(
         self,
         user_data: UserRegisterInput,
     ) -> OperationOutput:

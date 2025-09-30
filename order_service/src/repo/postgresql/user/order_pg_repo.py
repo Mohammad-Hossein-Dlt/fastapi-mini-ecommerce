@@ -55,7 +55,7 @@ class OrderPgRepo(IOrderRepo):
             ).where(
                 and_(
                     OrderDBModel.id == order_id,
-                    OrderDBModel.user_id == user_id,
+                    OrderDBModel.user_id == str(user_id),
                 ),
             ).first()
             
@@ -76,8 +76,8 @@ class OrderPgRepo(IOrderRepo):
                 OrderDBModel   
             ).where(
                 and_(
-                    OrderDBModel.user_id == user_id,
-                    OrderDBModel.product_id == product_id,
+                    OrderDBModel.user_id == str(user_id),
+                    OrderDBModel.product_id == str(product_id),
                 ),
             ).first()
             
@@ -129,7 +129,7 @@ class OrderPgRepo(IOrderRepo):
         try:
             orders = await self.get_all_orders(
                 FilterOrderInput(
-                    user_id=user_id,
+                    user_id=str(user_id),
                 ),
             )
             

@@ -23,7 +23,7 @@ async def get_all_orders(
 ):
     try:
         get_all_orders_usecase = GetAllOrders(order_repo)
-        orders = await get_all_orders_usecase.execute(user.id, filter_order)
-        return [ order.model_dump(mode="json") for order in orders ]
+        outputs_list = await get_all_orders_usecase.execute(user.id, filter_order)
+        return [ output.model_dump(mode="json") for output in outputs_list ]
     except AppBaseException as ex:
         raise HTTPException(status_code=ex.status_code, detail=str(ex))

@@ -23,7 +23,7 @@ async def modify_one_order(
 ):
     try:
         update_order_usecase = AdminModifyOrder(order_repo)
-        order = await update_order_usecase.execute(order)
-        return order.model_dump(mode="json")
+        output = await update_order_usecase.execute(order)
+        return output.model_dump(mode="json")
     except AppBaseException as ex:
         raise HTTPException(status_code=ex.status_code, detail=str(ex))

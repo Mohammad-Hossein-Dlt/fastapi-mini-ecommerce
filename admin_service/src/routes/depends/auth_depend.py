@@ -41,7 +41,7 @@ async def admin_auth_depend(
         
     try:
         get_user_usecase = AdminGetSelf(auth_service)
-        user = get_user_usecase.execute(auth_repo.get_user_auth_credentials())
+        user = await get_user_usecase.execute(auth_repo.get_user_auth_credentials())
         user.credentials = auth_repo.get_user_auth_credentials()
         return user
     except AppBaseException as get_user_ex:

@@ -22,7 +22,7 @@ async def get_one_order(
 ):
     try:
         get_order_usecase = AdminGetOrder(order_repo)
-        order = await get_order_usecase.execute(order_id)
-        return order.model_dump(mode="json")
+        output = await get_order_usecase.execute(order_id)
+        return output.model_dump(mode="json")
     except AppBaseException as ex:
         raise HTTPException(status_code=ex.status_code, detail=str(ex))

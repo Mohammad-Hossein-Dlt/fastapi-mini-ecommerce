@@ -22,6 +22,7 @@ async def user_delete_self(
 ):
     try:
         delete_user_usecase = UserDeleteSelf(auth_service)
-        return await delete_user_usecase.execute(user.credentials)
+        output = await delete_user_usecase.execute(user.credentials)
+        return output.model_dump(mode="json")
     except AppBaseException as ex:
         raise HTTPException(status_code=ex.status_code, detail=str(ex))

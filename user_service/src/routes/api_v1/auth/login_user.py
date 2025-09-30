@@ -26,6 +26,7 @@ async def login_user(
 ):
     try:
         login_user_usecase = LoginUser(auth_service, auth_repo)
-        return login_user_usecase.execute(UserLoginInput(username=form_data.username, password=form_data.password))
+        output = await login_user_usecase.execute(UserLoginInput(username=form_data.username, password=form_data.password))
+        return output.model_dump(mode="json")
     except AppBaseException as ex:
         raise HTTPException(status_code=ex.status_code, detail=str(ex))

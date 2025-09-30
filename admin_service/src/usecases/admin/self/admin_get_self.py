@@ -11,7 +11,7 @@ class AdminGetSelf:
     ):  
         self.auth_service = auth_service
     
-    def execute(
+    async def execute(
         self,
         credentials: AuthCredentials,
     ) -> UserModel:

@@ -13,7 +13,7 @@ class RefreshToken:
         self.auth_service = auth_service
         self.auth_repo = auth_repo
         
-    def execute(
+    async def execute(
         self,
         auth_credentials: AuthCredentials,
     ) -> AuthCredentials:

@@ -73,6 +73,7 @@ class CategoryPgRepo(ICategoryRepo):
                 result.extend( await get_categories(parent) )
                 return result
             elif parent:
+                result.append(parent)
                 return result
             else:
                 return result
@@ -136,7 +137,13 @@ class CategoryPgRepo(ICategoryRepo):
         
         try:
             
-            to_update: dict = category.custom_model_dump(exclude_unset=True)
+            to_update: dict = category.custom_model_dump(
+                exclude_unset=True,
+                exclude={
+                    "id",
+                },
+                db_stack="sql",
+            )
  
             self.db.query(
                 CategoryDBModel   

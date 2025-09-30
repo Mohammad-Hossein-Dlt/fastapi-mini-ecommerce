@@ -22,6 +22,7 @@ async def user_get_self(
 ):
     try:
         get_user_usecase = UserGetSelf(auth_service)
-        return get_user_usecase.execute(user.credentials)
+        output = await get_user_usecase.execute(user.credentials)
+        return output.model_dump(mode="json")
     except AppBaseException as ex:
         raise HTTPException(status_code=ex.status_code, detail=str(ex))
