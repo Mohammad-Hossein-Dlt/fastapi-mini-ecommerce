@@ -5,7 +5,7 @@ import sys
 import time
 
 logger.remove()
-logger.add("logs/auth_app.log", level="INFO")
+logger.add("logs/admin_app.log", level="INFO")
 logger.add(sys.stdout, level="DEBUG")
 
 class LoggingMiddleware(BaseHTTPMiddleware):
