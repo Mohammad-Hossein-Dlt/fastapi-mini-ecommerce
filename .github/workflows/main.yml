@@ -119,10 +119,6 @@ jobs:
         run: |
           kubectl get svc
 
-  test-auth:
-    runs-on: ubuntu-latest
-    needs: build-and-deploy
-    steps:
       - name: Send request to Auth service
         run: |
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://nginx-service/auth/api/v1/health)
