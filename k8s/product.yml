@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: product-deployment
+  name: product-service
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: product
+      app: product-service
   template:
     metadata:
       labels:
-        app: product
+        app: product-service
     spec:
       containers:
-        - name: product
-          image: mhdlt/product:latest
+        - name: product-service
+          image: product-service:latest
           ports:
             - containerPort: 8000
           envFrom:
@@ -28,7 +28,7 @@ metadata:
   name: product-service
 spec:
   selector:
-    app: product
+    app: product-service
   ports:
     - protocol: TCP
       port: 8000

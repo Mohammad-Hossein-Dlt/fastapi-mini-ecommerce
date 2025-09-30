@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-deployment
+  name: user-service
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: user
+      app: user-service
   template:
     metadata:
       labels:
-        app: user
+        app: user-service
     spec:
       containers:
-        - name: user
-          image: mhdlt/user:latest
+        - name: user-service
+          image: user-service:latest
           ports:
             - containerPort: 8000
           envFrom:
@@ -28,7 +28,7 @@ metadata:
   name: user-service
 spec:
   selector:
-    app: user
+    app: user-service
   ports:
     - protocol: TCP
       port: 8000
