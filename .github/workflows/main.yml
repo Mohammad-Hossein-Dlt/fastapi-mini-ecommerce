@@ -121,5 +121,5 @@ jobs:
 
       - name: Send request to auth-service
         run: |
-          check_service=$(curl -s http://localhost/auth/api/v1/user/self/get)
+          check_service= bash <(curl -s http://localhost/auth/api/v1/user/self/get)
           echo "$check_service"
