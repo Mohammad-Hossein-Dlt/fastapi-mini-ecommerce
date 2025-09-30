@@ -101,14 +101,14 @@ jobs:
         run: |
           kubectl create configmap nginx-config --from-file=nginx.conf -o yaml --dry-run=client | kubectl apply -f -
 
-      - name: Restart Nginx
-        run: |
-          kubectl rollout restart deployment nginx-service
-
       # 7. Deploy Kubernetes manifests
       - name: Deploy to Kind cluster
         run: |
           kubectl apply -f k8s/
+
+      # - name: Restart Nginx
+      #   run: |
+      #     kubectl rollout restart deployment nginx-service
 
       # 8. Verify Pods
       - name: Check Pods status
