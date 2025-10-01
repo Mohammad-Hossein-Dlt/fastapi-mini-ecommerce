@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: user
-          image: user:latest
+          image: /user:latest
           ports:
             - containerPort: 8000
           envFrom:
