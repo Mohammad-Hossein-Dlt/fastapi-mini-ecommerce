@@ -1,4 +1,4 @@
-name: CI/CD with Docker Compose
+name: CI/CD Pipeline
 
 on:
   push:
@@ -9,81 +9,139 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    steps:
-      # 1. Checkout repo
-      - uses: actions/checkout@v3
+    env:
+      # FastAPI Ports
+      EXTERNAL_FASTAPI_PORT: ${{ vars.EXTERNAL_FASTAPI_PORT }}
+      INTERNAL_FASTAPI_PORT: ${{ vars.INTERNAL_FASTAPI_PORT }}
 
-      # 2. Set up Docker
+      # Base URLs
+      AUTH_BASE_URL: ${{ vars.AUTH_BASE_URL }}
+      PRODUCT_BASE_URL: ${{ vars.PRODUCT_BASE_URL }}
+      ORDER_BASE_URL: ${{ vars.ORDER_BASE_URL }}
+
+      # DB Stack
+      AUTH_DB_STACK: ${{ vars.AUTH_DB_STACK }}
+      PRODUCT_DB_STACK: ${{ vars.PRODUCT_DB_STACK }}
+      ORDER_DB_STACK: ${{ vars.ORDER_DB_STACK }}
+
+      # MongoDB
+      MONGO_HOST: ${{ vars.MONGO_HOST }}
+      MONGO_PORT: ${{ vars.MONGO_PORT }}
+      MONGO_INITDB_ROOT_USERNAME: ${{ vars.MONGO_INITDB_ROOT_USERNAME }}
+      MONGO_INITDB_ROOT_PASSWORD: ${{ vars.MONGO_INITDB_ROOT_PASSWORD }}
+      MONGO_INITDB_DATABASE: ${{ vars.MONGO_INITDB_DATABASE }}
+
+      # PostgreSQL
+      POSTGRES_HOST: ${{ vars.POSTGRES_HOST }}
+      POSTGRES_PORT: ${{ vars.POSTGRES_PORT }}
+      POSTGRES_USER: ${{ vars.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ vars.POSTGRES_PASSWORD }}
+      POSTGRES_DB: ${{ vars.POSTGRES_DB }}
+
+      # PGAdmin
+      PGADMIN_DEFAULT_EMAIL: ${{ vars.PGADMIN_DEFAULT_EMAIL }}
+      PGADMIN_DEFAULT_PASSWORD: ${{ vars.PGADMIN_DEFAULT_PASSWORD }}
+
+      # JWT
+      JWT_SECRET: ${{ vars.JWT_SECRET }}
+      JWT_ALGORITHM: ${{ vars.JWT_ALGORITHM }}
+      JWT_EXPIRATION_MINUTES: ${{ vars.JWT_EXPIRATION_MINUTES }}
+      JWT_REFRESH_EXPIRATION_MINUTES: ${{ vars.JWT_REFRESH_EXPIRATION_MINUTES }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Create .env file
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push auth
         run: |
-          cat <<EOF > .env
-          EXTERNAL_FASTAPI_PORT = ${{ vars.EXTERNAL_FASTAPI_PORT }}
-          INTERNAL_FASTAPI_PORT = ${{ vars.INTERNAL_FASTAPI_PORT }}
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/auth:latest ./auth_service
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/auth:latest
 
-          # Base URLs
-          AUTH_BASE_URL = ${{ vars.AUTH_BASE_URL }}
-          PRODUCT_BASE_URL = ${{ vars.PRODUCT_BASE_URL }}
-          ORDER_BASE_URL = ${{ vars.ORDER_BASE_URL }}
-
-          # DB Stack
-          AUTH_DB_STACK = ${{ vars.AUTH_DB_STACK }}
-          PRODUCT_DB_STACK = ${{ vars.PRODUCT_DB_STACK }}
-          ORDER_DB_STACK = ${{ vars.ORDER_DB_STACK }}
-
-          # MongoDB
-          MONGO_HOST = ${{ vars.MONGO_HOST }}
-          MONGO_PORT = ${{ vars.MONGO_PORT }}
-          MONGO_INITDB_ROOT_USERNAME = ${{ vars.MONGO_INITDB_ROOT_USERNAME }}
-          MONGO_INITDB_ROOT_PASSWORD = ${{ vars.MONGO_INITDB_ROOT_PASSWORD }}
-          MONGO_INITDB_DATABASE = ${{ vars.MONGO_INITDB_DATABASE }}
-
-          # PostgreSQL
-          POSTGRES_HOST = ${{ vars.POSTGRES_HOST }}
-          POSTGRES_PORT = ${{ vars.POSTGRES_PORT }}
-          POSTGRES_USER = ${{ vars.POSTGRES_USER }}
-          POSTGRES_PASSWORD = ${{ vars.POSTGRES_PASSWORD }}
-          POSTGRES_DB = ${{ vars.POSTGRES_DB }}
-
-          # JWT
-          JWT_SECRET = ${{ vars.JWT_SECRET }}
-          JWT_ALGORITHM = ${{ vars.JWT_ALGORITHM }}
-          JWT_EXPIRATION_MINUTES = ${{ vars.JWT_EXPIRATION_MINUTES }}
-          JWT_REFRESH_EXPIRATION_MINUTES = ${{ vars.JWT_REFRESH_EXPIRATION_MINUTES }}
-          EOF
-
-      # 3. Build & start services with Docker Compose
-      - name: Build and start containers
+      - name: Build and Push product
         run: |
-          docker compose up -d
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/product:latest ./product_service
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/product:latest
 
-      # 4. Check running containers
-      - name: Check Docker containers
-        run: docker ps -a
-
-      # 5. Wait for services to be ready
-      - name: Wait for services
-        run: sleep 20
-
-      # 6. Test API endpoints via Nginx
-      - name: Test auth-service
+      - name: Build and Push order
         run: |
-          curl -v http://localhost/auth/api/v1/health
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/order:latest ./order_service
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/order:latest
 
-      - name: Test product-service
+      - name: Build and Push admin
         run: |
-          curl -v http://localhost/product/api/v1/health
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/admin:latest ./admin_service
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/admin:latest
 
-      - name: Test order-service
+      - name: Build and Push user
         run: |
-          curl -v http://localhost/order/api/v1/health
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/user:latest ./user_service
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/user:latest
 
-      - name: Test admin-service
-        run: |
-          curl -v http://localhost/admin/api/v1/health
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: "latest"
 
-      - name: Test user-service
+      # - name: Configure kubeconfig
+      #   run: |
+      #     mkdir -p $HOME/.kube
+      #     echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config
+
+      - name: Configure Kubeconfig
         run: |
-          curl -v http://localhost/user/api/v1/health
+          echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig.yaml
+          export KUBECONFIG=kubeconfig.yaml
+
+      # - name: Apply ConfigMap from .env
+      #   run: |
+      #     kubectl create configmap app-config --from-env-file=.env -o yaml --dry-run=client | kubectl apply -f -
+
+      - name: Create ConfigMap from Variables
+        run: |
+          kubectl create configmap app-config \
+            --from-literal=EXTERNAL_FASTAPI_PORT=$EXTERNAL_FASTAPI_PORT \
+            --from-literal=INTERNAL_FASTAPI_PORT=$INTERNAL_FASTAPI_PORT \
+            --from-literal=AUTH_BASE_URL=$AUTH_BASE_URL \
+            --from-literal=PRODUCT_BASE_URL=$PRODUCT_BASE_URL \
+            --from-literal=ORDER_BASE_URL=$ORDER_BASE_URL \
+            --from-literal=AUTH_DB_STACK=$AUTH_DB_STACK \
+            --from-literal=PRODUCT_DB_STACK=$PRODUCT_DB_STACK \
+            --from-literal=ORDER_DB_STACK=$ORDER_DB_STACK \
+            --from-literal=MONGO_HOST=$MONGO_HOST \
+            --from-literal=MONGO_PORT=$MONGO_PORT \
+            --from-literal=MONGO_INITDB_ROOT_USERNAME=$MONGO_INITDB_ROOT_USERNAME \
+            --from-literal=MONGO_INITDB_ROOT_PASSWORD=$MONGO_INITDB_ROOT_PASSWORD \
+            --from-literal=MONGO_INITDB_DATABASE=$MONGO_INITDB_DATABASE \
+            --from-literal=POSTGRES_HOST=$POSTGRES_HOST \
+            --from-literal=POSTGRES_PORT=$POSTGRES_PORT \
+            --from-literal=POSTGRES_USER=$POSTGRES_USER \
+            --from-literal=POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
+            --from-literal=POSTGRES_DB=$POSTGRES_DB \
+            --from-literal=PGADMIN_DEFAULT_EMAIL=$PGADMIN_DEFAULT_EMAIL \
+            --from-literal=PGADMIN_DEFAULT_PASSWORD=$PGADMIN_DEFAULT_PASSWORD \
+            --from-literal=JWT_SECRET=$JWT_SECRET \
+            --from-literal=JWT_ALGORITHM=$JWT_ALGORITHM \
+            --from-literal=JWT_EXPIRATION_MINUTES=$JWT_EXPIRATION_MINUTES \
+            --from-literal=JWT_REFRESH_EXPIRATION_MINUTES=$JWT_REFRESH_EXPIRATION_MINUTES \
+            -o yaml --dry-run=client | kubectl apply -f -
+
+      - name: Apply nginx ConfigMap from file
+        run: |
+          kubectl create configmap nginx-config --from-file=nginx.conf -o yaml --dry-run=client | kubectl apply -f -
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/
+
+      - name: Restart nginx to pick up new config
+        run: |
+          kubectl rollout restart deployment nginx-service
