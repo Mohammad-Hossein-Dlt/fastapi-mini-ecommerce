@@ -55,36 +55,37 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Login to DockerHub
+      - name: Login to ArvanCloud Registry
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ${{ secrets.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: Build and Push auth
+      - name: Build and Push auth_service
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/auth:latest ./auth_service
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/auth:latest
+          docker build -t ${{ secrets.REGISTRY }}/auth_service:latest ./auth_service
+          docker push ${{ secrets.REGISTRY }}/auth_service:latest
 
-      - name: Build and Push product
+      - name: Build and Push product_service
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/product:latest ./product_service
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/product:latest
+          docker build -t ${{ secrets.REGISTRY }}/product_service:latest ./product_service
+          docker push ${{ secrets.REGISTRY }}/product_service:latest
 
-      - name: Build and Push order
+      - name: Build and Push order_service
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/order:latest ./order_service
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/order:latest
+          docker build -t ${{ secrets.REGISTRY }}/order_service:latest ./order_service
+          docker push ${{ secrets.REGISTRY }}/order_service:latest
 
-      - name: Build and Push admin
+      - name: Build and Push admin_service
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/admin:latest ./admin_service
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/admin:latest
+          docker build -t ${{ secrets.REGISTRY }}/admin_service:latest ./admin_service
+          docker push ${{ secrets.REGISTRY }}/admin_service:latest
 
-      - name: Build and Push user
+      - name: Build and Push user_service
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/user:latest ./user_service
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/user:latest
+          docker build -t ${{ secrets.REGISTRY }}/user_service:latest ./user_service
+          docker push ${{ secrets.REGISTRY }}/user_service:latest
 
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
