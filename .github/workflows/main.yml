@@ -97,10 +97,10 @@ jobs:
           mkdir -p $HOME/.kube
           echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
 
-      - name: Check Kubeconfig
-        run: |
-          kubectl config current-context
-          kubectl cluster-info
+      # - name: Check Kubeconfig
+      #   run: |
+      #     kubectl config current-context
+      #     kubectl cluster-info
 
       - name: Create .env file
         run: |
