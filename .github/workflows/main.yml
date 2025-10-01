@@ -94,8 +94,8 @@ jobs:
 
       - name: Configure Kubeconfig
         run: |
-          echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig.yaml
-          export KUBECONFIG=kubeconfig.yaml
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > config.yaml
+          export KUBECONFIG=$PWD/config.yaml
 
       - name: Check Kubeconfig
         run: |
