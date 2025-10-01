@@ -1,7 +1,7 @@
 services:
 
   # Nginx
-  nginx:
+  nginx-service:
     image: nginx:latest
     restart: always
     volumes:
