@@ -79,10 +79,10 @@ jobs:
       #     docker build -t ${{ secrets.REGISTRY }}/admin:latest ./admin_service
       #     docker push ${{ secrets.REGISTRY }}/admin:latest
 
-      # - name: Build and Push user-service
-      #   run: |
-      #     docker build -t ${{ secrets.REGISTRY }}/user:latest ./user_service
-      #     docker push ${{ secrets.REGISTRY }}/user:latest
+      - name: Build and Push user-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/user:latest ./user_service
+          docker push ${{ secrets.REGISTRY }}/user:latest
 
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
@@ -93,11 +93,6 @@ jobs:
         run: |
           mkdir -p $HOME/.kube
           echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
-
-      # - name: Check Kubeconfig
-      #   run: |
-      #     kubectl config current-context
-      #     kubectl cluster-info
 
       - name: Create .env file
         run: |
@@ -140,29 +135,22 @@ jobs:
         run: |
           kubectl create configmap app-config --from-file=.env --dry-run=client -o yaml | kubectl apply -f -
 
-      # - name: Apply nginx ConfigMap from file
-      #   run: |
-      #     kubectl create configmap nginx-config --from-file=nginx.conf --dry-run=client -o yaml | kubectl apply -f -
+      - name: Apply nginx ConfigMap from file
+        run: |
+          kubectl create configmap nginx-config --from-file=nginx.conf --dry-run=client -o yaml | kubectl apply -f -
 
-      # - name: Create Docker registry secret
-      #   run: |
-      #     kubectl create secret docker-registry arvan-regcred \
-      #       --docker-server=${{ secrets.REGISTRY }} \
-      #       --docker-username=${{ secrets.REGISTRY_USERNAME }} \
-      #       --docker-password=${{ secrets.REGISTRY_PASSWORD }} \
-      #       --dry-run=client -o yaml | kubectl apply -f -
+      - name: Create Docker registry secret
+        run: |
+          kubectl create secret docker-registry arvan-regcred \
+            --docker-server=${{ secrets.REGISTRY }} \
+            --docker-username=${{ secrets.REGISTRY_USERNAME }} \
+            --docker-password=${{ secrets.REGISTRY_PASSWORD }} \
+            --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Deploy to Kubernetes
         run: |
-          kubectl apply -f k8s/postgresql.yml
+          kubectl apply -f k8s
 
-      # - name: Check Pods status
-      #   run: kubectl get pods -A
-
-      # - name: Test Services
-      #   run: |
-      #     kubectl get svc
-
-      # - name: Restart nginx to pick up new config
-      #   run: |
-      #     kubectl rollout restart deployment nginx
+      - name: Restart nginx to pick up new config
+        run: |
+          kubectl rollout restart deployment nginx

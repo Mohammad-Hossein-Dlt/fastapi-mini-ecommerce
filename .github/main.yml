@@ -87,3 +87,15 @@ jobs:
       - name: Test user-service
         run: |
           curl -v http://localhost/user/api/v1/health
+
+      # - name: Check Kubeconfig
+      #   run: |
+      #     kubectl config current-context
+      #     kubectl cluster-info
+
+      # - name: Check Pods status
+      #   run: kubectl get pods -A
+
+      # - name: Test Services
+      #   run: |
+      #     kubectl get svc
