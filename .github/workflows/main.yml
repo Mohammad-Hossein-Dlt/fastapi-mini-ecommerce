@@ -160,4 +160,4 @@ jobs:
 
       - name: Restart nginx to pick up new config
         run: |
-          kubectl rollout restart deployment nginx-service
+          kubectl rollout restart deployment nginx
