@@ -26,10 +26,10 @@ kind: Service
 metadata:
   name: user-service
 spec:
+  type: ClusterIP
   selector:
     app: user
   ports:
     - protocol: TCP
       port: 8000
       targetPort: 8000
-  type: ClusterIP

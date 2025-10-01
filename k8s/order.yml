@@ -26,10 +26,10 @@ kind: Service
 metadata:
   name: order-service
 spec:
+  type: ClusterIP
   selector:
     app: order
   ports:
     - protocol: TCP
       port: 8000
       targetPort: 8000
-  type: ClusterIP

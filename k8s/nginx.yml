@@ -32,9 +32,9 @@ kind: Service
 metadata:
   name: nginx-service
 spec:
+  type: LoadBalancer
   selector:
     app: nginx
-  type: LoadBalancer
   ports:
     - protocol: TCP
       port: 80
