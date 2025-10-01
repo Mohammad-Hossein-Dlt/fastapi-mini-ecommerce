@@ -1,25 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-service
+  name: nginx
+  labels:
+    app: nginx
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nginx-service
+      app: nginx
   template:
     metadata:
       labels:
-        app: nginx-service
+        app: nginx
     spec:
       containers:
-        - name: nginx-service
+        - name: nginx
           image: nginx:latest
           ports:
             - containerPort: 80
           volumeMounts:
             - name: nginx-config
-              mountPath: /etc/nginx/conf.d
+              mountPath: /etc/nginx/nginx.conf
       volumes:
         - name: nginx-config
           configMap:
@@ -31,7 +33,7 @@ metadata:
   name: nginx-service
 spec:
   selector:
-    app: nginx-service
+    app: nginx
   type: LoadBalancer
   ports:
     - protocol: TCP

@@ -62,10 +62,10 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: Build and Push auth-service
-        run: |
-          docker build -t ${{ secrets.REGISTRY }}/auth_service:latest ./auth_service
-          docker push ${{ secrets.REGISTRY }}/auth_service:latest
+      # - name: Build and Push auth-service
+      #   run: |
+      #     docker build -t ${{ secrets.REGISTRY }}/auth_service:latest ./auth_service
+      #     docker push ${{ secrets.REGISTRY }}/auth_service:latest
 
       # - name: Build and Push product-service
       #   run: |
@@ -153,6 +153,7 @@ jobs:
 
       # - name: Check Pods status
       #   run: kubectl get pods -A
+
       # - name: Test Services
       #   run: |
       #     kubectl get svc
