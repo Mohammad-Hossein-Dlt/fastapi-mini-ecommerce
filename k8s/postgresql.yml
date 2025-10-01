@@ -25,6 +25,8 @@ spec:
       labels:
         app: pg
     spec:
+      securityContext:
+        fsGroup: 999
       containers:
         - name: pg
           image: postgres:latest
