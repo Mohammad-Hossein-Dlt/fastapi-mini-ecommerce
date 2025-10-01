@@ -4,11 +4,9 @@ WORKDIR /app
 
 COPY . .
 
-RUN apt-get -y update
-RUN apt-get -y upgrade
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8000
 
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["fastapi", "run", "./src/main.py"]

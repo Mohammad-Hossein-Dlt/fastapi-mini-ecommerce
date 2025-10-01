@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user
+  name: admin
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: user
+      app: admin
   template:
     metadata:
       labels:
-        app: user
+        app: admin
     spec:
       imagePullSecrets:
         - name: arvan-regcred
       containers:
-        - name: user
-          image: registry-fc6690c55a-mini-ecommerce.apps.ir-central1.arvancaas.ir/user:latest
+        - name: admin
+          image: registry-fc6690c55a-mini-ecommerce.apps.ir-central1.arvancaas.ir/admin:latest
           ports:
             - containerPort: 8000
           envFrom:
@@ -26,12 +26,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: user-service
+  name: admin-service
 spec:
   type: ClusterIP
   selector:
-    app: user
+    app: admin
   ports:
     - protocol: TCP
-    - port: 8000
+      port: 8000
       targetPort: 8000
