@@ -82,10 +82,10 @@ jobs:
       #     docker build -t ${{ secrets.REGISTRY }}/admin:latest ./admin_service
       #     docker push ${{ secrets.REGISTRY }}/admin:latest
 
-      - name: Build and Push user-service
-        run: |
-          docker build -t ${{ secrets.REGISTRY }}/user:latest ./user_service
-          docker push ${{ secrets.REGISTRY }}/user:latest
+      # - name: Build and Push user-service
+      #   run: |
+      #     docker build -t ${{ secrets.REGISTRY }}/user:latest ./user_service
+      #     docker push ${{ secrets.REGISTRY }}/user:latest
 
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3

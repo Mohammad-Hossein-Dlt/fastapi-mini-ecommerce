@@ -12,11 +12,11 @@ spec:
       labels:
         app: user
     spec:
+      imagePullSecrets:
+        - name: arvan-regcred
       containers:
         - name: user
           image: registry-fc6690c55a-mini-ecommerce.apps.ir-central1.arvancaas.ir/admin/user:latest
-          imagePullSecrets:
-            - name: arvan-regcred
           ports:
             - containerPort: 8000
           # envFrom:
