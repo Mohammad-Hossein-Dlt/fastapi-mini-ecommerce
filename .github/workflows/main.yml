@@ -151,12 +151,12 @@ jobs:
         run: |
           kubectl apply -f k8s/
 
-      - name: Check Pods status
-        run: kubectl get pods -A
+      # - name: Check Pods status
+      #   run: kubectl get pods -A
 
-      - name: Test Services
-        run: |
-          kubectl get svc
+      # - name: Test Services
+      #   run: |
+      #     kubectl get svc
 
       - name: Restart nginx to pick up new config
         run: |
