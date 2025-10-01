@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: admin
-          image: admin:latest
+          image: registry-fc6690c55a-mini-ecommerce.apps.ir-central1.arvancaas.ir/admin:latest
           ports:
             - containerPort: 8000
           envFrom:
