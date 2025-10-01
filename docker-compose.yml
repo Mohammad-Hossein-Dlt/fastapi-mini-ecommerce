@@ -96,7 +96,7 @@ services:
     command: ["fastapi", "run", "./src/main.py", "--port", "${INTERNAL_FASTAPI_PORT}"]
 
   # Mongo-db
-  mongo-db:
+  mongodb-service:
     image: mongo
     container_name: mongo-db
     restart: always
@@ -108,7 +108,7 @@ services:
       - 27017:27017
 
   # Postgresql
-  postgres-db:
+  postgres-service:
     image: postgres
     container_name: postgres-db
     restart: always
