@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth
+  name: admin
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: auth
+      app: admin
   template:
     metadata:
       labels:
-        app: auth
+        app: admin
     spec:
       containers:
-        - name: auth
-          image: auth:latest
+        - name: admin
+          image: admin:latest
           ports:
             - containerPort: 8000
           envFrom:
@@ -24,11 +24,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-service
+  name: admin-service
 spec:
   type: ClusterIP
   selector:
-    app: auth
+    app: admin
   ports:
     - protocol: TCP
       port: 8000
