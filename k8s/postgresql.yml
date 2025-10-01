@@ -35,13 +35,13 @@ spec:
           envFrom:
             - configMapRef:
                 name: app-config
-          volumeMounts:
-            - name: pg-storage
-              mountPath: /var/lib/postgresql/data
-      volumes:
-        - name: pg-storage
-          persistentVolumeClaim:
-            claimName: pg-pvc
+      #     volumeMounts:
+      #       - name: pg-storage
+      #         mountPath: /var/lib/postgresql/data
+      # volumes:
+      #   - name: pg-storage
+      #     persistentVolumeClaim:
+      #       claimName: pg-pvc
 ---
 apiVersion: v1
 kind: Service
