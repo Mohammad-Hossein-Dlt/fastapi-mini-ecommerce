@@ -32,6 +32,6 @@ spec:
   selector:
     app: user
   ports:
-    - protocol: TCP
-      port: 8000
-      targetPort: 8000
+    # - protocol: TCP
+    port: 8000
+    targetPort: 8000
