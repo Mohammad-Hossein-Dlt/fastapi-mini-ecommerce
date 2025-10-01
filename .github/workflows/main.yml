@@ -154,7 +154,7 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          kubectl apply -f k8s/user.yml
+          kubectl apply -f k8s/
 
       # - name: Check Pods status
       #   run: kubectl get pods -A
@@ -163,12 +163,12 @@ jobs:
       #   run: |
       #     kubectl get svc
 
-      - name: Wait for services
-        run: sleep 20
+      # - name: Wait for services
+      #   run: sleep 20
 
-      - name: Deploy nginx
-        run: |
-          kubectl apply -f k8s/nginx.yml
+      # - name: Deploy nginx
+      #   run: |
+      #     kubectl apply -f k8s/nginx.yml
 
       - name: Restart nginx to pick up new config
         run: |
