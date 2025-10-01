@@ -82,10 +82,10 @@ jobs:
       #     docker build -t ${{ secrets.REGISTRY }}/admin:latest ./admin_service
       #     docker push ${{ secrets.REGISTRY }}/admin:latest
 
-      - name: Build and Push user-service
-        run: |
-          docker build -t ${{ secrets.REGISTRY }}/user:latest ./user_service
-          docker push ${{ secrets.REGISTRY }}/user:latest
+      # - name: Build and Push user-service
+      #   run: |
+      #     docker build -t ${{ secrets.REGISTRY }}/user:latest ./user_service
+      #     docker push ${{ secrets.REGISTRY }}/user:latest
 
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
@@ -151,12 +151,12 @@ jobs:
         run: |
           kubectl apply -f k8s/
 
-      # - name: Check Pods status
-      #   run: kubectl get pods -A
+      - name: Check Pods status
+        run: kubectl get pods -A
 
-      # - name: Test Services
-      #   run: |
-      #     kubectl get svc
+      - name: Test Services
+        run: |
+          kubectl get svc
 
       - name: Restart nginx to pick up new config
         run: |
