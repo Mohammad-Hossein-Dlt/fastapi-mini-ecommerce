@@ -57,7 +57,7 @@ jobs:
       # 3. Build & start services with Docker Compose
       - name: Build and start containers
         run: |
-          docker compose up -d --build
+          docker compose up -d
 
       # 4. Check running containers
       - name: Check Docker containers
@@ -68,14 +68,22 @@ jobs:
         run: sleep 20
 
       # 6. Test API endpoints via Nginx
-      - name: Test Auth Service
+      - name: Test auth-service
         run: |
-          curl -v http://localhost/auth/api/v1/user/self/get || exit 1
+          curl -v http://localhost/auth/api/v1/health
 
-      - name: Test Product Service
+      - name: Test product-service
         run: |
-          curl -v http://localhost/product/api/v1/health || exit 1
+          curl -v http://localhost/product/api/v1/health
 
-      - name: Test Order Service
+      - name: Test order-service
         run: |
-          curl -v http://localhost/order/api/v1/health || exit 1
+          curl -v http://localhost/order/api/v1/health
+
+      - name: Test admin-service
+        run: |
+          curl -v http://localhost/admin/api/v1/health
+
+      - name: Test user-service
+        run: |
+          curl -v http://localhost/user/api/v1/health
