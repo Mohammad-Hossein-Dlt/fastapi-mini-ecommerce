@@ -65,27 +65,27 @@ jobs:
       - name: Build and Push auth-service
         run: |
           docker build -t ${{ secrets.REGISTRY }}/auth_service:latest ./auth_service
-          docker push ${{ secrets.REGISTRY }}/auth_service:latest:fastapi-service
+          docker push ${{ secrets.REGISTRY }}/auth_service:latest
 
       - name: Build and Push product-service
         run: |
           docker build -t ${{ secrets.REGISTRY }}/product_service:latest ./product_service
-          docker push ${{ secrets.REGISTRY }}/product_service:latest:fastapi-service
+          docker push ${{ secrets.REGISTRY }}/product_service:latest
 
       - name: Build and Push order-service
         run: |
           docker build -t ${{ secrets.REGISTRY }}/order_service:latest ./order_service
-          docker push ${{ secrets.REGISTRY }}/order_service:latest:fastapi-service
+          docker push ${{ secrets.REGISTRY }}/order_service:latest
 
       - name: Build and Push admin-service
         run: |
           docker build -t ${{ secrets.REGISTRY }}/admin_service:latest ./admin_service
-          docker push ${{ secrets.REGISTRY }}/admin_service:latest:fastapi-service
+          docker push ${{ secrets.REGISTRY }}/admin_service:latest
 
       - name: Build and Push user-service
         run: |
           docker build -t ${{ secrets.REGISTRY }}/user_service:latest ./user_service
-          docker push ${{ secrets.REGISTRY }}/user_service:latest:fastapi-service
+          docker push ${{ secrets.REGISTRY }}/user_service:latest
 
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
