@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: user
-          image: arvan-registry/user:latest
+          image: registry-fc6690c55a-mini-ecommerce.apps.ir-central1.arvancaas.ir/user:latest
           ports:
             - containerPort: 8000
           envFrom:
