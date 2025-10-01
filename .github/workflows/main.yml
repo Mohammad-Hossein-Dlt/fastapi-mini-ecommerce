@@ -131,11 +131,11 @@ jobs:
           JWT_REFRESH_EXPIRATION_MINUTES=${{ vars.JWT_REFRESH_EXPIRATION_MINUTES }}
           EOF
 
-      - name: Apply app-config ConfigMap from file
+      - name: Apply app-config ConfigMap from .env file
         run: |
           kubectl create configmap app-config --from-env-file=.env --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: Apply nginx ConfigMap from file
+      - name: Apply nginx ConfigMap from nginx.conf file
         run: |
           kubectl create configmap nginx-config --from-file=nginx.conf --dry-run=client -o yaml | kubectl apply -f -
 
