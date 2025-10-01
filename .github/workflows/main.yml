@@ -119,9 +119,10 @@ jobs:
         run: |
           kubectl get svc
 
-      - name: Port-forward Nginx
+      - name: Port Forward
         run: |
-          kubectl port-forward svc/nginx-service 8080:80
+          kubectl port-forward svc/nginx-service 8080:80 &
+          sleep 5
 
       - name: Send request to auth-service
         run: |
