@@ -62,49 +62,45 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: Build and Push auth_service
+      - name: Build and Push auth-service
         run: |
           docker build -t ${{ secrets.REGISTRY }}/auth_service:latest ./auth_service
-          docker push ${{ secrets.REGISTRY }}/auth_service:latest
+          docker push ${{ secrets.REGISTRY }}/auth_service:latest:fastapi-service
 
-      - name: Build and Push product_service
+      - name: Build and Push product-service
         run: |
           docker build -t ${{ secrets.REGISTRY }}/product_service:latest ./product_service
-          docker push ${{ secrets.REGISTRY }}/product_service:latest
+          docker push ${{ secrets.REGISTRY }}/product_service:latest:fastapi-service
 
-      - name: Build and Push order_service
+      - name: Build and Push order-service
         run: |
           docker build -t ${{ secrets.REGISTRY }}/order_service:latest ./order_service
-          docker push ${{ secrets.REGISTRY }}/order_service:latest
+          docker push ${{ secrets.REGISTRY }}/order_service:latest:fastapi-service
 
-      - name: Build and Push admin_service
+      - name: Build and Push admin-service
         run: |
           docker build -t ${{ secrets.REGISTRY }}/admin_service:latest ./admin_service
-          docker push ${{ secrets.REGISTRY }}/admin_service:latest
+          docker push ${{ secrets.REGISTRY }}/admin_service:latest:fastapi-service
 
-      - name: Build and Push user_service
+      - name: Build and Push user-service
         run: |
           docker build -t ${{ secrets.REGISTRY }}/user_service:latest ./user_service
-          docker push ${{ secrets.REGISTRY }}/user_service:latest
+          docker push ${{ secrets.REGISTRY }}/user_service:latest:fastapi-service
 
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
         with:
           version: "latest"
 
-      # - name: Configure kubeconfig
-      #   run: |
-      #     mkdir -p $HOME/.kube
-      #     echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config
-
       - name: Configure Kubeconfig
         run: |
           echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig.yaml
           export KUBECONFIG=kubeconfig.yaml
 
-      # - name: Apply ConfigMap from .env
-      #   run: |
-      #     kubectl create configmap app-config --from-env-file=.env -o yaml --dry-run=client | kubectl apply -f -
+      - name: Check Kubeconfig
+        run: |
+          kubectl config current-context
+          kubectl cluster-info
 
       - name: Create .env file
         run: |
@@ -145,11 +141,11 @@ jobs:
 
       - name: Apply app-config ConfigMap from file
         run: |
-          kubectl create configmap app-config --from-file=.env -o yaml --dry-run=client | kubectl apply -f -
+          kubectl create configmap app-config --from-file=.env --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Apply nginx ConfigMap from file
         run: |
-          kubectl create configmap nginx-config --from-file=nginx.conf -o yaml --dry-run=client | kubectl apply -f -
+          kubectl create configmap nginx-config --from-file=nginx.conf --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Deploy to Kubernetes
         run: |
