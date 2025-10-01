@@ -64,7 +64,7 @@ jobs:
 
       - name: Build and Push auth-service
         run: |
-          docker build -t ${{ secrets.REGISTRY }}/auth:latest ./auth_service
+          docker build -t /auth:latest ./auth_service
           docker push ${{ secrets.REGISTRY }}/auth:latest
 
       # - name: Build and Push product-service
