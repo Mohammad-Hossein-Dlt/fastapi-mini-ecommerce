@@ -27,12 +27,12 @@ spec:
     spec:
       containers:
         - name: pg
-          image: postgres
+          image: postgres:latest
           ports:
             - containerPort: 5432
-          # envFrom:
-          #   - configMapRef:
-          #       name: app-config
+          envFrom:
+            - configMapRef:
+                name: app-config
           volumeMounts:
             - name: pg-storage
               mountPath: /var/lib/postgresql/data
