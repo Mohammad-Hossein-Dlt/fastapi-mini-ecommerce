@@ -94,8 +94,7 @@ jobs:
 
       - name: Configure Kubeconfig
         run: |
-          echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig.yaml
-          export KUBECONFIG=kubeconfig.yaml
+          echo "${{ secrets.KUBECONFIG_FILE }}" > $HOME/.kube/config
 
       - name: Check Kubeconfig
         run: |
