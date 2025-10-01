@@ -77,10 +77,10 @@ jobs:
       #     docker build -t ${{ secrets.REGISTRY }}/order:latest ./order_service
       #     docker push ${{ secrets.REGISTRY }}/order:latest
 
-      - name: Build and Push admin-service
-        run: |
-          docker build -t ${{ secrets.REGISTRY }}/admin:latest ./admin_service
-          docker push ${{ secrets.REGISTRY }}/admin:latest
+      # - name: Build and Push admin-service
+      #   run: |
+      #     docker build -t ${{ secrets.REGISTRY }}/admin:latest ./admin_service
+      #     docker push ${{ secrets.REGISTRY }}/admin:latest
 
       - name: Build and Push user-service
         run: |
