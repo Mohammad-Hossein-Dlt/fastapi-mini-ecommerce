@@ -19,13 +19,13 @@ spec:
           image: nginx:latest
           ports:
             - containerPort: 80
-          volumeMounts:
-            - name: nginx-config
-              mountPath: /etc/nginx/nginx.conf
-      volumes:
-        - name: nginx-config
-          configMap:
-            name: nginx-config
+      #     volumeMounts:
+      #       - name: nginx-config
+      #         mountPath: /etc/nginx/nginx.conf
+      # volumes:
+      #   - name: nginx-config
+      #     configMap:
+      #       name: nginx-config
 ---
 apiVersion: v1
 kind: Service
