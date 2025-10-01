@@ -9,4 +9,4 @@ RUN apt-get -y upgrade
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-RUN ["fastapi", "run", "./src/main.py"]
+CMD ["fastapi", "run", "./src/main.py"]
