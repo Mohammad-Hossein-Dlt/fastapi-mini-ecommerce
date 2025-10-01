@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: user
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: user
@@ -17,9 +17,9 @@ spec:
           image: registry-fc6690c55a-mini-ecommerce.apps.ir-central1.arvancaas.ir/user:latest
           ports:
             - containerPort: 8000
-          envFrom:
-            - configMapRef:
-                name: app-config
+          # envFrom:
+          #   - configMapRef:
+          #       name: app-config
 ---
 apiVersion: v1
 kind: Service
