@@ -34,6 +34,9 @@ spec:
     app: nginx-service
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 80
+      type: NodePort
+      ports:
+        - port: 80
+          targetPort: 80
+          nodePort: 80
   type: LoadBalancer
