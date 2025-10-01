@@ -70,12 +70,12 @@ jobs:
       # 6. Test API endpoints via Nginx
       - name: Test Auth Service
         run: |
-          curl -v http://nginx/auth/api/v1/user/self/get || exit 1
+          curl -v http://localhost/auth/api/v1/user/self/get || exit 1
 
       - name: Test Product Service
         run: |
-          curl -v http://nginx/product/api/v1/health || exit 1
+          curl -v http://localhost/product/api/v1/health || exit 1
 
       - name: Test Order Service
         run: |
-          curl -v http://nginx/order/api/v1/health || exit 1
+          curl -v http://localhost/order/api/v1/health || exit 1
