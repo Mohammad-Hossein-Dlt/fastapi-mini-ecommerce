@@ -149,6 +149,13 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
+          kubectl create secret docker-registry arvan-regcred \
+            --docker-server=${{ secrets.REGISTRY }} \
+            --docker-username=${{ secrets.REGISTRY_USERNAME }} \
+            --docker-password=${{ secrets.REGISTRY_PASSWORD }} \
+
+      - name: Deploy to Kubernetes
+        run: |
           kubectl apply -f k8s/
 
       # - name: Check Pods status
