@@ -143,9 +143,9 @@ jobs:
       #   run: |
       #     kubectl create configmap app-config --from-file=.env --dry-run=client -o yaml | kubectl apply -f -
 
-      # - name: Apply nginx ConfigMap from file
-      #   run: |
-      #     kubectl create configmap nginx-config --from-file=nginx.conf --dry-run=client -o yaml | kubectl apply -f -
+      - name: Apply nginx ConfigMap from file
+        run: |
+          kubectl create configmap nginx-config --from-file=nginx.conf --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Create Docker registry secret
         run: |
