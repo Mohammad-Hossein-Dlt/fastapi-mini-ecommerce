@@ -36,6 +36,7 @@ spec:
           volumeMounts:
             - name: postgres-db-storage
               mountPath: /bitnami/postgresql
+              subPath: pgdata
       volumes:
         - name: postgres-db-storage
           persistentVolumeClaim:
