@@ -99,3 +99,42 @@ jobs:
       # - name: Test Services
       #   run: |
       #     kubectl get svc
+
+    env:
+      # FastAPI Ports
+      EXTERNAL_FASTAPI_PORT: ${{ vars.EXTERNAL_FASTAPI_PORT }}
+      INTERNAL_FASTAPI_PORT: ${{ vars.INTERNAL_FASTAPI_PORT }}
+
+      # Base URLs
+      AUTH_BASE_URL: ${{ vars.AUTH_BASE_URL }}
+      PRODUCT_BASE_URL: ${{ vars.PRODUCT_BASE_URL }}
+      ORDER_BASE_URL: ${{ vars.ORDER_BASE_URL }}
+
+      # DB Stack
+      AUTH_DB_STACK: ${{ vars.AUTH_DB_STACK }}
+      PRODUCT_DB_STACK: ${{ vars.PRODUCT_DB_STACK }}
+      ORDER_DB_STACK: ${{ vars.ORDER_DB_STACK }}
+
+      # MongoDB
+      MONGO_HOST: ${{ vars.MONGO_HOST }}
+      MONGO_PORT: ${{ vars.MONGO_PORT }}
+      MONGO_INITDB_ROOT_USERNAME: ${{ vars.MONGO_INITDB_ROOT_USERNAME }}
+      MONGO_INITDB_ROOT_PASSWORD: ${{ vars.MONGO_INITDB_ROOT_PASSWORD }}
+      MONGO_INITDB_DATABASE: ${{ vars.MONGO_INITDB_DATABASE }}
+
+      # PostgreSQL
+      POSTGRES_HOST: ${{ vars.POSTGRES_HOST }}
+      POSTGRES_PORT: ${{ vars.POSTGRES_PORT }}
+      POSTGRES_USER: ${{ vars.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ vars.POSTGRES_PASSWORD }}
+      POSTGRES_DB: ${{ vars.POSTGRES_DB }}
+
+      # PGAdmin
+      PGADMIN_DEFAULT_EMAIL: ${{ vars.PGADMIN_DEFAULT_EMAIL }}
+      PGADMIN_DEFAULT_PASSWORD: ${{ vars.PGADMIN_DEFAULT_PASSWORD }}
+
+      # JWT
+      JWT_SECRET: ${{ vars.JWT_SECRET }}
+      JWT_ALGORITHM: ${{ vars.JWT_ALGORITHM }}
+      JWT_EXPIRATION_MINUTES: ${{ vars.JWT_EXPIRATION_MINUTES }}
+      JWT_REFRESH_EXPIRATION_MINUTES: ${{ vars.JWT_REFRESH_EXPIRATION_MINUTES }}

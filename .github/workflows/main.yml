@@ -9,45 +9,6 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    env:
-      # FastAPI Ports
-      EXTERNAL_FASTAPI_PORT: ${{ vars.EXTERNAL_FASTAPI_PORT }}
-      INTERNAL_FASTAPI_PORT: ${{ vars.INTERNAL_FASTAPI_PORT }}
-
-      # Base URLs
-      AUTH_BASE_URL: ${{ vars.AUTH_BASE_URL }}
-      PRODUCT_BASE_URL: ${{ vars.PRODUCT_BASE_URL }}
-      ORDER_BASE_URL: ${{ vars.ORDER_BASE_URL }}
-
-      # DB Stack
-      AUTH_DB_STACK: ${{ vars.AUTH_DB_STACK }}
-      PRODUCT_DB_STACK: ${{ vars.PRODUCT_DB_STACK }}
-      ORDER_DB_STACK: ${{ vars.ORDER_DB_STACK }}
-
-      # MongoDB
-      MONGO_HOST: ${{ vars.MONGO_HOST }}
-      MONGO_PORT: ${{ vars.MONGO_PORT }}
-      MONGO_INITDB_ROOT_USERNAME: ${{ vars.MONGO_INITDB_ROOT_USERNAME }}
-      MONGO_INITDB_ROOT_PASSWORD: ${{ vars.MONGO_INITDB_ROOT_PASSWORD }}
-      MONGO_INITDB_DATABASE: ${{ vars.MONGO_INITDB_DATABASE }}
-
-      # PostgreSQL
-      POSTGRES_HOST: ${{ vars.POSTGRES_HOST }}
-      POSTGRES_PORT: ${{ vars.POSTGRES_PORT }}
-      POSTGRES_USER: ${{ vars.POSTGRES_USER }}
-      POSTGRES_PASSWORD: ${{ vars.POSTGRES_PASSWORD }}
-      POSTGRES_DB: ${{ vars.POSTGRES_DB }}
-
-      # PGAdmin
-      PGADMIN_DEFAULT_EMAIL: ${{ vars.PGADMIN_DEFAULT_EMAIL }}
-      PGADMIN_DEFAULT_PASSWORD: ${{ vars.PGADMIN_DEFAULT_PASSWORD }}
-
-      # JWT
-      JWT_SECRET: ${{ vars.JWT_SECRET }}
-      JWT_ALGORITHM: ${{ vars.JWT_ALGORITHM }}
-      JWT_EXPIRATION_MINUTES: ${{ vars.JWT_EXPIRATION_MINUTES }}
-      JWT_REFRESH_EXPIRATION_MINUTES: ${{ vars.JWT_REFRESH_EXPIRATION_MINUTES }}
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -59,30 +20,30 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      # - name: Build and Push auth-service
-      #   run: |
-      #     docker build -t ${{ secrets.REGISTRY }}/auth:latest ./auth_service
-      #     docker push ${{ secrets.REGISTRY }}/auth:latest
+      - name: Build and Push auth-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/auth:latest ./auth_service
+          docker push ${{ secrets.REGISTRY }}/auth:latest
 
-      # - name: Build and Push product-service
-      #   run: |
-      #     docker build -t ${{ secrets.REGISTRY }}/product:latest ./product_service
-      #     docker push ${{ secrets.REGISTRY }}/product:latest
+      - name: Build and Push product-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/product:latest ./product_service
+          docker push ${{ secrets.REGISTRY }}/product:latest
 
-      # - name: Build and Push order-service
-      #   run: |
-      #     docker build -t ${{ secrets.REGISTRY }}/order:latest ./order_service
-      #     docker push ${{ secrets.REGISTRY }}/order:latest
+      - name: Build and Push order-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/order:latest ./order_service
+          docker push ${{ secrets.REGISTRY }}/order:latest
 
-      # - name: Build and Push admin-service
-      #   run: |
-      #     docker build -t ${{ secrets.REGISTRY }}/admin:latest ./admin_service
-      #     docker push ${{ secrets.REGISTRY }}/admin:latest
+      - name: Build and Push admin-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/admin:latest ./admin_service
+          docker push ${{ secrets.REGISTRY }}/admin:latest
 
-      # - name: Build and Push user-service
-      #   run: |
-      #     docker build -t ${{ secrets.REGISTRY }}/user:latest ./user_service
-      #     docker push ${{ secrets.REGISTRY }}/user:latest
+      - name: Build and Push user-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/user:latest ./user_service
+          docker push ${{ secrets.REGISTRY }}/user:latest
 
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
