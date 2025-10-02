@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: prometheus-db-pvc
+  name: prometheus-pvc
 spec:
   accessModes:
     - ReadWriteOnce
@@ -34,15 +34,15 @@ spec:
             - name: prometheus-config
               mountPath: /etc/prometheus/prometheus.yml
               subPath: prometheus.yml
-            - name: prometheus-data
+            - name: prometheus-storage
               mountPath: /prometheus
       volumes:
         - name: prometheus-config
           configMap:
             name: prometheus-config
-        - name: prometheus-data
+        - name: prometheus-storage
           persistentVolumeClaim:
-            claimName: prometheus-db-pvc
+            claimName: prometheus-pvc
 ---
 apiVersion: v1
 kind: Service
