@@ -13,10 +13,10 @@ spec:
         app: auth
     spec:
       imagePullSecrets:
-        - name: arvan-regcred
+        - name: registry-secret
       containers:
         - name: auth
-          image: registry-fc6690c55a-mini-ecommerce.apps.ir-central1.arvancaas.ir/auth:latest
+          image: ${{ secrets.REGISTRY }}/auth:latest
           ports:
             - containerPort: 8000
           envFrom:

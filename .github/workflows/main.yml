@@ -10,51 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      #  Init project
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Login to ArvanCloud Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ secrets.REGISTRY }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-
-      - name: Build and Push auth-service
-        run: |
-          docker build -t ${{ secrets.REGISTRY }}/auth:latest ./auth_service
-          docker push ${{ secrets.REGISTRY }}/auth:latest
-
-      - name: Build and Push product-service
-        run: |
-          docker build -t ${{ secrets.REGISTRY }}/product:latest ./product_service
-          docker push ${{ secrets.REGISTRY }}/product:latest
-
-      - name: Build and Push order-service
-        run: |
-          docker build -t ${{ secrets.REGISTRY }}/order:latest ./order_service
-          docker push ${{ secrets.REGISTRY }}/order:latest
-
-      - name: Build and Push admin-service
-        run: |
-          docker build -t ${{ secrets.REGISTRY }}/admin:latest ./admin_service
-          docker push ${{ secrets.REGISTRY }}/admin:latest
-
-      - name: Build and Push user-service
-        run: |
-          docker build -t ${{ secrets.REGISTRY }}/user:latest ./user_service
-          docker push ${{ secrets.REGISTRY }}/user:latest
-
-      - name: Setup kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: "latest"
-
-      - name: Configure Kubeconfig
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
-
+      # Create .env file
       - name: Create .env file
         run: |
           cat <<EOF > .env
@@ -92,6 +52,52 @@ jobs:
           JWT_REFRESH_EXPIRATION_MINUTES=${{ vars.JWT_REFRESH_EXPIRATION_MINUTES }}
           EOF
 
+      #  Init kubectl
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: "latest"
+
+      - name: Configure Kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
+
+      # Login to registry
+      - name: Login to docker registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ secrets.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      #  Build and push services
+      - name: Build and push auth-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/auth:latest ./auth_service
+          docker push ${{ secrets.REGISTRY }}/auth:latest
+
+      - name: Build and push product-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/product:latest ./product_service
+          docker push ${{ secrets.REGISTRY }}/product:latest
+
+      - name: Build and push order-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/order:latest ./order_service
+          docker push ${{ secrets.REGISTRY }}/order:latest
+
+      - name: Build and push admin-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/admin:latest ./admin_service
+          docker push ${{ secrets.REGISTRY }}/admin:latest
+
+      - name: Build and push user-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/user:latest ./user_service
+          docker push ${{ secrets.REGISTRY }}/user:latest
+
+      #  Create config-map's
       - name: Apply app-config ConfigMap from .env file
         run: |
           kubectl create configmap app-config --from-env-file=.env --dry-run=client -o yaml | kubectl apply -f -
@@ -100,18 +106,16 @@ jobs:
         run: |
           kubectl create configmap nginx-config --from-file=nginx.conf --dry-run=client -o yaml | kubectl apply -f -
 
+      # Create docker registry secret
       - name: Create Docker registry secret
         run: |
-          kubectl create secret docker-registry arvan-regcred \
+          kubectl create secret docker-registry registry-secret \
             --docker-server=${{ secrets.REGISTRY }} \
             --docker-username=${{ secrets.REGISTRY_USERNAME }} \
             --docker-password=${{ secrets.REGISTRY_PASSWORD }} \
             --dry-run=client -o yaml | kubectl apply -f -
 
+      # Deploy
       - name: Deploy to Kubernetes
         run: |
           kubectl apply -f k8s/
-
-      - name: Restart nginx to pick up new config
-        run: |
-          kubectl rollout restart deployment nginx

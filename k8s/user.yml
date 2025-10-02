@@ -13,7 +13,7 @@ spec:
         app: user
     spec:
       imagePullSecrets:
-        - name: arvan-regcred
+        - name: registry-secret
       containers:
         - name: user
           image: registry-fc6690c55a-mini-ecommerce.apps.ir-central1.arvancaas.ir/user:latest
