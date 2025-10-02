@@ -29,5 +29,4 @@ async def get_user_token(
         output = await login_user_usecase.execute(LoginUserInput(username=form_data.username, password=form_data.password))
         return output.model_dump(mode="json")
     except AppBaseException as ex:
-        raise
         raise HTTPException(status_code=ex.status_code, detail=str(ex))
