@@ -51,7 +51,7 @@ async def access_token_depend(
     user_repo: IUserRepo = Depends(get_user_repo),
 ) -> UserModel:
     
-    return auth_depend(
+    return await auth_depend(
         "access",
         token,
         jwt_handler,
@@ -64,7 +64,7 @@ async def refresh_token_depend(
     user_repo: IUserRepo = Depends(get_user_repo),
 ) -> UserModel:
     
-    return auth_depend(
+    return await auth_depend(
         "refresh",
         token,
         jwt_handler,
