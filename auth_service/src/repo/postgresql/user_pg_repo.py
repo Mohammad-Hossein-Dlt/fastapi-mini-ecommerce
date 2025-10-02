@@ -22,11 +22,14 @@ class UserPgRepo(IUserRepo):
             await self.get_user_by_username(user.username)
             raise InvalidRequestException(400, f"User '{user.username}' already exist")
         except EntityNotFoundError:
-            user = UserDBModel(**user.model_dump())
-            self.db.add(user)
-            self.db.commit()
-            return UserModel.model_validate(user, from_attributes=True)
-        
+            try:
+                user = UserDBModel(**user.model_dump())
+                self.db.add(user)
+                self.db.commit()
+                return UserModel.model_validate(user, from_attributes=True)
+            except:
+                self.db.rollback()
+                raise
     
     async def get_user_by_id(
         self,
@@ -42,6 +45,7 @@ class UserPgRepo(IUserRepo):
 
             return UserModel.model_validate(user, from_attributes=True)
         except:
+            self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="User not found")
     
     async def get_user_by_username(
@@ -58,6 +62,7 @@ class UserPgRepo(IUserRepo):
             
             return UserModel.model_validate(user, from_attributes=True)
         except:
+            self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="User not found")
     
     async def delete_user_by_id(
@@ -78,6 +83,9 @@ class UserPgRepo(IUserRepo):
             return False
         except EntityNotFoundError:
             raise
+        except:
+            self.db.rollback()
+            raise EntityNotFoundError(status_code=404, message="User not found")
     
     async def delete_user_by_username(
         self,
@@ -97,3 +105,7 @@ class UserPgRepo(IUserRepo):
             return False
         except EntityNotFoundError:
             raise
+        except:
+            self.db.rollback()
+            raise EntityNotFoundError(status_code=404, message="User not found")
+            

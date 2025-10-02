@@ -18,12 +18,15 @@ class CategoryPgRepo(ICategoryRepo):
         self,
         category: CategoryModel,
     ) -> CategoryModel:
-        
-        new_category = CategoryDBModel(**category.model_dump(exclude_none=True))
-        self.db.add(new_category)
-        self.db.commit()
+        try:
+            new_category = CategoryDBModel(**category.model_dump(exclude_none=True))
+            self.db.add(new_category)
+            self.db.commit()
 
-        return CategoryModel.model_validate(new_category, from_attributes=True)
+            return CategoryModel.model_validate(new_category, from_attributes=True)
+        except:
+            self.db.rollback()
+            raise
 
     async def get_categories_with_filter(
         self,
@@ -102,16 +105,20 @@ class CategoryPgRepo(ICategoryRepo):
         self,
         parent_id: int,
     ) -> list[CategoryModel]:
-
-        categories_list = self.db.query(
-            CategoryDBModel
-        ).where(
-            CategoryDBModel.parent_id == parent_id,
-        ).order_by(
-            CategoryDBModel.id.asc(),
-        ).all()
         
-        return [ CategoryModel.model_validate(category, from_attributes=True) for category in categories_list ]
+        try:
+            categories_list = self.db.query(
+                CategoryDBModel
+            ).where(
+                CategoryDBModel.parent_id == parent_id,
+            ).order_by(
+                CategoryDBModel.id.asc(),
+            ).all()
+            
+            return [ CategoryModel.model_validate(category, from_attributes=True) for category in categories_list ]
+        except:
+            self.db.rollback()
+            raise EntityNotFoundError(status_code=404, message="There are no categories")
     
     async def get_category_by_id(
         self,
@@ -178,9 +185,11 @@ class CategoryPgRepo(ICategoryRepo):
                 return True 
             else:
                 return False
+        except EntityNotFoundError:
+            raise
         except:
             self.db.rollback()
-            raise EntityNotFoundError(status_code=404, message="Category not found")
+            raise EntityNotFoundError(status_code=404, message="There are no categories")
         
     async def delete_category(
         self,

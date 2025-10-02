@@ -83,6 +83,7 @@ class OrderPgRepo(IOrderRepo):
             
             return OrderModel.model_validate(order, from_attributes=True)
         except:
+            self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Order not found")
     
     async def update_order(
