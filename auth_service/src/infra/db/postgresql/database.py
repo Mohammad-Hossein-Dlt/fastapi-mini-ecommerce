@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, Engine
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import sessionmaker
 import psycopg2
 from psycopg2 import sql
 from .models._base import Base
@@ -51,7 +51,7 @@ def init_sql_client(
     username: str,
     password: str,
     db_name: str,
-) -> tuple[Session, Engine]:
+) -> tuple[sessionmaker, Engine]:
     
     check = check_and_create_database(
         host=host,
@@ -68,9 +68,9 @@ def init_sql_client(
 
     engine = create_engine(BASE_URL)
     
-    SessionLocal = sessionmaker(bind=engine)
+    session_maker = sessionmaker(bind=engine)
     
-    return SessionLocal(), engine
+    return session_maker, engine
 
 def create_tables(
     engine: Engine,

@@ -4,13 +4,11 @@ from src.infra.db.mongodb.client import init_mongodb
 from src.infra.settings.settings import settings
 from src.infra.db.postgresql.database import init_sql_client, create_tables
 from .app_state import AppStates, set_app_state
-from sqlalchemy.orm import Session
 from motor.motor_asyncio import AsyncIOMotorClient
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     
-    sql_client: Session = Session()
     mongo_client: AsyncIOMotorClient = AsyncIOMotorClient()
     
     if settings.ORDER_DB_STACK == "postgresql":
@@ -44,6 +42,5 @@ async def lifespan(app: FastAPI):
             
     yield
     
-    sql_client.close()
     mongo_client.close()
     

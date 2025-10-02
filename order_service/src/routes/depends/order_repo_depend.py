@@ -22,7 +22,7 @@ def get_admin_order_repo(
     if isinstance(db_client, Session):
         return AdminPgRepo(db_client)
 
-def get_order_repo(
+def get_user_order_repo(
     db_client: AsyncIOMotorClient | Session = Depends(get_db_depend)    
 ) -> IOrderRepo:
     

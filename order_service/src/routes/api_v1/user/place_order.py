@@ -4,7 +4,7 @@ from src.routes.http_response.responses import ResponseMessage
 from src.models.schemas.order.place_order_input import PlaceOrderInput
 from src.usecases.user.order.place_order import PlaceOrder
 from src.repo.interface.user.Iorder_repo import IOrderRepo
-from src.routes.depends.order_repo_depend import get_order_repo
+from src.routes.depends.order_repo_depend import get_user_order_repo
 from src.infra.external_api.interface.Iproduct_service import IProductService
 from src.routes.depends.external_api_services_depend import get_product_service
 from src.routes.depends.auth_depend import user_auth_depend
@@ -20,7 +20,7 @@ from src.infra.exceptions.exceptions import AppBaseException
 )
 async def place_order(
     order: PlaceOrderInput = Query(...),
-    order_repo: IOrderRepo = Depends(get_order_repo),
+    order_repo: IOrderRepo = Depends(get_user_order_repo),
     product_service: IProductService = Depends(get_product_service),
     user: UserModel = Depends(user_auth_depend),
 ):
