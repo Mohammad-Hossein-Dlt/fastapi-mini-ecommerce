@@ -34,6 +34,12 @@ async def user_auth_depend(
         jwt_handler.is_token_valid(credentials.access_token)
         print("Current access token is valid")
     except AppBaseException:
+        
+            try:
+                jwt_handler.is_token_valid(credentials.refresh_token)
+            except AppBaseException as refresh_valid_ex:
+                raise HTTPException(status_code=refresh_valid_ex.status_code, detail=f"{refresh_valid_ex.message}. Please login again.")
+            
             try:
                 refresh_token_usecase = RefreshToken(auth_service, auth_repo)
                 credentials = await refresh_token_usecase.execute(credentials)
