@@ -16,7 +16,7 @@ spec:
         - name: registry-secret
       containers:
         - name: admin
-          image: registry-fc6690c55a-mini-ecommerce.apps.ir-central1.arvancaas.ir/admin:latest
+          image: admin:latest
           ports:
             - containerPort: 8000
           envFrom:
