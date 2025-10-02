@@ -16,7 +16,6 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         try:
             response = await call_next(request)
         except Exception as e:
-            print(str(e))
             logger.exception(f"Error while handling request: {e}")
             raise
 
