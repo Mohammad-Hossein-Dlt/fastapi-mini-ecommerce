@@ -23,5 +23,4 @@ async def create_user(
         output = await create_user_usecase.execute(user_data)
         return output.model_dump(mode="json")
     except AppBaseException as ex:
-        raise
         raise HTTPException(status_code=ex.status_code, detail=str(ex))

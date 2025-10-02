@@ -13,7 +13,7 @@ class UserMongodbRepo(IUserRepo):
         
         try:
             await self.get_user_by_username(user.username)
-            raise InvalidRequestException(400, f"User '{user.username}' already exist")
+            raise InvalidRequestException(409, f"User '{user.username}' already exist")
         except EntityNotFoundError:
             new_user = await UserCollection.insert(
                 UserCollection(**user.model_dump(exclude={"id", "_id"})),
