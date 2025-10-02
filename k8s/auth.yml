@@ -16,7 +16,7 @@ spec:
         - name: registry-secret
       containers:
         - name: auth
-          image: auth:latest
+          image: registry-fc6690c55a-mini-ecommerce.apps.ir-central1.arvancaas.ir/auth:latest
           ports:
             - containerPort: 8000
           envFrom:
