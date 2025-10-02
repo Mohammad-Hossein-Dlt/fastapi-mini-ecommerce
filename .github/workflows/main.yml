@@ -124,7 +124,12 @@ jobs:
       #     docker build -t ${{ secrets.REGISTRY }}/user:latest ./user_service
       #     docker push ${{ secrets.REGISTRY }}/user:latest
 
+      # Deploy project-services
+      # - name: Deploy project-services to Kubernetes
+      #   run: |
+      #     kubectl apply -f k8s/project-services/
+
       # Deploy services
-      - name: Deploy services to Kubernetes
+      - name: Deploy other services to Kubernetes
         run: |
-          kubectl apply -f k8s/services/prometheus.yml
+          kubectl apply -f k8s/other-services/
