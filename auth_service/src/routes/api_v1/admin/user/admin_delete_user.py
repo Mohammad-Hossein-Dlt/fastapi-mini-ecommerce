@@ -1,10 +1,10 @@
 from ._router import router 
 from fastapi import Depends, Query, HTTPException
 from src.routes.http_response.responses import ResponseMessage
-from src.domain.schemas.user.user_model import UserModel
 from src.repo.interface.Iuser_repo import IUserRepo
-from src.routes.depends.auth_depend import admin_auth_depend
 from src.routes.depends.user_repo_depend import get_user_repo
+from src.domain.schemas.user.user_model import UserModel
+from src.routes.depends.auth_depend import admin_auth_depend
 from src.usecases.admin.admin_delete_user import AdminDeleteUser
 from src.infra.exceptions.exceptions import AppBaseException
 

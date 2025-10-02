@@ -4,7 +4,7 @@ from src.routes.http_response.responses import ResponseMessage
 from src.infra.auth.jwt_handler import JWTHandler
 from src.routes.depends.auth_depend import jwt_handler_depend
 from src.domain.schemas.user.user_model import UserModel
-from src.routes.depends.auth_depend import auth_depend
+from src.routes.depends.auth_depend import refresh_token_depend
 from src.usecases.auth.refresh_token import RefreshToken
 from src.infra.exceptions.exceptions import AppBaseException
 
@@ -18,7 +18,7 @@ from src.infra.exceptions.exceptions import AppBaseException
 )
 async def get_user(
     jwt_handler: JWTHandler = Depends(jwt_handler_depend),
-    user: UserModel = Depends(auth_depend),
+    user: UserModel = Depends(refresh_token_depend),
 ):
     try:
         refresh_token_usecase = RefreshToken(jwt_handler)
