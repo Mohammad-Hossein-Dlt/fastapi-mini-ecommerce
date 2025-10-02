@@ -52,6 +52,14 @@ jobs:
           JWT_REFRESH_EXPIRATION_MINUTES=${{ vars.JWT_REFRESH_EXPIRATION_MINUTES }}
           EOF
 
+      # Login to registry
+      - name: Login to docker registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ secrets.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
       #  Init kubectl
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
@@ -63,13 +71,28 @@ jobs:
           mkdir -p $HOME/.kube
           echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
 
-      # Login to registry
-      - name: Login to docker registry
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ secrets.REGISTRY }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+      #  Create config-map's
+      - name: Apply app-config ConfigMap from .env file
+        run: |
+          kubectl create configmap app-config --from-env-file=.env --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Apply nginx ConfigMap from nginx.conf file
+        run: |
+          kubectl create configmap nginx-config --from-file=nginx.conf --dry-run=client -o yaml | kubectl apply -f -
+
+      # Create docker registry secret
+      - name: Create Docker registry secret
+        run: |
+          kubectl create secret docker-registry registry-secret \
+            --docker-server=${{ secrets.REGISTRY }} \
+            --docker-username=${{ secrets.REGISTRY_USERNAME }} \
+            --docker-password=${{ secrets.REGISTRY_PASSWORD }} \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      # Deploy databases
+      - name: Deploy databases to Kubernetes
+        run: |
+          kubectl apply -f k8s/databases/
 
       #  Build and push services
       - name: Build and push auth-service
@@ -97,25 +120,7 @@ jobs:
           docker build -t ${{ secrets.REGISTRY }}/user:latest ./user_service
           docker push ${{ secrets.REGISTRY }}/user:latest
 
-      #  Create config-map's
-      - name: Apply app-config ConfigMap from .env file
+      # Deploy services
+      - name: Deploy services to Kubernetes
         run: |
-          kubectl create configmap app-config --from-env-file=.env --dry-run=client -o yaml | kubectl apply -f -
-
-      - name: Apply nginx ConfigMap from nginx.conf file
-        run: |
-          kubectl create configmap nginx-config --from-file=nginx.conf --dry-run=client -o yaml | kubectl apply -f -
-
-      # Create docker registry secret
-      - name: Create Docker registry secret
-        run: |
-          kubectl create secret docker-registry registry-secret \
-            --docker-server=${{ secrets.REGISTRY }} \
-            --docker-username=${{ secrets.REGISTRY_USERNAME }} \
-            --docker-password=${{ secrets.REGISTRY_PASSWORD }} \
-            --dry-run=client -o yaml | kubectl apply -f -
-
-      # Deploy
-      - name: Deploy to Kubernetes
-        run: |
-          kubectl apply -f k8s/
+          kubectl apply -f k8s/services/

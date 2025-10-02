@@ -20,4 +20,4 @@ class OperationOutput(BaseModel):
         except:
             pass
         
-        return str(var)
+        return str(var) if var else None

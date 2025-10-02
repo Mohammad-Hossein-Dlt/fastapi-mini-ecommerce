@@ -5,24 +5,24 @@ scrape_configs:
   - job_name: "auth-service"
     metrics_path: /auth/api/v1/metrics
     static_configs:
-      - targets: ["nginx"]
+      - targets: ["nginx-service"]
 
   - job_name: "product-service"
     metrics_path: /product/api/v1/metrics
     static_configs:
-      - targets: ["nginx"]
+      - targets: ["nginx-service"]
 
   - job_name: "order-service"
     metrics_path: /order/api/v1/metrics
     static_configs:
-      - targets: ["nginx"]
+      - targets: ["nginx-service"]
 
   - job_name: "admin-service"
     metrics_path: /admin/api/v1/metrics
     static_configs:
-      - targets: ["nginx"]
+      - targets: ["nginx-service"]
 
   - job_name: "user-service"
     metrics_path: /user/api/v1/metrics
     static_configs:
-      - targets: ["nginx"]
+      - targets: ["nginx-service"]
