@@ -77,25 +77,25 @@ jobs:
           docker build -t ${{ secrets.REGISTRY }}/auth:latest ./auth_service
           docker push ${{ secrets.REGISTRY }}/auth:latest
 
-      # - name: Build and push product-service
-      #   run: |
-      #     docker build -t ${{ secrets.REGISTRY }}/product:latest ./product_service
-      #     docker push ${{ secrets.REGISTRY }}/product:latest
+      - name: Build and push product-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/product:latest ./product_service
+          docker push ${{ secrets.REGISTRY }}/product:latest
 
-      # - name: Build and push order-service
-      #   run: |
-      #     docker build -t ${{ secrets.REGISTRY }}/order:latest ./order_service
-      #     docker push ${{ secrets.REGISTRY }}/order:latest
+      - name: Build and push order-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/order:latest ./order_service
+          docker push ${{ secrets.REGISTRY }}/order:latest
 
-      # - name: Build and push admin-service
-      #   run: |
-      #     docker build -t ${{ secrets.REGISTRY }}/admin:latest ./admin_service
-      #     docker push ${{ secrets.REGISTRY }}/admin:latest
+      - name: Build and push admin-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/admin:latest ./admin_service
+          docker push ${{ secrets.REGISTRY }}/admin:latest
 
-      # - name: Build and push user-service
-      #   run: |
-      #     docker build -t ${{ secrets.REGISTRY }}/user:latest ./user_service
-      #     docker push ${{ secrets.REGISTRY }}/user:latest
+      - name: Build and push user-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/user:latest ./user_service
+          docker push ${{ secrets.REGISTRY }}/user:latest
 
       #  Create config-map's
       - name: Apply app-config ConfigMap from .env file

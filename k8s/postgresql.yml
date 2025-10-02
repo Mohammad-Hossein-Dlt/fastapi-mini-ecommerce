@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: postgres-pvc
+  name: postgres-db-pvc
 spec:
   accessModes:
     - ReadWriteOnce
@@ -12,34 +12,34 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
+  name: postgres-db
   labels:
-    app: postgres
+    app: postgres-db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: postgres-db
   template:
     metadata:
       labels:
-        app: postgres
+        app: postgres-db
     spec:
       containers:
-        - name: postgres
-          image: postgres:latest
+        - name: postgres-db
+          image: postgres
           ports:
             - containerPort: 5432
           envFrom:
             - configMapRef:
                 name: app-config
           volumeMounts:
-            - name: postgres-storage
+            - name: postgres-db-storage
               mountPath: /bitnami/postgresql
       volumes:
-        - name: postgres-storage
+        - name: postgres-db-storage
           persistentVolumeClaim:
-            claimName: postgres-pvc
+            claimName: postgres-db-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -48,7 +48,7 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: postgres
+    app: postgres-db
   ports:
     - protocol: TCP
       port: 5432
