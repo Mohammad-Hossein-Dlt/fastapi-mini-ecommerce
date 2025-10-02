@@ -94,42 +94,42 @@ jobs:
             --dry-run=client -o yaml | kubectl apply -f -
 
       # Deploy databases
-      # - name: Deploy databases to Kubernetes
-      #   run: |
-      #     kubectl apply -f k8s/databases/
+      - name: Deploy databases to Kubernetes
+        run: |
+          kubectl apply -f k8s/databases/
 
       #  Build and push services
-      # - name: Build and push auth-service
-      #   run: |
-      #     docker build -t ${{ secrets.REGISTRY }}/auth:latest ./auth_service
-      #     docker push ${{ secrets.REGISTRY }}/auth:latest
+      - name: Build and push auth-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/auth:latest ./auth_service
+          docker push ${{ secrets.REGISTRY }}/auth:latest
 
-      # - name: Build and push product-service
-      #   run: |
-      #     docker build -t ${{ secrets.REGISTRY }}/product:latest ./product_service
-      #     docker push ${{ secrets.REGISTRY }}/product:latest
+      - name: Build and push product-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/product:latest ./product_service
+          docker push ${{ secrets.REGISTRY }}/product:latest
 
-      # - name: Build and push order-service
-      #   run: |
-      #     docker build -t ${{ secrets.REGISTRY }}/order:latest ./order_service
-      #     docker push ${{ secrets.REGISTRY }}/order:latest
+      - name: Build and push order-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/order:latest ./order_service
+          docker push ${{ secrets.REGISTRY }}/order:latest
 
-      # - name: Build and push admin-service
-      #   run: |
-      #     docker build -t ${{ secrets.REGISTRY }}/admin:latest ./admin_service
-      #     docker push ${{ secrets.REGISTRY }}/admin:latest
+      - name: Build and push admin-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/admin:latest ./admin_service
+          docker push ${{ secrets.REGISTRY }}/admin:latest
 
-      # - name: Build and push user-service
-      #   run: |
-      #     docker build -t ${{ secrets.REGISTRY }}/user:latest ./user_service
-      #     docker push ${{ secrets.REGISTRY }}/user:latest
+      - name: Build and push user-service
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/user:latest ./user_service
+          docker push ${{ secrets.REGISTRY }}/user:latest
 
       # Deploy project-services
-      # - name: Deploy project-services to Kubernetes
-      #   run: |
-      #     kubectl apply -f k8s/project-services/
+      - name: Deploy project-services to Kubernetes
+        run: |
+          kubectl apply -f k8s/project-services/
 
       # Deploy services
-      - name: Deploy other services to Kubernetes
+      - name: Deploy other-services to Kubernetes
         run: |
           kubectl apply -f k8s/other-services/
