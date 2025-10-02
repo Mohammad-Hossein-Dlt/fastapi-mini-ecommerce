@@ -25,7 +25,7 @@ class AdminPgRepo(IAdminOrderRepo):
                         
             return [ OrderModel.model_validate(t, from_attributes=True) for t in orders ]
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="There are no orders")
     
     async def get_order_by_id(
@@ -43,7 +43,7 @@ class AdminPgRepo(IAdminOrderRepo):
             
             return OrderModel.model_validate(order, from_attributes=True)
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Order not found")
     
     async def modify_order(
@@ -79,7 +79,7 @@ class AdminPgRepo(IAdminOrderRepo):
         except EntityNotFoundError:
             raise
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Order not found")
     
     async def delete_all_orders(
@@ -103,7 +103,7 @@ class AdminPgRepo(IAdminOrderRepo):
         except EntityNotFoundError:
             raise
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="There are no orders")
     
     async def delete_order(
@@ -125,5 +125,5 @@ class AdminPgRepo(IAdminOrderRepo):
         except EntityNotFoundError:
             raise
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Order not found")

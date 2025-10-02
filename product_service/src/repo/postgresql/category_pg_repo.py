@@ -25,7 +25,7 @@ class CategoryPgRepo(ICategoryRepo):
 
             return CategoryModel.model_validate(new_category, from_attributes=True)
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise
 
     async def get_categories_with_filter(
@@ -41,7 +41,8 @@ class CategoryPgRepo(ICategoryRepo):
         except EntityNotFoundError:
             raise EntityNotFoundError(status_code=404, message="There are no categories")
         except:
-            self.db.rollback()
+            # self.db.rollback()
+            raise
         
     async def get_child_to_parent(
         self,
@@ -117,7 +118,7 @@ class CategoryPgRepo(ICategoryRepo):
             
             return [ CategoryModel.model_validate(category, from_attributes=True) for category in categories_list ]
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="There are no categories")
     
     async def get_category_by_id(
@@ -134,7 +135,7 @@ class CategoryPgRepo(ICategoryRepo):
             
             return CategoryModel.model_validate(category, from_attributes=True)
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Category not found")
     
     async def update_category(
@@ -167,7 +168,7 @@ class CategoryPgRepo(ICategoryRepo):
         except EntityNotFoundError:
             raise
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Category not found")
     
     async def delete_all_categories(
@@ -188,7 +189,7 @@ class CategoryPgRepo(ICategoryRepo):
         except EntityNotFoundError:
             raise
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="There are no categories")
         
     async def delete_category(
@@ -210,5 +211,5 @@ class CategoryPgRepo(ICategoryRepo):
         except EntityNotFoundError:
             raise
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Category not found")

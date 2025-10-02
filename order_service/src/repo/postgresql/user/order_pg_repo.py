@@ -25,7 +25,7 @@ class OrderPgRepo(IOrderRepo):
             self.db.commit()
             return OrderModel.model_validate(new_order, from_attributes=True)
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise
     
     async def get_all_orders(
@@ -39,7 +39,7 @@ class OrderPgRepo(IOrderRepo):
         
             return [ OrderModel.model_validate(t, from_attributes=True) for t in orders ]
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="There are no orders")
     
     async def get_order_by_id(
@@ -61,7 +61,7 @@ class OrderPgRepo(IOrderRepo):
             
             return OrderModel.model_validate(order, from_attributes=True)
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Order not found")
         
     async def check_order(
@@ -83,7 +83,7 @@ class OrderPgRepo(IOrderRepo):
             
             return OrderModel.model_validate(order, from_attributes=True)
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Order not found")
     
     async def update_order(
@@ -119,7 +119,7 @@ class OrderPgRepo(IOrderRepo):
         except EntityNotFoundError:
             raise
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Order not found")
     
     async def delete_all_orders(
@@ -147,7 +147,7 @@ class OrderPgRepo(IOrderRepo):
         except EntityNotFoundError:
             raise
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="There are no orders")
     
     async def delete_order(
@@ -170,5 +170,5 @@ class OrderPgRepo(IOrderRepo):
         except EntityNotFoundError:
             raise
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Order not found")

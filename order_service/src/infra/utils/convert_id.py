@@ -12,5 +12,10 @@ def convert_object_id(
     except:
         pass
     
+    try:
+        return int(_id)
+    except:
+        pass
+        
     return _id
 

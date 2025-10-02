@@ -25,7 +25,7 @@ class ProductPgRepo(IProductRepo):
             self.db.commit()
             return ProductModel.model_validate(new_product, from_attributes=True)
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise
 
     async def get_all_products(
@@ -39,7 +39,7 @@ class ProductPgRepo(IProductRepo):
         
             return [ ProductModel.model_validate(t, from_attributes=True) for t in products ]
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="There are no products")
     
     async def get_product_by_id(
@@ -56,7 +56,7 @@ class ProductPgRepo(IProductRepo):
             
             return ProductModel.model_validate(product, from_attributes=True)
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Product not found")
     
     async def update_product(
@@ -89,7 +89,7 @@ class ProductPgRepo(IProductRepo):
         except EntityNotFoundError:
             raise
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Product not found")
     
     async def delete_all_products(
@@ -113,7 +113,7 @@ class ProductPgRepo(IProductRepo):
         except EntityNotFoundError:
             raise
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="There are no products")
     
     async def delete_product(
@@ -135,5 +135,5 @@ class ProductPgRepo(IProductRepo):
         except EntityNotFoundError:
             raise
         except:
-            self.db.rollback()
+            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Product not found")
