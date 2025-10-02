@@ -18,12 +18,12 @@ class RefreshToken:
     ) -> LoginUserOutput:
         
         access_payload = JWTPayload(
-            user_id = user.id,
+            user_id = str(user.id),
             type="access"
         )
         
         refresh_payload = JWTPayload(
-            user_id = user.id,
+            user_id = str(user.id),
             type="refresh"
         )
         

@@ -30,7 +30,6 @@ async def auth_depend(
     jwt_handler: JWTHandler = Depends(jwt_handler_depend),
     user_repo: IUserRepo = Depends(get_user_repo),
 ) -> UserModel:
-    
     try:
         payload = jwt_handler.decode_jwt_token(token)
     except AppBaseException as ex:
@@ -92,8 +91,8 @@ async def user_auth_depend(
     user_repo: IUserRepo = Depends(get_user_repo),
 ) -> UserModel:
     user: UserModel = await access_token_depend(
-        jwt_handler,
         token,
+        jwt_handler,
         user_repo,
     )
     return user

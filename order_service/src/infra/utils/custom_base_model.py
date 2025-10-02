@@ -10,14 +10,32 @@ class CustomBaseModel(BaseModel):
         "id": "_id"
     }
     
+    def __setattr__(self, name, value):
+        
+        if isinstance(value, str):
+            value = value.strip()
+        
+        return super().__setattr__(name, value)
+    
     @model_validator(mode="before")
-    def alias_validator(cls, values) -> dict:
+    def alias_validator_before(cls, values) -> dict:
                 
         if isinstance(values, dict):
             
             for k, v in cls.aliases.items():      
                 if v in values:
                     values[k] = values.pop(v)
+                    
+        return values
+    
+    @model_validator(mode="before")
+    def str_validator_before(cls, values) -> dict:
+                
+        if isinstance(values, dict):
+            
+            for k, v in values.items():
+                if isinstance(v, str):
+                    values[k] = v.strip()
                     
         return values
     

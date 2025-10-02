@@ -31,7 +31,7 @@ async def admin_auth_depend(
         raise HTTPException(status_code=credentials_ex.status_code, detail=credentials_ex.message)
     
     try:
-        jwt_handler.is_token_valid(bearer_token.credentials)
+        jwt_handler.is_token_valid(credentials.access_token)
         print("Current access token is valid")
     except AppBaseException:
             try:
