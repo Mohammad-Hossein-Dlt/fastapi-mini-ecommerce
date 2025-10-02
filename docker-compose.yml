@@ -138,7 +138,7 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
     ports:
-      - "9090:9090"
+      - 9090:9090
     depends_on:
       - auth-service
       - product-service
@@ -155,7 +155,7 @@ services:
     env_file:
       - .env
     ports:
-      - "3000:3000"
+      - 3000:3000
 
 volumes:
   pgdata:
