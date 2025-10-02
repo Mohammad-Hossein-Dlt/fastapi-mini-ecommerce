@@ -35,7 +35,7 @@ spec:
                 name: app-config
           volumeMounts:
             - name: postgres-db-storage
-              mountPath: /bitnami/postgresql
+              mountPath: /var/lib/postgresql/data
               subPath: pgdata
       volumes:
         - name: postgres-db-storage
