@@ -1,7 +1,7 @@
 from pydantic import BaseModel, ConfigDict
 
 class OperationOutput(BaseModel):
-    id: str | None = None
+    id: int | str | None = None
     request: str
     status: bool
     
