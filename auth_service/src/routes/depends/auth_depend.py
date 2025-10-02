@@ -25,7 +25,7 @@ def jwt_handler_depend() -> JWTHandler:
     return jwt_handler
 
 async def auth_depend(
-    token_type: Literal["access", "refresh"],
+    token_type: Literal["access", "refresh"] = "access",
     token: str = Depends(schema),
     jwt_handler: JWTHandler = Depends(jwt_handler_depend),
     user_repo: IUserRepo = Depends(get_user_repo),
@@ -72,8 +72,8 @@ async def refresh_token_depend(
     )
     
 async def admin_auth_depend(
-    jwt_handler: JWTHandler = Depends(jwt_handler_depend),
     token: str = Depends(schema),
+    jwt_handler: JWTHandler = Depends(jwt_handler_depend),
     user_repo: IUserRepo = Depends(get_user_repo),
 ) -> UserModel:
     user: UserModel = await access_token_depend(
@@ -87,8 +87,8 @@ async def admin_auth_depend(
         raise HTTPException(status_code=401, detail="Only admin have access")    
     
 async def user_auth_depend(
-    jwt_handler: JWTHandler = Depends(jwt_handler_depend),
     token: str = Depends(schema),
+    jwt_handler: JWTHandler = Depends(jwt_handler_depend),
     user_repo: IUserRepo = Depends(get_user_repo),
 ) -> UserModel:
     user: UserModel = await access_token_depend(
