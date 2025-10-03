@@ -8,21 +8,21 @@
 EXTERNAL_FASTAPI_PORT = 80
 INTERNAL_FASTAPI_PORT = 8000
 
-AUTH_BASE_URL = http://nginx/auth/api/v1
-PRODUCT_BASE_URL = http://nginx/product/api/v1
-ORDER_BASE_URL = http://nginx/order/api/v1
+AUTH_BASE_URL = http://nginx-service/auth/api/v1
+PRODUCT_BASE_URL = http://nginx-service/product/api/v1
+ORDER_BASE_URL = http://nginx-service/order/api/v1
 
-AUTH_DB_STACK = mongo_db # postgresql, mongo_db
+AUTH_DB_STACK = postgresql # postgresql, mongo_db
 PRODUCT_DB_STACK = postgresql # postgresql, mongo_db
 ORDER_DB_STACK = mongo_db # postgresql, mongo_db
 
-MONGO_HOST = mongo-db
+MONGO_HOST = mongodb-service
 MONGO_PORT = 27017
 MONGO_INITDB_ROOT_USERNAME = root
 MONGO_INITDB_ROOT_PASSWORD = rootpassword
 MONGO_INITDB_DATABASE = db
 
-POSTGRES_HOST = postgres-db
+POSTGRES_HOST = postgres-service
 POSTGRES_PORT = 5432
 POSTGRES_USER = admin
 POSTGRES_PASSWORD = adminpassword
@@ -35,6 +35,8 @@ JWT_SECRET = 5fd4a7c9-7b61-49bf-8aea-ae8c53727290
 JWT_ALGORITHM = HS256
 JWT_EXPIRATION_MINUTES = 2
 JWT_REFRESH_EXPIRATION_MINUTES = 4
+
+GF_SECURITY_ADMIN_PASSWORD=admin
 ```
 
 ## App architecture description
