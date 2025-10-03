@@ -18,6 +18,8 @@ jobs:
       - name: Create .env file
         run: |
           cat <<EOF > .env
+
+          # Ports
           EXTERNAL_FASTAPI_PORT=${{ vars.EXTERNAL_FASTAPI_PORT }}
           INTERNAL_FASTAPI_PORT=${{ vars.INTERNAL_FASTAPI_PORT }}
 
@@ -50,6 +52,9 @@ jobs:
           JWT_ALGORITHM=${{ vars.JWT_ALGORITHM }}
           JWT_EXPIRATION_MINUTES=${{ vars.JWT_EXPIRATION_MINUTES }}
           JWT_REFRESH_EXPIRATION_MINUTES=${{ vars.JWT_REFRESH_EXPIRATION_MINUTES }}
+
+          # Grafana
+          GF_SECURITY_ADMIN_PASSWORD=${{ vars.GF_SECURITY_ADMIN_PASSWORD }}
           EOF
 
       # Login to registry
