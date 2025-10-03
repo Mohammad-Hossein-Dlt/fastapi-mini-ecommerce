@@ -32,9 +32,9 @@ spec:
           image: grafana/grafana:latest
           ports:
             - containerPort: 3000
-          # envFrom:
-          #   - configMapRef:
-          #       name: app-config
+          envFrom:
+            - configMapRef:
+                name: app-config
           volumeMounts:
             - name: grafana-storage
               mountPath: /var/lib/grafana
@@ -42,6 +42,19 @@ spec:
         - name: grafana-storage
           persistentVolumeClaim:
             claimName: grafana-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-service
+spec:
+  type: ClusterIP
+  selector:
+    app: grafana
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
 ---
 apiVersion: v1
 kind: Service
