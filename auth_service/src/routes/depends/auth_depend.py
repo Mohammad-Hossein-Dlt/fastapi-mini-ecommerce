@@ -11,7 +11,7 @@ from src.domain.enums import Role
 from src.infra.exceptions.exceptions import AppBaseException
 from typing import Literal
 
-schema = OAuth2PasswordBearer(tokenUrl="/auth/api/v1/login")
+auth_schema = OAuth2PasswordBearer(tokenUrl="/auth/api/v1/login")
 
 def jwt_handler_depend() -> JWTHandler:
     
@@ -26,7 +26,7 @@ def jwt_handler_depend() -> JWTHandler:
 
 async def auth_depend(
     token_type: Literal["access", "refresh"] = "access",
-    token: str = Depends(schema),
+    token: str = Depends(auth_schema),
     jwt_handler: JWTHandler = Depends(jwt_handler_depend),
     user_repo: IUserRepo = Depends(get_user_repo),
 ) -> UserModel:
@@ -45,7 +45,7 @@ async def auth_depend(
         raise HTTPException(status_code=401, detail=f"You have not access with {token_type}-token")
     
 async def access_token_depend(
-    token: str = Depends(schema),
+    token: str = Depends(auth_schema),
     jwt_handler: JWTHandler = Depends(jwt_handler_depend),
     user_repo: IUserRepo = Depends(get_user_repo),
 ) -> UserModel:
@@ -58,7 +58,7 @@ async def access_token_depend(
     )
 
 async def refresh_token_depend(
-    token: str = Depends(schema),
+    token: str = Depends(auth_schema),
     jwt_handler: JWTHandler = Depends(jwt_handler_depend),
     user_repo: IUserRepo = Depends(get_user_repo),
 ) -> UserModel:
@@ -71,7 +71,7 @@ async def refresh_token_depend(
     )
     
 async def admin_auth_depend(
-    token: str = Depends(schema),
+    token: str = Depends(auth_schema),
     jwt_handler: JWTHandler = Depends(jwt_handler_depend),
     user_repo: IUserRepo = Depends(get_user_repo),
 ) -> UserModel:
@@ -86,7 +86,7 @@ async def admin_auth_depend(
         raise HTTPException(status_code=401, detail="Only admin have access")    
     
 async def user_auth_depend(
-    token: str = Depends(schema),
+    token: str = Depends(auth_schema),
     jwt_handler: JWTHandler = Depends(jwt_handler_depend),
     user_repo: IUserRepo = Depends(get_user_repo),
 ) -> UserModel:

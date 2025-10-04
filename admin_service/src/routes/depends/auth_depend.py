@@ -1,5 +1,5 @@
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi import Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer
 from src.infra.auth.jwt_handler import JWTHandler
 from src.infra.external_api.interface.Iauth_service import IAuthService
 from .external_api_services_depend import get_auth_service
@@ -10,21 +10,19 @@ from src.domain.schemas.auth.auth_credentials import AuthCredentials
 from src.usecases.auth.refresh_token import RefreshToken
 from src.usecases.admin.self.admin_get_self import AdminGetSelf
 from src.infra.exceptions.exceptions import AppBaseException
-from typing import Annotated
 
-bearer = HTTPBearer()
+auth_schema = OAuth2PasswordBearer(tokenUrl="/admin/api/v1/auth/login")
 
 def get_jwt_handler() -> JWTHandler:
     jwt_handler = JWTHandler()
     return jwt_handler
 
 async def admin_auth_depend(
-    bearer_token: Annotated[HTTPAuthorizationCredentials, Depends(bearer)],
+    bearer_token: str = Depends(auth_schema),
     jwt_handler: JWTHandler = Depends(get_jwt_handler),
     auth_service: IAuthService = Depends(get_auth_service),
     auth_repo: IAuthRepo = Depends(get_auth_repo),
 ) -> UserModel:
-    
     try:
         credentials: AuthCredentials = auth_repo.get_user_auth_credentials()
     except AppBaseException as credentials_ex:

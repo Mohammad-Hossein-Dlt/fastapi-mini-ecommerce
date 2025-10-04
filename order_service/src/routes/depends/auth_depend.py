@@ -9,14 +9,14 @@ from src.usecases.user.self.user_get_self import UserGetSelf
 from src.infra.exceptions.exceptions import AppBaseException, InvalidTokenException
 from typing import Annotated
 
-bearer = HTTPBearer()
+token_schema = HTTPBearer()
 
 def get_jwt_handler() -> JWTHandler:
     jwt_handler = JWTHandler()
     return jwt_handler
 
 async def verify_token_depend(
-    bearer_token: Annotated[HTTPAuthorizationCredentials, Depends(bearer)],
+    bearer_token: Annotated[HTTPAuthorizationCredentials, Depends(token_schema)],
     jwt_handler: JWTHandler = Depends(get_jwt_handler),
 ) -> UserModel:
     
@@ -26,7 +26,7 @@ async def verify_token_depend(
         raise HTTPException(status_code=access_ex.status_code, detail=access_ex.message)  
 
 async def admin_auth_depend(
-    bearer_token: Annotated[HTTPAuthorizationCredentials, Depends(bearer)],
+    bearer_token: Annotated[HTTPAuthorizationCredentials, Depends(token_schema)],
     jwt_handler: JWTHandler = Depends(get_jwt_handler),
     auth_service: IAuthService = Depends(get_auth_service),
 ) -> UserModel:
@@ -46,7 +46,7 @@ async def admin_auth_depend(
     
     
 async def user_auth_depend(
-    bearer_token: Annotated[HTTPAuthorizationCredentials, Depends(bearer)],
+    bearer_token: Annotated[HTTPAuthorizationCredentials, Depends(token_schema)],
     jwt_handler: JWTHandler = Depends(get_jwt_handler),
     auth_service: IAuthService = Depends(get_auth_service),
 ) -> UserModel:
