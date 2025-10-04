@@ -24,7 +24,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         log_messsage = f"{request.method} {request.url} - {response.status_code} ({duration:.2f} ms)"
         
         if 200 <= status_code < 300:
-            logger.success(log_messsage,)
+            logger.success(log_messsage)
         elif 300 <= status_code < 400:
             logger.warning(log_messsage)
         elif 400 <= status_code < 500:
