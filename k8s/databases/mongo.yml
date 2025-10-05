@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: mongodb
-          image: mongo:alpine
+          image: mongo
           ports:
             - containerPort: 27017
           envFrom:
