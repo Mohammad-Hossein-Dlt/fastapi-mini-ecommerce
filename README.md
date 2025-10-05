@@ -1,6 +1,6 @@
 [How dose it deploy? via docker-compose](#how-dose-it-deploy-via-docker-compose)
 
-[How dose it deploy? via CICD and kubernetes](#how-dose-it-deploy-via-cicd-and-kubernetes)
+[How dose it deploy? via CI/CD and kubernetes](#how-dose-it-deploy-via-cicd-and-kubernetes)
 
 `.env` file parameters, put it next to the services
 
@@ -257,7 +257,7 @@ All services are set with `restart: always`. This ensures that whenever a contai
 - The container ports for this service are defined in the `.env` file, and the `ports` section of the Docker Compose file references these environment variables.
 - Since we can change the default port of the FastAPI app via the `.env` file, the command to run the app is placed at the end of the service definition in the Docker Compose file. This way, the application always uses the internal port defined in `.env`.
 
-## **How dose it deploy?** via CICD and kubernetes
+## **How dose it deploy?** via CI/CD and kubernetes
 
 All **Kubernetes manifests** for our services, with databases services, nginx, prometheus, grafana and others, are organized and stored within the `k8s` directory in a structured manner.
 
