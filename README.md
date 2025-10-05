@@ -259,11 +259,11 @@ All services are set with `restart: always`. This ensures that whenever a contai
 
 ## **How dose it deploy?** with CICD and kubernetes
 
-### **Deployment via CI/CD on Cloud Provider**
+#### **Deployment via CI/CD on Cloud Provider**
 
-All **Kubernetes manifests** for our services — as well as supporting services such as databases, Nginx, and others — are organized and stored within the `k8s` directory in a structured manner.
+All **Kubernetes manifests** for our services, with databases services, nginx, prometheus, grafana and others, are organized and stored within the `k8s` directory in a structured manner.
 
-### **Workflow Configuration**
+#### **Workflow Configuration**
 
 1. **Environment Setup**
 
@@ -279,12 +279,13 @@ All **Kubernetes manifests** for our services — as well as supporting services
 
 4. **ConfigMap Creation, Generate all necessary ConfigMaps:**
 
-   - **app-config** – Contains environment variables derived from the `.env` file.
-   - **nginx-config** – Built from the `nginx.conf` file for Nginx configuration.
-   - **prometheus-config** – Created from the `prometheus.yml` file for Prometheus configuration.
+   - `app-config` – Contains environment variables derived from the `.env` file.
+   - `nginx-config` – Built from the `nginx.conf` file for Nginx configuration.
+   - `prometheus-config` – Created from the `prometheus.yml` file for Prometheus configuration.
 
 5. **Secrets Creation**
-   Create Docker registry secrets for use in the `imagePullSecrets` section of the Kubernetes manifests for our project services.
+
+   - Create Docker registry secrets for use in the `imagePullSecrets` section of the Kubernetes manifests for our project services.
 
 6. **Database Deployment**
 
@@ -299,4 +300,5 @@ All **Kubernetes manifests** for our services — as well as supporting services
    - Deploy all project services using their corresponding Kubernetes manifests.
 
 9. **Supporting Services Deployment**
+
    - Finally, deploy the manifests for auxiliary services such as **Nginx**, **Prometheus**, and **Grafana**.
