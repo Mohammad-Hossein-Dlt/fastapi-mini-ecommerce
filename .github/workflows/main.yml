@@ -99,7 +99,7 @@ jobs:
             --dry-run=client -o yaml | kubectl apply -f -
 
       # Deploy databases
-      - name: Deploy databases to kubernetes
+      - name: Deploy databases services
         run: |
           kubectl apply -f k8s/databases/
 
@@ -130,11 +130,11 @@ jobs:
           docker push ${{ secrets.REGISTRY }}/user:latest
 
       # Deploy project-services
-      - name: Deploy project-services to kubernetes
+      - name: Deploy project-services
         run: |
           kubectl apply -f k8s/project-services/
 
       # Deploy services
-      - name: Deploy other-services to kubernetes
+      - name: Deploy other-services
         run: |
           kubectl apply -f k8s/other-services/
