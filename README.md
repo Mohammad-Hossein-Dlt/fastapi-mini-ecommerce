@@ -1,6 +1,6 @@
-[How dose it deploy? with docker-compose](#how-dose-it-deploy-with-docker-compose)
+[How dose it deploy? via docker-compose](#how-dose-it-deploy-via-docker-compose)
 
-[How dose it deploy? with CICD and kubernetes](#how-dose-it-deploy-with-cicd-and-kubernetes)
+[How dose it deploy? via CICD and kubernetes](#how-dose-it-deploy-via-cicd-and-kubernetes)
 
 `.env` file parameters, put it next to the services
 
@@ -225,7 +225,7 @@ usecase/
 
 The layers are not limited to the mentioned items and can also include other related configurations.
 
-## **How dose it deploy?** with docker-compose
+## **How dose it deploy?** via docker-compose
 
 **Configuring Docker Compose**
 
@@ -257,48 +257,46 @@ All services are set with `restart: always`. This ensures that whenever a contai
 - The container ports for this service are defined in the `.env` file, and the `ports` section of the Docker Compose file references these environment variables.
 - Since we can change the default port of the FastAPI app via the `.env` file, the command to run the app is placed at the end of the service definition in the Docker Compose file. This way, the application always uses the internal port defined in `.env`.
 
-## **How dose it deploy?** with CICD and kubernetes
-
-#### **Deployment via CI/CD on Cloud Provider**
+## **How dose it deploy?** via CICD and kubernetes
 
 All **Kubernetes manifests** for our services, with databases services, nginx, prometheus, grafana and others, are organized and stored within the `k8s` directory in a structured manner.
 
-#### **Workflow Configuration**
+#### **Workflow configuration**
 
-1. **Environment Setup**
+1. **Environment setup:**
 
    - All environment variables defined in the project repository’s _Variables_ section are stored in a `.env` file.
 
-2. **Docker Registry Login**
+2. **Docker registry login:**
 
    - Authenticate with the Docker registry.
 
-3. **Kubectl Setup**
+3. **Kubectl setup:**
 
-   - Configure and initialize `kubectl` with Kubeconfig, set in the secrets and access with secrets.KUBE_CONFIG.
+   - Configure and initialize `kubectl` with Kubeconfig, set in the secrets and access with `secrets.KUBE_CONFIG`.
 
-4. **ConfigMap Creation, Generate all necessary ConfigMaps:**
+4. **ConfigMap creation, generate all necessary ConfigMaps:**
 
-   - `app-config` – Contains environment variables derived from the `.env` file.
+   - `app-config` – Contains environment variables from the `.env` file.
    - `nginx-config` – Built from the `nginx.conf` file for Nginx configuration.
-   - `prometheus-config` – Created from the `prometheus.yml` file for Prometheus configuration.
+   - `prometheus-config` – Built from the `prometheus.yml` file for Prometheus configuration.
 
-5. **Secrets Creation**
+5. **Secrets creation:**
 
-   - Create Docker registry secrets for use in the `imagePullSecrets` section of the Kubernetes manifests for our project services.
+   - Create docker registry secrets for use in the `imagePullSecrets` section of the kubernetes manifests for our project services.
 
-6. **Database Deployment**
+6. **Database services deployment:**
 
-   - Deploy database manifests first to ensure database services are available.
+   - Deploy database manifests first, to ensure database services are available.
 
-7. **Build and Push Images**
+7. **Build and push project services images:**
 
-   - Build Docker images for all project services and push them to the registry.
+   - Build docker images for all project services and push them to the registry.
 
-8. **Application Deployment**
+8. **Project services deployment:**
 
-   - Deploy all project services using their corresponding Kubernetes manifests.
+   - Deploy all project services using their kubernetes manifests.
 
-9. **Supporting Services Deployment**
+9. **Other services deployment:**
 
-   - Finally, deploy the manifests for auxiliary services such as **Nginx**, **Prometheus**, and **Grafana**.
+   - Finally, deploy the manifests for other services such as **Nginx**, **Prometheus**, and **Grafana**.
