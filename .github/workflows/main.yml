@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      #  Init project
+      # Init project
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -65,7 +65,7 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      #  Init kubectl
+      # Init kubectl
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
         with:
@@ -76,7 +76,7 @@ jobs:
           mkdir -p $HOME/.kube
           echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
 
-      #  Create config-map's
+      # Create config-map's
       - name: Apply app-config ConfigMap from .env file
         run: |
           kubectl create configmap app-config --from-env-file=.env --dry-run=client -o yaml | kubectl apply -f -
@@ -103,7 +103,7 @@ jobs:
         run: |
           kubectl apply -f k8s/databases/
 
-      #  Build and push services
+      # Build and push services
       - name: Build and push auth-service
         run: |
           docker build -t ${{ secrets.REGISTRY }}/auth:latest ./auth_service
