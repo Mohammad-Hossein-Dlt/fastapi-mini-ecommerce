@@ -13,7 +13,7 @@ class IAdminOrderRepo(ABC):
     
     @abstractmethod
     async def get_order_by_id(
-        order_id: str,
+        order_id: str | int,
     ) ->  OrderModel:
     
         raise NotImplementedError
@@ -34,7 +34,7 @@ class IAdminOrderRepo(ABC):
     
     @abstractmethod
     async def delete_order(
-        order_id: str,
+        order_id: str | int,
     ) -> bool:
     
         raise NotImplementedError

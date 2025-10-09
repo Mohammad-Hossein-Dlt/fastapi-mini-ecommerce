@@ -133,10 +133,6 @@ class CategoryMongodbRepo(ICategoryRepo):
                 db_stack="no-sql",
             )
             
-            print(to_update)
-            
-            print(type(category.id))
-            
             await CategoryCollection.find(
                 CategoryCollection.id == category.id,
             ).update(

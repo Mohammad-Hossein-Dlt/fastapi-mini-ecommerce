@@ -51,7 +51,7 @@ class ProductPgRepo(IProductRepo):
             product = self.db.query(
                 ProductDBModel   
             ).where(
-                ProductDBModel.id == product_id,
+                ProductDBModel.id == int(product_id),
             ).first()
             
             return ProductModel.model_validate(product, from_attributes=True)

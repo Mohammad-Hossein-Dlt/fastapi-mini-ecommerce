@@ -30,7 +30,7 @@ class AdminPgRepo(IAdminOrderRepo):
     
     async def get_order_by_id(
         self,
-        order_id: str,
+        order_id: int,
     ) ->  OrderModel:
         
         try:
@@ -38,7 +38,7 @@ class AdminPgRepo(IAdminOrderRepo):
             order = self.db.query(
                 OrderDBModel
             ).where(
-                OrderDBModel.id == order_id
+                OrderDBModel.id == int(order_id)
             ).first()
             
             return OrderModel.model_validate(order, from_attributes=True)
@@ -108,7 +108,7 @@ class AdminPgRepo(IAdminOrderRepo):
     
     async def delete_order(
         self,
-        order_id: str,
+        order_id: int,
     ) -> bool:
         
         try:

@@ -26,7 +26,7 @@ class ProductDBModel(UpdateFromSchemaMixin, Base):
         
         if product_filter.category_id:
             query = query.where(
-                cls.category_id == product_filter.category_id
+                cls.category_id == int(product_filter.category_id)
             )
         
         if product_filter.start_price:

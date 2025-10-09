@@ -34,7 +34,7 @@ class ICategoryRepo(ABC):
     
     @abstractmethod
     async def get_categories_with_parent_id(
-        parent_id: str,    
+        parent_id: str | None,    
     ) ->  list[CategoryModel]:
     
         raise NotImplementedError

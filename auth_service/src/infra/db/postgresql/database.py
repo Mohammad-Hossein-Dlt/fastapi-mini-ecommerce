@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, Engine
 from sqlalchemy.orm import sessionmaker
-import psycopg2
-from psycopg2 import sql
+import psycopg
+from psycopg import sql
 from .models._base import Base
 
 def check_and_create_database(
@@ -12,7 +12,7 @@ def check_and_create_database(
     db_name: str,
 ) -> bool:
     try:
-        connection = psycopg2.connect(
+        connection = psycopg.connect(
             dbname="postgres",
             user=username,
             password=password,
@@ -40,7 +40,7 @@ def check_and_create_database(
         
         return True
 
-    except psycopg2.Error as e:
+    except psycopg.Error as e:
         print("An error occurred:", e)
         
         return False
@@ -64,7 +64,7 @@ def init_sql_client(
     if not check:
         return None, None
             
-    BASE_URL = f"postgresql://{username}:{password}@{host}:{port}/{db_name}"
+    BASE_URL = f"postgresql+psycopg://{username}:{password}@{host}:{port}/{db_name}"
 
     engine = create_engine(BASE_URL)
     

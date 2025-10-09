@@ -40,7 +40,7 @@ class UserPgRepo(IUserRepo):
             user = self.db.query(
                 UserDBModel   
             ).where(
-                UserDBModel.id == user_id,
+                UserDBModel.id == int(user_id),
             ).first()
 
             return UserModel.model_validate(user, from_attributes=True)

@@ -44,7 +44,7 @@ class OrderPgRepo(IOrderRepo):
     
     async def get_order_by_id(
         self,
-        order_id: str,
+        order_id: int,
         user_id: str,
     ) ->  OrderModel:
         
@@ -54,7 +54,7 @@ class OrderPgRepo(IOrderRepo):
                 OrderDBModel   
             ).where(
                 and_(
-                    OrderDBModel.id == order_id,
+                    OrderDBModel.id == int(order_id),
                     OrderDBModel.user_id == str(user_id),
                 ),
             ).first()
@@ -152,7 +152,7 @@ class OrderPgRepo(IOrderRepo):
     
     async def delete_order(
         self,
-        order_id: str,
+        order_id: int,
         user_id: str,
     ) -> bool:
         

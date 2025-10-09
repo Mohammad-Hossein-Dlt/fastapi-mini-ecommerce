@@ -104,10 +104,13 @@ class CategoryPgRepo(ICategoryRepo):
                     
     async def get_categories_with_parent_id(
         self,
-        parent_id: int,
+        parent_id: int | None,
     ) -> list[CategoryModel]:
         
         try:
+            
+            parent_id = int(parent_id) if parent_id else None
+            
             categories_list = self.db.query(
                 CategoryDBModel
             ).where(
@@ -130,7 +133,7 @@ class CategoryPgRepo(ICategoryRepo):
             category = self.db.query(
                 CategoryDBModel   
             ).where(
-                CategoryDBModel.id == category_id,
+                CategoryDBModel.id == int(category_id),
             ).first()
             
             return CategoryModel.model_validate(category, from_attributes=True)
