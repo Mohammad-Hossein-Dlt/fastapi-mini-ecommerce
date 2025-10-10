@@ -21,21 +21,19 @@ class CreateProduct:
         product: CreateProductInput,
     ) -> ProductModel:
         
-        categories_list = []
         if product.category_id:
-            try:
-                categories_list: list[CategoryModel] = await self.category_repo.get_child_to_parent(
-                    CategoryFilterInput(
-                        id=product.category_id,
-                        based_on="child-to-parent",
-                    ),
-                )
-            except AppBaseException:
-                raise
-        
+            await self.category_repo.get_category_by_id(product.category_id)
+            
         try:
             to_insert = ProductModel.model_validate(product, from_attributes=True)
             product = await self.product_repo.insert_product(to_insert)
+            
+            categories_list: list[CategoryModel] = await self.category_repo.get_child_to_parent(
+                CategoryFilterInput(
+                    id=product.category_id,
+                    based_on="child-to-parent",
+                ),
+            )
             
             related_categories = []
             for category in categories_list:
