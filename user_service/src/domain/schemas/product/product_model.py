@@ -19,5 +19,5 @@ class ProductModel(CustomBaseModel):
     
     @field_serializer("related_categories", return_type=list[dict])
     def category_validator(self, value: list[CategoryModel]):
-        return [ category.model_dump(include={"id", "parent_id", "name"}) for category in value ]
+        return [ category.model_dump(include={"id", "parent_id", "name"}, mode="json") for category in value ]
     

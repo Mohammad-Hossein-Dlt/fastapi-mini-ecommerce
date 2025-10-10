@@ -37,6 +37,9 @@ class CustomBaseModel(BaseModel):
                 if isinstance(v, str):
                     values[k] = v.strip()
                     
+                    if ObjectId.is_valid(v):
+                        values[k] = ObjectId(v)
+        
         return values
     
     @field_validator("*")
@@ -45,7 +48,7 @@ class CustomBaseModel(BaseModel):
             return ObjectId(var)
         return var
     
-    @field_serializer("*")
+    @field_serializer("*", when_used="json")
     def object_id_serializer(self, var):
         if ObjectId.is_valid(var):
             return str(var)

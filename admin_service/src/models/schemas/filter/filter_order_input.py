@@ -3,8 +3,8 @@ from src.domain.enums import Status
 from datetime import datetime
 
 class FilterOrderInput(BaseModel):
-    user_id: str | None = None
-    product_id: str | None = None
+    user_id: int | str | None = None
+    product_id: int | str | None = None
     statuses: list[Status] | None = None
     start_quantity: int | None = None
     end_quantity: int | None = None
@@ -13,7 +13,7 @@ class FilterOrderInput(BaseModel):
     
     
 class UserFilterOrderInput(BaseModel):
-    product_id: str | None = None
+    product_id: int | str | None = None
     statuses: list[Status] | None = None
     start_quantity: int | None = None 
     end_quantity: int | None = None

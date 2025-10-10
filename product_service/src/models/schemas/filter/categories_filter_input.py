@@ -7,5 +7,5 @@ based_on_const: TypeAlias = Literal[
 ]
 
 class CategoryFilterInput(BaseModel):
-    id: str | None = None
+    id: int | str | None = None
     based_on: based_on_const = "parent-id"

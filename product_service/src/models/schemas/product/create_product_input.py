@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 class CreateProductInput(BaseModel):
-    category_id: str | None = None
+    category_id: int | str | None = None
     name: str | None = None
     description: str | None = None
     price: float | None = None
