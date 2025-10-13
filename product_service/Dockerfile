@@ -21,6 +21,6 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 RUN uv sync --no-cache
 
-EXPOSE 8000
+EXPOSE 80
 
-CMD ["uv", "run", "fastapi", "run", "./src/main.py"]
+CMD ["uv", "run", "fastapi", "run", "./src/main.py", "--proxy-headers", "--port", "80"]

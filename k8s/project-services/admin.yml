@@ -18,7 +18,7 @@ spec:
         - name: admin
           image: registry-fc6690c55a-mini-ecommerce.apps.ir-central1.arvancaas.ir/admin:latest
           ports:
-            - containerPort: 8000
+            - containerPort: 80
           envFrom:
             - configMapRef:
                 name: app-config
@@ -34,4 +34,4 @@ spec:
   ports:
     - protocol: TCP
       port: 8000
-      targetPort: 8000
+      targetPort: 80

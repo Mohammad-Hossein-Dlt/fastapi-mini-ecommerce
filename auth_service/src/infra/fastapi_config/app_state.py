@@ -4,9 +4,6 @@ from typing import Any
 
 class AppStates(str, Enum):
     
-    EXTERNAL_FASTAPI_PORT = "external_fastapi_port"
-    INTERNAL_FASTAPI_PORT = "internal_fastapi_port"
-    
     JWT_SECRET = "auth_base_url"
     JWT_ALGORITHM = "auth_db_client"
     JWT_EXPIRATION_MINUTES = "jwt_expiration_minutes"

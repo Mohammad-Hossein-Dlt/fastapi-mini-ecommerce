@@ -33,10 +33,6 @@ async def lifespan(app: FastAPI):
         )
         set_app_state(app, AppStates.DB_CLIENT, mongo_client)
     
-        
-    set_app_state(app, AppStates.EXTERNAL_FASTAPI_PORT, settings.EXTERNAL_FASTAPI_PORT)
-    set_app_state(app, AppStates.INTERNAL_FASTAPI_PORT, settings.INTERNAL_FASTAPI_PORT)
-    
     set_app_state(app, AppStates.JWT_SECRET, settings.JWT_SECRET)
     set_app_state(app, AppStates.JWT_ALGORITHM, settings.JWT_ALGORITHM)
     set_app_state(app, AppStates.JWT_EXPIRATION_MINUTES, settings.JWT_EXPIRATION_MINUTES)

@@ -5,9 +5,6 @@
 `.env` file parameters, put it next to the services
 
 ```
-EXTERNAL_FASTAPI_PORT = 80
-INTERNAL_FASTAPI_PORT = 8000
-
 AUTH_BASE_URL = http://nginx-service/auth/api/v1
 PRODUCT_BASE_URL = http://nginx-service/product/api/v1
 ORDER_BASE_URL = http://nginx-service/order/api/v1

@@ -7,7 +7,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
-      - ${EXTERNAL_FASTAPI_PORT}:80
+      - 80:80
     depends_on:
       - auth-service
       - product-service
@@ -28,8 +28,8 @@ services:
       - mongodb-service
       - postgres-service
     # expose:
-    #   - ${INTERNAL_FASTAPI_PORT}
-    # command: ["fastapi", "run", "./src/main.py", "--port", "${INTERNAL_FASTAPI_PORT}"]
+    #   - 80
+    # command: ["fastapi", "run", "./src/main.py", "--proxy-headers", "--port", "80"]
 
   product-service:
     working_dir: /app
@@ -44,8 +44,8 @@ services:
       - mongodb-service
       - postgres-service
     # expose:
-    #   - ${INTERNAL_FASTAPI_PORT}
-    # command: ["fastapi", "run", "./src/main.py", "--port", "${INTERNAL_FASTAPI_PORT}"]
+    #   - 80
+    # command: ["fastapi", "run", "./src/main.py", "--proxy-headers", "--port", "80"]
 
   order-service:
     working_dir: /app
@@ -60,8 +60,8 @@ services:
       - mongodb-service
       - postgres-service
     # expose:
-    #   - ${INTERNAL_FASTAPI_PORT}
-    # command: ["fastapi", "run", "./src/main.py", "--port", "${INTERNAL_FASTAPI_PORT}"]
+    #   - 80
+    # command: ["fastapi", "run", "./src/main.py", "--proxy-headers", "--port", "80"]
 
   admin-service:
     working_dir: /app
@@ -76,8 +76,8 @@ services:
       - mongodb-service
       - postgres-service
     # expose:
-    #   - ${INTERNAL_FASTAPI_PORT}
-    # command: ["fastapi", "run", "./src/main.py", "--port", "${INTERNAL_FASTAPI_PORT}"]
+    #   - 80
+    # command: ["fastapi", "run", "./src/main.py", "--proxy-headers", "--port", "80"]
 
   user-service:
     working_dir: /app
@@ -92,8 +92,8 @@ services:
       - mongodb-service
       - postgres-service
     # expose:
-    #   - ${INTERNAL_FASTAPI_PORT}
-    # command: ["fastapi", "run", "./src/main.py", "--port", "${INTERNAL_FASTAPI_PORT}"]
+    #   - 80
+    # command: ["fastapi", "run", "./src/main.py", "--proxy-headers", "--port", "80"]
 
   # Mongo-db
   mongodb-service:

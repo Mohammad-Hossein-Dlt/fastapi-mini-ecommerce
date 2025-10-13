@@ -18,11 +18,7 @@ jobs:
       - name: Create .env file
         run: |
           cat <<EOF > .env
-
-          # Ports
-          EXTERNAL_FASTAPI_PORT=${{ vars.EXTERNAL_FASTAPI_PORT }}
-          INTERNAL_FASTAPI_PORT=${{ vars.INTERNAL_FASTAPI_PORT }}
-
+          
           # Base URLs
           AUTH_BASE_URL=${{ vars.AUTH_BASE_URL }}
           PRODUCT_BASE_URL=${{ vars.PRODUCT_BASE_URL }}

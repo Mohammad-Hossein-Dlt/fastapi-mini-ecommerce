@@ -3,10 +3,7 @@ from fastapi import FastAPI
 from typing import Any
 
 class AppStates(str, Enum):
-    
-    EXTERNAL_FASTAPI_PORT = "external_fastapi_port"
-    INTERNAL_FASTAPI_PORT = "internal_fastapi_port"
-    
+
     AUTH_BASE_URL = "auth_base_url"
     
     DB_CLIENT = "db_client"

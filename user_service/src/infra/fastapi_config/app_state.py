@@ -4,9 +4,6 @@ from typing import Any
 
 class AppStates(str, Enum):
     
-    EXTERNAL_FASTAPI_PORT = "external_fastapi_port"
-    INTERNAL_FASTAPI_PORT = "internal_fastapi_port"
-    
     AUTH_BASE_URL = "auth_base_url"
     PRODUCT_BASE_URL = "product_base_url"
     ORDER_BASE_URL = "order_base_url"
