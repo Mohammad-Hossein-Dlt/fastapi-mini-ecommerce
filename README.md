@@ -5,6 +5,7 @@
 `.env` file parameters, put it next to the services
 
 ```
+
 AUTH_BASE_URL = http://nginx-service/auth/api/v1
 PRODUCT_BASE_URL = http://nginx-service/product/api/v1
 ORDER_BASE_URL = http://nginx-service/order/api/v1
