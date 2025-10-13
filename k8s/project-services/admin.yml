@@ -33,5 +33,5 @@ spec:
     app: admin
   ports:
     - protocol: TCP
-      port: 8000
+      port: 80
       targetPort: 80
