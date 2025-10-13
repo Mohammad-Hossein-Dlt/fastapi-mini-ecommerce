@@ -27,9 +27,6 @@ services:
     depends_on:
       - mongodb-service
       - postgres-service
-    # expose:
-    #   - 80
-    # command: ["fastapi", "run", "./src/main.py", "--proxy-headers", "--port", "80"]
 
   product-service:
     working_dir: /app
@@ -43,9 +40,6 @@ services:
     depends_on:
       - mongodb-service
       - postgres-service
-    # expose:
-    #   - 80
-    # command: ["fastapi", "run", "./src/main.py", "--proxy-headers", "--port", "80"]
 
   order-service:
     working_dir: /app
@@ -59,9 +53,6 @@ services:
     depends_on:
       - mongodb-service
       - postgres-service
-    # expose:
-    #   - 80
-    # command: ["fastapi", "run", "./src/main.py", "--proxy-headers", "--port", "80"]
 
   admin-service:
     working_dir: /app
@@ -75,9 +66,6 @@ services:
     depends_on:
       - mongodb-service
       - postgres-service
-    # expose:
-    #   - 80
-    # command: ["fastapi", "run", "./src/main.py", "--proxy-headers", "--port", "80"]
 
   user-service:
     working_dir: /app
@@ -91,9 +79,6 @@ services:
     depends_on:
       - mongodb-service
       - postgres-service
-    # expose:
-    #   - 80
-    # command: ["fastapi", "run", "./src/main.py", "--proxy-headers", "--port", "80"]
 
   # Mongo-db
   mongodb-service:
