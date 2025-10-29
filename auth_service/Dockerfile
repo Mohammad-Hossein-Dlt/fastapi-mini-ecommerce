@@ -7,7 +7,7 @@ COPY . .
 # Uv implementation
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
-RUN uv sync --no-cache
+RUN uv sync --upgrade --no-cache
 
 EXPOSE 80
 

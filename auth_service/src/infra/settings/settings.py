@@ -1,7 +1,12 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
-
+    
+    # Broker params
+    BROKER_STACK: str
+    RABBITMQ_AUTH: dict
+    
+    # Database params
     AUTH_DB_STACK: str
     
     MONGO_HOST: str
@@ -16,14 +21,15 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
     
-    JWT_SECRET: str
-    JWT_ALGORITHM: str
-    JWT_EXPIRATION_MINUTES: int
-    JWT_REFRESH_EXPIRATION_MINUTES: int
+    # JWT params
+    JWT: dict
             
     model_config = SettingsConfigDict(
         case_sensitive=False,
-        env_file=".env",
+        env_file=[
+            ".env",
+            "../.env",
+        ],
         env_file_encoding="utf-8",
         extra="ignore"
     )

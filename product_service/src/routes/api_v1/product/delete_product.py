@@ -3,7 +3,7 @@ from fastapi import Depends, Query, HTTPException
 from src.routes.http_response.responses import ResponseMessage
 from src.usecases.product.delete_product import DeleteProduct
 from src.repo.interface.Iproduct_repo import IProductRepo
-from src.routes.depends.product_repo_depend import get_product_repo
+from src.routes.depends.product_repo_depend import product_repo_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import admin_auth_depend
 from src.infra.exceptions.exceptions import AppBaseException
@@ -17,7 +17,7 @@ from src.infra.exceptions.exceptions import AppBaseException
 )
 async def delete_one_product(
     product_id: str = Query(...),
-    product_repo: IProductRepo = Depends(get_product_repo),
+    product_repo: IProductRepo = Depends(product_repo_depend),
     user: UserModel = Depends(admin_auth_depend),
 ):
     try:

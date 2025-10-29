@@ -7,7 +7,7 @@ from src.usecases.auth.login_user import LoginUser
 from src.infra.auth.jwt_handler import JWTHandler
 from src.routes.depends.auth_depend import jwt_handler_depend
 from src.repo.interface.Iuser_repo import IUserRepo
-from src.routes.depends.user_repo_depend import get_user_repo
+from src.routes.depends.user_repo_depend import user_repo_depend
 from src.infra.exceptions.exceptions import AppBaseException
 from typing import Annotated
 
@@ -19,10 +19,10 @@ from typing import Annotated
         **ResponseMessage.HTTP_500_INTERNAL_SERVER_ERROR("Internal server error"),
     }    
 )
-async def get_user_token(
+async def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     jwt_handler: JWTHandler = Depends(jwt_handler_depend),
-    user_repo: IUserRepo = Depends(get_user_repo),
+    user_repo: IUserRepo = Depends(user_repo_depend),
 ):
     try:
         login_user_usecase = LoginUser(user_repo, jwt_handler)

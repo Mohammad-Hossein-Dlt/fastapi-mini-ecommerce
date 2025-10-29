@@ -4,7 +4,7 @@ from src.routes.http_response.responses import ResponseMessage
 from src.models.schemas.user.create_user_input import CreateUserInput
 from src.usecases.auth.register_user import RegisterUser
 from src.repo.interface.Iuser_repo import IUserRepo
-from src.routes.depends.user_repo_depend import get_user_repo
+from src.routes.depends.user_repo_depend import user_repo_depend
 from src.infra.exceptions.exceptions import AppBaseException
 
 @router.post(
@@ -14,9 +14,9 @@ from src.infra.exceptions.exceptions import AppBaseException
         **ResponseMessage.HTTP_500_INTERNAL_SERVER_ERROR("Internal server error"),
     }
 )
-async def create_user(
+async def register(
     user_data: CreateUserInput = Body(),
-    user_repo: IUserRepo = Depends(get_user_repo),
+    user_repo: IUserRepo = Depends(user_repo_depend),
 ):
     try:
         create_user_usecase = RegisterUser(user_repo)

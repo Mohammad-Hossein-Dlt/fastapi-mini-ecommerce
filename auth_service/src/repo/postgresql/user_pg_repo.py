@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from src.repo.interface.Iuser_repo import IUserRepo
 from src.domain.schemas.user.user_model import UserModel
-from src.infra.db.postgresql.models.user_db_model import UserDBModel
+from src.infra.database.postgresql.models.user_db_model import UserDBModel
 from src.infra.exceptions.exceptions import EntityNotFoundError, InvalidRequestException
 
 class UserPgRepo(IUserRepo):
@@ -71,16 +71,24 @@ class UserPgRepo(IUserRepo):
     ) -> bool:
         
         try:
-            user = await self.get_user_by_id(user_id)
-            if user:
-                user = self.db.merge(UserDBModel(**user.model_dump()))
 
-            if isinstance(user, UserDBModel):
-                self.db.delete(user)
+            try:
+                user = await self.get_user_by_id(user_id)
+            except:
+                return False
+            
+            if not user:
+                return False
+            
+            to_delete = self.db.merge(UserDBModel(**user.model_dump()))
+
+            if isinstance(to_delete, UserDBModel):
+                self.db.delete(to_delete)
                 self.db.commit()
                 return True
             
             return False
+        
         except EntityNotFoundError:
             raise
         except:
@@ -93,16 +101,24 @@ class UserPgRepo(IUserRepo):
     ) -> bool:
         
         try:
-            user = await self.get_user_by_username(username)
-            if user:
-                user = self.db.merge(UserDBModel(**user.model_dump()))
+            
+            try:
+                user = await self.get_user_by_username(username)
+            except:
+                return False
+            
+            if not user:
+                return False
+            
+            to_delete = self.db.merge(UserDBModel(**user.model_dump()))
 
-            if isinstance(user, UserDBModel):
-                self.db.delete(user)
+            if isinstance(to_delete, UserDBModel):
+                self.db.delete(to_delete)
                 self.db.commit()
                 return True
             
             return False
+        
         except EntityNotFoundError:
             raise
         except:

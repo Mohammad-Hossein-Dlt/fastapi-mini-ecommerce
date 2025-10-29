@@ -1,4 +1,4 @@
-from src.infra.external_api.interface.Iorder_service import IOrderService
+from src.gateway.internal.interface.Iorder_service import IOrderService
 from src.models.schemas.operation.operation_output import OperationOutput
 from src.domain.schemas.auth.auth_credentials import AuthCredentials
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
@@ -18,7 +18,7 @@ class AdminDeleteOrder:
     ) -> OperationOutput:
         
         try:
-            response: dict = self.order_service.admin_delete_one(credentials, order_id)
+            response: dict = await self.order_service.admin_delete_one(credentials, order_id)
             return OperationOutput.model_validate(response)
         except AppBaseException:
             raise

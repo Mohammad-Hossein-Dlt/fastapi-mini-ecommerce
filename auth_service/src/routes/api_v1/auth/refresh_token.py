@@ -16,7 +16,7 @@ from src.infra.exceptions.exceptions import AppBaseException
         **ResponseMessage.HTTP_500_INTERNAL_SERVER_ERROR("Internal server error"),
     }
 )
-async def get_user(
+async def refresh_token(
     jwt_handler: JWTHandler = Depends(jwt_handler_depend),
     user: UserModel = Depends(refresh_token_depend),
 ):

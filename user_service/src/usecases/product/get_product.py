@@ -1,4 +1,4 @@
-from src.infra.external_api.interface.Iproduct_service import IProductService
+from src.gateway.internal.interface.Iproduct_service import IProductService
 from src.domain.schemas.product.product_model import ProductModel
 from src.domain.schemas.auth.auth_credentials import AuthCredentials
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
@@ -18,7 +18,7 @@ class GetProduct:
     ) -> ProductModel:
         
         try:
-            response: dict = self.product_service.get_one(credentials, product_id)
+            response: dict = await self.product_service.get_one(credentials, product_id)
             return ProductModel.model_validate(response)
         except AppBaseException:
             raise

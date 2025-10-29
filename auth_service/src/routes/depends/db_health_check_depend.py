@@ -1,11 +1,11 @@
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from motor.motor_asyncio import AsyncIOMotorClient
-from .db_depend import get_db_depend
+from .db_depend import db_depend
 from sqlalchemy import text
 
 async def db_health_check_depend(
-    db: AsyncIOMotorClient | Session = Depends(get_db_depend)
+    db: AsyncIOMotorClient | Session = Depends(db_depend)
 ):
     if isinstance(db, Session):
         try:

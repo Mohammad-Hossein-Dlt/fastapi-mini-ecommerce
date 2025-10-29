@@ -19,12 +19,12 @@ class RefreshToken:
         
         access_payload = JWTPayload(
             user_id = str(user.id),
-            type="access"
+            type="access",
         )
         
         refresh_payload = JWTPayload(
             user_id = str(user.id),
-            type="refresh"
+            type="refresh",
         )
         
         access_token = self.jwt_handler.create_jwt_token(access_payload)

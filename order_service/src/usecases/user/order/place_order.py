@@ -1,5 +1,5 @@
 from src.repo.interface.user.Iorder_repo import IOrderRepo
-from src.infra.external_api.interface.Iproduct_service import IProductService
+from src.gateway.internal.interface.Iproduct_service import IProductService
 from src.domain.schemas.product.product_model import ProductModel
 from src.models.schemas.order.place_order_input import PlaceOrderInput
 from src.domain.schemas.order.order_model import OrderModel
@@ -25,7 +25,7 @@ class PlaceOrder:
     ) -> OrderModel:
         
         try:
-            product = self.product_service.get_product(access_token, order.product_id)
+            product = await self.product_service.get_product(access_token, order.product_id)
             product: ProductModel = ProductModel.model_validate(product)
         except AppBaseException:
             raise

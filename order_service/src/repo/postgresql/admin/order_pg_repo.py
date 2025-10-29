@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
 from src.domain.schemas.order.order_model import OrderModel
-from src.infra.db.postgresql.models.order_db_model import OrderDBModel
+from src.infra.database.postgresql.models.order_db_model import OrderDBModel
 from src.models.schemas.filter.filter_order_input import FilterOrderInput
 from src.infra.exceptions.exceptions import EntityNotFoundError
 
@@ -88,7 +88,11 @@ class AdminPgRepo(IAdminOrderRepo):
     ) -> bool:
         
         try:
-            orders = await self.get_all_orders(filter_order)
+            
+            try:
+                orders = await self.get_all_orders(filter_order)
+            except:
+                return False
             
             if orders:
                 for order in orders:
@@ -98,8 +102,9 @@ class AdminPgRepo(IAdminOrderRepo):
                 
                 self.db.commit()        
                 return True 
-            else:
-                return False
+
+            return False
+
         except EntityNotFoundError:
             raise
         except:
@@ -112,16 +117,24 @@ class AdminPgRepo(IAdminOrderRepo):
     ) -> bool:
         
         try:
-            order = await self.get_order_by_id(order_id)
-            if order:
-                order = self.db.merge(OrderDBModel(**order.model_dump()))
-                
-            if isinstance(order, OrderDBModel):
-                self.db.delete(order)
+            
+            try:
+                order = await self.get_order_by_id(order_id)
+            except:
+                return False
+            
+            if not order:
+                return False
+            
+            to_delete = self.db.merge(OrderDBModel(**order.model_dump()))  
+            
+            if isinstance(to_delete, OrderDBModel):
+                self.db.delete(to_delete)
                 self.db.commit()
                 return True
-            else:
-                return False
+
+            return False
+
         except EntityNotFoundError:
             raise
         except:

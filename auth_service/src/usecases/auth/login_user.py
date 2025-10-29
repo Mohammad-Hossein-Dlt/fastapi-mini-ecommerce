@@ -34,12 +34,12 @@ class LoginUser:
         
         access_payload = JWTPayload(
             user_id = str(get_user.id),
-            type="access"
+            type="access",
         )
         
         refresh_payload = JWTPayload(
             user_id = str(get_user.id),
-            type="refresh"
+            type="refresh",
         )
         
         access_token = self.jwt_handler.create_jwt_token(access_payload)

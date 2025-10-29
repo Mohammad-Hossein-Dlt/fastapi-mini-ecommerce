@@ -2,8 +2,8 @@ from ._router import router
 from fastapi import Query, Depends, HTTPException
 from src.routes.http_response.responses import ResponseMessage
 from src.models.schemas.category.update_category_input import UpdateCategoryInput
-from src.infra.external_api.interface.Icategory_service import ICategoryService
-from src.routes.depends.external_api_services_depend import get_category_service
+from src.gateway.internal.interface.Icategory_service import ICategoryService
+from src.routes.depends.internal_http_depend import category_service_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import admin_auth_depend
 from src.usecases.admin.category.update_category import UpdateCategory
@@ -18,7 +18,7 @@ from src.infra.exceptions.exceptions import AppBaseException
 )
 async def update_one_category(
     category: UpdateCategoryInput = Query(...),
-    category_service: ICategoryService = Depends(get_category_service),
+    category_service: ICategoryService = Depends(category_service_depend),
     user: UserModel = Depends(admin_auth_depend),
 ):
     try:

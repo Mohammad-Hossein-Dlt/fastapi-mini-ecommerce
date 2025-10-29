@@ -1,4 +1,4 @@
-from src.infra.external_api.interface.Iauth_service import IAuthService
+from src.gateway.internal.interface.Iauth_service import IAuthService
 from src.domain.schemas.auth.auth_credentials import AuthCredentials
 from src.domain.schemas.user.user_model import UserModel
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
@@ -17,7 +17,7 @@ class UserGetSelf:
     ) -> UserModel:
         
         try:
-            response = self.auth_service.user_get_self(credentials)        
+            response = await self.auth_service.user_get_self(credentials)        
             return UserModel.model_validate(response)
         except AppBaseException:
             raise

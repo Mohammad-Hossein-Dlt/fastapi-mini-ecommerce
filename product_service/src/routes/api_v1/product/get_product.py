@@ -3,9 +3,9 @@ from fastapi import Depends, Query, HTTPException
 from src.routes.http_response.responses import ResponseMessage
 from src.usecases.product.get_product import GetProduct
 from src.repo.interface.Iproduct_repo import IProductRepo
-from src.routes.depends.product_repo_depend import get_product_repo
+from src.routes.depends.product_repo_depend import product_repo_depend
 from src.repo.interface.Icategory_repo import ICategoryRepo
-from src.routes.depends.category_repo_depend import get_category_repo
+from src.routes.depends.category_repo_depend import category_repo_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import user_auth_depend
 from src.infra.exceptions.exceptions import AppBaseException
@@ -19,8 +19,8 @@ from src.infra.exceptions.exceptions import AppBaseException
 )
 async def get_one_product(
     product_id: str = Query(...),
-    product_repo: IProductRepo = Depends(get_product_repo),
-    category_repo: ICategoryRepo = Depends(get_category_repo),
+    product_repo: IProductRepo = Depends(product_repo_depend),
+    category_repo: ICategoryRepo = Depends(category_repo_depend),
     user: UserModel = Depends(user_auth_depend),
 ): 
     try:

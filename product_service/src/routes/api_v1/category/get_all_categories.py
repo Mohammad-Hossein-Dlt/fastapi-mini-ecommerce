@@ -4,7 +4,7 @@ from src.routes.http_response.responses import ResponseMessage
 from src.models.schemas.filter.categories_filter_input import CategoryFilterInput
 from src.usecases.category.get_all_categories import GetAllCategories
 from src.repo.interface.Icategory_repo import ICategoryRepo
-from src.routes.depends.category_repo_depend import get_category_repo
+from src.routes.depends.category_repo_depend import category_repo_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import user_auth_depend
 from src.infra.exceptions.exceptions import AppBaseException
@@ -18,7 +18,7 @@ from src.infra.exceptions.exceptions import AppBaseException
 )
 async def get_all_categories(
     filter: CategoryFilterInput = Query(...),
-    category_repo: ICategoryRepo = Depends(get_category_repo),
+    category_repo: ICategoryRepo = Depends(category_repo_depend),
     user: UserModel = Depends(user_auth_depend),
 ):
     try:

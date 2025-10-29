@@ -1,8 +1,8 @@
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi import Depends, HTTPException
 from src.infra.auth.jwt_handler import JWTHandler
-from src.infra.external_api.interface.Iauth_service import IAuthService
-from .external_api_services_depend import get_auth_service
+from src.gateway.internal.interface.Iauth_service import IAuthService
+from .internal_http_depend import auth_service_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.usecases.admin.admin_get_self import AdminGetSelf
 from src.usecases.user.user_get_self import UserGetSelf
@@ -11,13 +11,13 @@ from typing import Annotated
 
 token_schema = HTTPBearer()
 
-def get_jwt_handler() -> JWTHandler:
+def jwt_handler_depend() -> JWTHandler:
     jwt_handler = JWTHandler()
     return jwt_handler
 
 async def verify_token_depend(
     bearer_token: Annotated[HTTPAuthorizationCredentials, Depends(token_schema)],
-    jwt_handler: JWTHandler = Depends(get_jwt_handler),
+    jwt_handler: JWTHandler = Depends(jwt_handler_depend),
 ) -> UserModel:
     
     try:
@@ -27,8 +27,8 @@ async def verify_token_depend(
 
 async def admin_auth_depend(
     bearer_token: Annotated[HTTPAuthorizationCredentials, Depends(token_schema)],
-    jwt_handler: JWTHandler = Depends(get_jwt_handler),
-    auth_service: IAuthService = Depends(get_auth_service),
+    jwt_handler: JWTHandler = Depends(jwt_handler_depend),
+    auth_service: IAuthService = Depends(auth_service_depend),
 ) -> UserModel:
     
     token = await verify_token_depend(
@@ -47,8 +47,8 @@ async def admin_auth_depend(
     
 async def user_auth_depend(
     bearer_token: Annotated[HTTPAuthorizationCredentials, Depends(token_schema)],
-    jwt_handler: JWTHandler = Depends(get_jwt_handler),
-    auth_service: IAuthService = Depends(get_auth_service),
+    jwt_handler: JWTHandler = Depends(jwt_handler_depend),
+    auth_service: IAuthService = Depends(auth_service_depend),
 ) -> UserModel:
     
     token = await verify_token_depend(

@@ -1,4 +1,4 @@
-from src.infra.external_api.interface.Iauth_service import IAuthService
+from src.gateway.internal.interface.Iauth_service import IAuthService
 from src.models.schemas.user.user_register_input import UserRegisterInput
 from src.models.schemas.operation.operation_output import OperationOutput
 
@@ -8,7 +8,6 @@ class RegisterUser:
         self,
         auth_service: IAuthService,
     ):
-        
         self.auth_service = auth_service
             
     async def execute(
@@ -16,6 +15,6 @@ class RegisterUser:
         user_data: UserRegisterInput,
     ) -> OperationOutput:
         
-        response = self.auth_service.register(user_data)
+        response = await self.auth_service.register(user_data)
         
         return OperationOutput.model_validate(response)

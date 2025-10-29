@@ -3,7 +3,7 @@ from fastapi import Depends, Query, HTTPException
 from src.routes.http_response.responses import ResponseMessage
 from src.usecases.category.get_category import GetCategory
 from src.repo.interface.Icategory_repo import ICategoryRepo
-from src.routes.depends.category_repo_depend import get_category_repo
+from src.routes.depends.category_repo_depend import category_repo_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import user_auth_depend
 from src.infra.exceptions.exceptions import AppBaseException
@@ -17,7 +17,7 @@ from src.infra.exceptions.exceptions import AppBaseException
 )
 async def get_one_category(
     category_id: str = Query(...),
-    category_repo: ICategoryRepo = Depends(get_category_repo),
+    category_repo: ICategoryRepo = Depends(category_repo_depend),
     user: UserModel = Depends(user_auth_depend),
 ):
     try:

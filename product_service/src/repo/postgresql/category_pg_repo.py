@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from src.repo.interface.Icategory_repo import ICategoryRepo
 from src.domain.schemas.category.category_model import CategoryModel
-from src.infra.db.postgresql.models.category_db_model import CategoryDBModel
+from src.infra.database.postgresql.models.category_db_model import CategoryDBModel
 from src.models.schemas.filter.categories_filter_input import CategoryFilterInput
 from src.infra.exceptions.exceptions import EntityNotFoundError
 
@@ -178,17 +178,25 @@ class CategoryPgRepo(ICategoryRepo):
         self,
     ) -> bool:
         try:
-            categories: list[CategoryModel] = await self.get_categories_with_parent_id(parent_id=None)
+            
+            try:
+                categories: list[CategoryModel] = await self.get_categories_with_parent_id(
+                    parent_id=None,
+                )
+            except:
+                return False
+                        
             if categories:
                 for record in categories:
-                    record = self.db.merge(CategoryDBModel(**record.model_dump(exclude={"children"})))
+                    record = self.db.merge(CategoryDBModel(**record.model_dump()))
                     if isinstance(record, CategoryDBModel):
                         self.db.delete(record)
                 
                 self.db.commit()        
                 return True 
-            else:
-                return False
+
+            return False
+
         except EntityNotFoundError:
             raise
         except:
@@ -201,16 +209,24 @@ class CategoryPgRepo(ICategoryRepo):
     ) -> bool:
         
         try:
-            category = await self.get_category_by_id(category_id)
-            if category:
-                category = self.db.merge(CategoryDBModel(**category.model_dump()))
+            
+            try:
+                category = await self.get_category_by_id(category_id)
+            except:
+                return False
+            
+            if not category:
+                return False
                 
-            if isinstance(category, CategoryDBModel):
-                self.db.delete(category)
+            to_delete = self.db.merge(CategoryDBModel(**category.model_dump()))
+                
+            if isinstance(to_delete, CategoryDBModel):
+                self.db.delete(to_delete)
                 self.db.commit()
                 return True
-            else:
-                return False
+            
+            return False            
+        
         except EntityNotFoundError:
             raise
         except:

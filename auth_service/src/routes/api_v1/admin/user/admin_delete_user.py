@@ -2,7 +2,7 @@ from ._router import router
 from fastapi import Depends, Query, HTTPException
 from src.routes.http_response.responses import ResponseMessage
 from src.repo.interface.Iuser_repo import IUserRepo
-from src.routes.depends.user_repo_depend import get_user_repo
+from src.routes.depends.user_repo_depend import user_repo_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import admin_auth_depend
 from src.usecases.admin.admin_delete_user import AdminDeleteUser
@@ -19,7 +19,7 @@ from src.infra.exceptions.exceptions import AppBaseException
 async def delete_user(
     user_id: str = Query(None),
     username: str = Query(None),
-    user_repo: IUserRepo = Depends(get_user_repo),
+    user_repo: IUserRepo = Depends(user_repo_depend),
     user: UserModel = Depends(admin_auth_depend),
 ):
     try:

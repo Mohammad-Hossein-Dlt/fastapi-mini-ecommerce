@@ -1,8 +1,8 @@
 from ._router import router
 from fastapi import Depends, Query, HTTPException
 from src.routes.http_response.responses import ResponseMessage
-from src.infra.external_api.interface.Iproduct_service import IProductService
-from src.routes.depends.external_api_services_depend import get_product_service
+from src.gateway.internal.interface.Iproduct_service import IProductService
+from src.routes.depends.internal_http_depend import product_service_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import user_auth_depend
 from src.usecases.product.get_product import GetProduct
@@ -17,7 +17,7 @@ from src.infra.exceptions.exceptions import AppBaseException
 )
 async def get_one_product(
     product_id: str = Query(...),
-    product_service: IProductService = Depends(get_product_service),
+    product_service: IProductService = Depends(product_service_depend),
     user: UserModel = Depends(user_auth_depend),
 ): 
     try:

@@ -3,8 +3,8 @@ from fastapi import Depends, Body, HTTPException
 from src.routes.http_response.responses import ResponseMessage
 from src.models.schemas.user.user_register_input import UserRegisterInput
 from src.usecases.auth.register_user import RegisterUser
-from src.infra.external_api.interface.Iauth_service import IAuthService
-from src.routes.depends.external_api_services_depend import get_auth_service
+from src.gateway.internal.interface.Iauth_service import IAuthService
+from src.routes.depends.internal_http_depend import auth_service_depend
 from src.infra.exceptions.exceptions import AppBaseException
 
 @router.post(
@@ -16,7 +16,7 @@ from src.infra.exceptions.exceptions import AppBaseException
 )
 async def register_user(
     user_data: UserRegisterInput = Body(),
-    auth_service: IAuthService = Depends(get_auth_service),  
+    auth_service: IAuthService = Depends(auth_service_depend),  
 ):
     try:
         create_user_usecase = RegisterUser(auth_service)

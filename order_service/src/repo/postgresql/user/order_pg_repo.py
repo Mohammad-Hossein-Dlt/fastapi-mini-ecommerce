@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_
 from src.repo.interface.user.Iorder_repo import IOrderRepo
 from src.domain.schemas.order.order_model import OrderModel
-from src.infra.db.postgresql.models.order_db_model import OrderDBModel
+from src.infra.database.postgresql.models.order_db_model import OrderDBModel
 from src.models.schemas.filter.filter_order_input import FilterOrderInput
 from src.infra.exceptions.exceptions import EntityNotFoundError
 

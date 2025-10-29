@@ -1,10 +1,10 @@
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from src.infra.auth.jwt_handler import JWTHandler
-from src.infra.external_api.interface.Iauth_service import IAuthService
-from .external_api_services_depend import get_auth_service
+from src.gateway.internal.interface.Iauth_service import IAuthService
+from .internal_http_depend import auth_service_depend
 from src.repo.interface.Iauth_repo import IAuthRepo
-from .auth_repo_depend import get_auth_repo
+from .auth_repo_depend import auth_repo_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.domain.schemas.auth.auth_credentials import AuthCredentials
 from src.usecases.auth.refresh_token import RefreshToken
@@ -13,19 +13,19 @@ from src.infra.exceptions.exceptions import AppBaseException
 
 auth_schema = OAuth2PasswordBearer(tokenUrl="/user/api/v1/auth/login")
 
-def get_jwt_handler() -> JWTHandler:
+def jwt_handler_depend() -> JWTHandler:
     jwt_handler = JWTHandler()
     return jwt_handler
 
 async def user_auth_depend(
     bearer_token: str = Depends(auth_schema),
-    jwt_handler: JWTHandler = Depends(get_jwt_handler),
-    auth_service: IAuthService = Depends(get_auth_service),
-    auth_repo: IAuthRepo = Depends(get_auth_repo),
+    jwt_handler: JWTHandler = Depends(jwt_handler_depend),
+    auth_service: IAuthService = Depends(auth_service_depend),
+    auth_repo: IAuthRepo = Depends(auth_repo_depend),
 ) -> UserModel:
     
     try:
-        credentials: AuthCredentials = auth_repo.get_user_auth_credentials()
+        credentials: AuthCredentials = await auth_repo.get_user_auth_credentials()
     except AppBaseException as credentials_ex:
         raise HTTPException(status_code=credentials_ex.status_code, detail=credentials_ex.message)
     
@@ -49,7 +49,7 @@ async def user_auth_depend(
     try:
         get_user_usecase = UserGetSelf(auth_service)
         user = await get_user_usecase.execute(credentials)
-        user.credentials = auth_repo.get_user_auth_credentials()
+        user.credentials = await auth_repo.get_user_auth_credentials()
         return user
     except AppBaseException as get_user_ex:
         raise HTTPException(status_code=get_user_ex.status_code, detail=get_user_ex.message)

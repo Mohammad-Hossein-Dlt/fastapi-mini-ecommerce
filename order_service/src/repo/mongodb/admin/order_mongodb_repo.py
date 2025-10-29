@@ -1,6 +1,6 @@
 from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
 from src.domain.schemas.order.order_model import OrderModel
-from src.infra.db.mongodb.collections.order_collection import OrderCollection
+from src.infra.database.mongodb.collections.order_collection import OrderCollection
 from src.models.schemas.filter.filter_order_input import FilterOrderInput
 from src.infra.utils.convert_id import convert_object_id
 from src.infra.exceptions.exceptions import EntityNotFoundError
@@ -71,6 +71,7 @@ class AdminOrderMongodbRepo(IAdminOrderRepo):
     ) -> bool:
         
         try:
+            
             query = OrderCollection.create_filter_query(filter_order)
             result = await OrderCollection.find(query).delete()
             

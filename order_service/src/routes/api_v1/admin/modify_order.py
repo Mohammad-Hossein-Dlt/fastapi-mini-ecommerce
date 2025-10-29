@@ -4,7 +4,7 @@ from src.routes.http_response.responses import ResponseMessage
 from src.models.schemas.order.modify_order_input import ModifyOrderInput
 from src.usecases.admin.order.modify_order import AdminModifyOrder
 from src.repo.interface.user.Iorder_repo import IOrderRepo
-from src.routes.depends.order_repo_depend import get_admin_order_repo
+from src.routes.depends.order_repo_depend import admin_order_repo_depend
 from src.routes.depends.auth_depend import admin_auth_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.infra.exceptions.exceptions import AppBaseException
@@ -18,7 +18,7 @@ from src.infra.exceptions.exceptions import AppBaseException
 )
 async def modify_one_order(
     order: ModifyOrderInput = Query(None),
-    order_repo: IOrderRepo = Depends(get_admin_order_repo),
+    order_repo: IOrderRepo = Depends(admin_order_repo_depend),
     user: UserModel = Depends(admin_auth_depend),
 ):
     try:

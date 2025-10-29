@@ -26,8 +26,8 @@ class UpdateCategory:
                 raise InvalidRequestException(400, "Parent-id cannot be equal to id")
                 
         try:
-            category = CategoryModel.model_validate(category, from_attributes=True)
-            return await self.category_repo.update_category(category)
+            to_update = CategoryModel.model_validate(category, from_attributes=True)
+            return await self.category_repo.update_category(to_update)
         except AppBaseException:
             raise
         except:

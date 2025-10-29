@@ -4,7 +4,7 @@ from src.routes.http_response.responses import ResponseMessage
 from src.models.schemas.filter.filter_order_input import FilterOrderInput
 from src.usecases.admin.order.get_all_orders import AdminGetAllOrders
 from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
-from src.routes.depends.order_repo_depend import get_admin_order_repo
+from src.routes.depends.order_repo_depend import admin_order_repo_depend
 from src.routes.depends.auth_depend import admin_auth_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.infra.exceptions.exceptions import AppBaseException
@@ -18,7 +18,7 @@ from src.infra.exceptions.exceptions import AppBaseException
 )
 async def get_all_orders(
     filter_order: FilterOrderInput = Query(None),
-    order_repo: IAdminOrderRepo = Depends(get_admin_order_repo),
+    order_repo: IAdminOrderRepo = Depends(admin_order_repo_depend),
     user: UserModel = Depends(admin_auth_depend),
 ):
     try:

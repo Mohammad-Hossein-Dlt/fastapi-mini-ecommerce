@@ -15,7 +15,7 @@ main_router_v1.include_router(user_router, prefix=ROUTE_PREFIX_VERSION_API)
 main_router_v1.include_router(metrics_router, prefix=ROUTE_PREFIX_VERSION_API)
 main_router_v1.include_router(health_check_router, prefix=ROUTE_PREFIX_VERSION_API)
 
-# from auth_service.src.routes.depends.db_health_check_depend import db_health_check_depend
+# from src.routes.depends.db_health_check_depend import db_health_check_depend
 
 # main_router_v1.add_api_route(
 #     "/health",

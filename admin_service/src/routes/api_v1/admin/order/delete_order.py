@@ -1,8 +1,8 @@
 from ._router import router
 from fastapi import Depends, HTTPException
 from src.routes.http_response.responses import ResponseMessage
-from src.infra.external_api.interface.Iorder_service import IOrderService
-from src.routes.depends.external_api_services_depend import get_order_service
+from src.gateway.internal.interface.Iorder_service import IOrderService
+from src.routes.depends.internal_http_depend import order_service_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import admin_auth_depend
 from src.usecases.admin.order.delete_order import AdminDeleteOrder
@@ -17,7 +17,7 @@ from src.infra.exceptions.exceptions import AppBaseException
 )
 async def delete_one_order(
     order_id: str,
-    order_service: IOrderService = Depends(get_order_service),
+    order_service: IOrderService = Depends(order_service_depend),
     user: UserModel = Depends(admin_auth_depend),
 ):
     try:

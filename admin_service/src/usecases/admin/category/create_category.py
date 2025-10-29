@@ -1,4 +1,4 @@
-from src.infra.external_api.interface.Icategory_service import ICategoryService
+from src.gateway.internal.interface.Icategory_service import ICategoryService
 from src.models.schemas.category.create_category_input import CreateCategoryInput
 from src.domain.schemas.category.category_model import CategoryModel
 from src.domain.schemas.auth.auth_credentials import AuthCredentials
@@ -19,7 +19,7 @@ class CreateCategory:
     ) -> CategoryModel:
                 
         try:
-            response: dict = self.category_service.create(credentials, category)
+            response: dict = await self.category_service.create(credentials, category)
             return CategoryModel.model_validate(response)
         except AppBaseException:
             raise

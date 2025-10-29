@@ -1,4 +1,4 @@
-from src.infra.external_api.interface.Iauth_service import IAuthService
+from src.gateway.internal.interface.Iauth_service import IAuthService
 from src.repo.interface.Iauth_repo import IAuthRepo
 from src.models.schemas.user.user_login_input import UserLoginInput
 from src.domain.schemas.auth.auth_credentials import AuthCredentials
@@ -19,7 +19,7 @@ class LoginUser:
         user_data: UserLoginInput,
     ) -> AuthCredentials:        
         
-        response = self.auth_service.login(user_data)
+        response = await self.auth_service.login(user_data)
         
         access_token, refresh_token, token_type = response["access_token"], response["refresh_token"], response["token_type"]
 
@@ -30,8 +30,7 @@ class LoginUser:
         )
                     
         try:
-            self.auth_repo.save_user_auth_credentials(auth_credentials)
-            return auth_credentials
+            return await self.auth_repo.save_user_auth_credentials(auth_credentials)
         except:
             raise OperationFailureException(500, "Internal server error")
 

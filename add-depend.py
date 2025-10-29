@@ -7,6 +7,8 @@ import shutil
 import subprocess
 from pathlib import Path
 from typing import Iterable, List, Set
+import json
+
 
 # Python 3.11+ has tomllib in stdlib. For 3.10- fallback to 'tomli' if installed.
 try:
@@ -28,7 +30,7 @@ def run_cmd(
     cmd: List[str],
     cwd: Path | None = None,
 ) -> str:
-    
+
     env = os.environ.copy()
     env.update(base_env)
 
@@ -52,9 +54,9 @@ def name_only(
 ) -> str:
     
     name = name.strip()
-    name = re.split(r";", name, 1)[0]
-    name = re.split(r"\[", name, 1)[0]
-    name = re.split(r"[<>=!~ ]", name, 1)[0]
+    name = re.split(r";", name, maxsplit=1)[0]
+    name = re.split(r"\[", name, maxsplit=1)[0]
+    name = re.split(r"[<>=!~ ]", name, maxsplit=1)[0]
     result = name.replace("_", "-").lower()
     
     return result
@@ -87,22 +89,61 @@ def parse_requirements_names(
         names.add(name_only(line))
     return names
 
-
 def discover_dirs(
     root: Path,
 ) -> Iterable[Path]:
     
     yield root
-    
+        
     for child in root.iterdir():
         if child.is_dir() and (child / "src").is_dir():
             yield child
-
+    
 
 def ensure_uv_available() -> None:
     if shutil.which("uv") is None:
         raise RuntimeError("Uv is not installed.")
-
+    
+def get_top_packages(dir: Path):
+    
+    requirements = ""
+        
+    result = run_cmd(
+        cmd=["pipdeptree", "--json"],
+        cwd=dir,
+    )
+    data: list[dict] = json.loads(result)
+    
+    exc = {
+        "pydantic",
+        "pymongo",
+        "motor",
+    }
+    
+    deps = set()
+    top_pkgs = set()
+    top_pkgs_with_version = dict()
+    for pkg in data:
+        
+        # if pkg["package"]["package_name"] == "PyYAML":
+        #     print(pkg)
+            
+        top_pkgs.add(pkg["package"]["package_name"])
+        top_pkgs_with_version[pkg["package"]["package_name"]] =  pkg["package"]["installed_version"]
+        for depend in pkg.get("dependencies", []):
+            deps.add(depend["package_name"])
+            
+            # if depend["package_name"] == "PyYAML":
+            #     print(pkg)           
+        
+    top_pkgs = top_pkgs - (deps - exc)
+    top_pkgs = sorted(top_pkgs)
+    for k, v in top_pkgs_with_version.items():
+        for p in top_pkgs:
+            if p == k:
+                requirements += f"{p}>={v}" + "\n"
+                    
+    return requirements
 
 def process(
     dir: Path,
@@ -117,34 +158,73 @@ def process(
 
     if not pyproject_exists:
         run_cmd(
-            cmd=["uv", "init", "--bare", str(dir)],
+            cmd=[
+                "uv",
+                "init",
+                "--bare",
+                str(dir),
+            ],
             cwd=dir,
         )
     
-    proc = run_cmd(
-        cmd=["uv", "pip", "freeze"],
-        cwd=dir,
+    # proc = run_cmd(
+    #     cmd=[
+    #         "uv",
+    #         "pip",
+    #         "freeze",
+    #     ],
+    #     cwd=dir,
+    # )
+        
+    requirements.write_text(
+        get_top_packages(dir),
+        encoding="utf-8",
     )
-    
-    requirements.write_text(proc, encoding="utf-8")
 
-    run_cmd(
-        cmd=["uv", "add", "-r", "requirements.txt", "--active", "--no-sync"],
-        cwd=dir,
-    )
+    # run_cmd(
+    #     cmd=[
+    #         "uv",
+    #         "add",
+    #         "-r",
+    #         "requirements.txt",
+    #         "--active",
+    #         # "--no-sync",
+    #         "--frozen",
+    #     ],
+    #     cwd=dir,
+    # )
 
     deps_set = parse_pyproject_dependencies(pyproject)
     req_names = parse_requirements_names(requirements)
     to_remove = sorted(deps_set - req_names)
+    # to_remove = False
 
     if to_remove:
         print(f"Pruning from pyproject.toml: {' '.join(to_remove)}")
         run_cmd(
-            cmd=["uv", "remove", *to_remove, "--active"],
+            cmd=[
+                "uv",
+                "remove",
+                *to_remove,
+                "--active",
+            ],
             cwd=dir,
         )
     else:
         print("No package to prune from pyproject.toml.")
+
+    run_cmd(
+        cmd=[
+            "uv",
+            "add",
+            "-r",
+            "requirements.txt",
+            "--active",
+            # "--no-sync",
+            "--frozen",
+        ],
+        cwd=dir,
+    )
 
     print(f"Process done in {dir.name}")
     

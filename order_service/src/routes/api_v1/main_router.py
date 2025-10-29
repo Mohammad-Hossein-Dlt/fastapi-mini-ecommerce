@@ -1,8 +1,8 @@
 from fastapi import APIRouter
-from src.routes.api_v1.admin._router import router as order_router
-from src.routes.api_v1.user._router import router as user_router
-from src.routes.api_v1.metrics._router import router as metrics_router
-from src.routes.api_v1.health_check._router import router as health_check_router
+from . import order_router
+from . import user_router
+from . import metrics_router
+from . import health_check_router
 
 ROUTE_PREFIX_VERSION_API = "/api/v1"
 

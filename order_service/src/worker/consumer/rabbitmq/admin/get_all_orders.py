@@ -1,0 +1,32 @@
+from ._subscriber import admin_subscriber, target_routing_key
+from faststream import Depends
+from faststream.rabbit import RabbitMessage
+from src.models.schemas.filter.filter_order_input import FilterOrderInput
+from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
+from src.worker.depends.order_repo_depend import admin_order_repo_depend
+from src.domain.schemas.user.user_model import UserModel
+from src.worker.depends.auth_depend import admin_auth_depend
+from src.usecases.admin.order.get_all_orders import AdminGetAllOrders
+from src.infra.exceptions.exceptions import AppBaseException
+
+routing_key = "order_service.admin.get.all"
+
+@admin_subscriber(
+    filter=target_routing_key(routing_key),
+)
+async def get_all_orders(
+    msg: RabbitMessage,
+    filter_order: FilterOrderInput,
+    order_repo: IAdminOrderRepo = Depends(admin_order_repo_depend),
+    user: UserModel = Depends(admin_auth_depend),
+):
+    try:
+        get_order_usecase = AdminGetAllOrders(order_repo)
+        outputs_list = await get_order_usecase.execute(filter_order)
+        return [ output.model_dump(mode="json") for output in outputs_list ]
+    except AppBaseException as ex:
+        await msg.reject(requeue=False)
+        return ex.model_dump()
+    except Exception as ex:
+        await msg.reject(requeue=False)
+        return AppBaseException(status_code=500, message="Error....").model_dump()

@@ -4,7 +4,7 @@ from src.routes.http_response.responses import ResponseMessage
 from src.domain.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import user_auth_depend
 from src.repo.interface.Iuser_repo import IUserRepo
-from src.routes.depends.user_repo_depend import get_user_repo
+from src.routes.depends.user_repo_depend import user_repo_depend
 from src.usecases.user.user_delete_self import UserDeleteSelf
 from src.infra.exceptions.exceptions import AppBaseException
 
@@ -18,7 +18,7 @@ from src.infra.exceptions.exceptions import AppBaseException
 )
 async def delete_self(
     user: UserModel = Depends(user_auth_depend),
-    user_repo: IUserRepo = Depends(get_user_repo),
+    user_repo: IUserRepo = Depends(user_repo_depend),
 ):
     try:
         delete_user_usecase = UserDeleteSelf(user_repo)

@@ -1,4 +1,4 @@
-from src.infra.external_api.interface.Icategory_service import ICategoryService
+from src.gateway.internal.interface.Icategory_service import ICategoryService
 from src.models.schemas.operation.operation_output import OperationOutput
 from src.domain.schemas.auth.auth_credentials import AuthCredentials
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
@@ -18,7 +18,7 @@ class DeleteCategory:
     ) -> OperationOutput:
         
         try:
-            response: dict = self.category_service.delete_one(credentials, category_id)
+            response: dict = await self.category_service.delete_one(credentials, category_id)
             return OperationOutput.model_validate(response)
         except AppBaseException:
             raise

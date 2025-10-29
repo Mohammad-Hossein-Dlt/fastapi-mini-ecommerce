@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from src.models.schemas.filter.products_filter_input import ProductFilterInput
 from src.repo.interface.Iproduct_repo import IProductRepo
 from src.domain.schemas.product.product_model import ProductModel
-from src.infra.db.postgresql.models.product_db_model import ProductDBModel
+from src.infra.database.postgresql.models.product_db_model import ProductDBModel
 from src.infra.exceptions.exceptions import EntityNotFoundError
 
 class ProductPgRepo(IProductRepo):
@@ -95,11 +95,15 @@ class ProductPgRepo(IProductRepo):
     async def delete_all_products(
         self,
     ) -> bool:
-        
         try:
-            products = await self.get_all_products(
-                ProductFilterInput(category_id=None),
-            )
+            
+            try:
+                products: list[ProductModel] = await self.get_all_products(
+                    ProductFilterInput(category_id=None),
+                )
+            except:
+                return False
+            
             if products:
                 for product in products:
                     product = self.db.merge(ProductDBModel(**product.model_dump()))
@@ -108,8 +112,9 @@ class ProductPgRepo(IProductRepo):
                 
                 self.db.commit()        
                 return True 
-            else:
-                return False
+
+            return False
+
         except EntityNotFoundError:
             raise
         except:
@@ -122,16 +127,24 @@ class ProductPgRepo(IProductRepo):
     ) -> bool:
         
         try:
-            product = await self.get_product_by_id(product_id)
-            if product:
-                product = self.db.merge(ProductDBModel(**product.model_dump()))
+            
+            try:
+                product = await self.get_product_by_id(product_id)
+            except:
+                return False
+            
+            if not product:
+                return False
+            
+            to_delete = self.db.merge(ProductDBModel(**product.model_dump()))
                 
-            if isinstance(product, ProductDBModel):
-                self.db.delete(product)
+            if isinstance(to_delete, ProductDBModel):
+                self.db.delete(to_delete)
                 self.db.commit()
                 return True
-            else:
-                return False
+
+            return False
+                        
         except EntityNotFoundError:
             raise
         except:
