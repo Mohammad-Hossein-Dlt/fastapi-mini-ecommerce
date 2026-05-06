@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from src.models.schemas.filter.filter_order_input import FilterOrderInput
 
 class OrderDBModel(UpdateFromSchemaMixin, Base):
-    __tablename__ = "order"
+    __tablename__ = "Order"
 
     id = Column(Integer, nullable=False, unique=True, primary_key=True, autoincrement=True, index=True)
     user_id = Column(Text, nullable=False)

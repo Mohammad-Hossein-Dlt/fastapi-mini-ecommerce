@@ -1,11 +1,11 @@
 from . import (
     _router,
-    get_user,
-    delete_user,
+    get,
+    delete,
 )
 
 __all__ = [
     "_router",
-    "get_user",
-    "delete_user",
+    "get",
+    "delete",
 ]

@@ -135,6 +135,8 @@ class CategoryPgRepo(ICategoryRepo):
             elif criteria.based_on == "child-to-parent":
                 return await self.get_ancestors(criteria)
         except EntityNotFoundError:
+            raise
+        except:
             raise EntityNotFoundError(status_code=404, message="Categories not found")
         
     async def get_tree_from_parent(

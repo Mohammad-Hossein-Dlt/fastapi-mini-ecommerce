@@ -17,7 +17,7 @@ from src.infra.exceptions.exceptions import AppBaseException
     }
 )
 async def update(
-    entity: UpdateOrderInput = Query(None),
+    entity: UpdateOrderInput = Query(...),
     order_service: IOrderService = Depends(order_service_depend),
     user: UserModel = Depends(admin_auth_depend),
 ):

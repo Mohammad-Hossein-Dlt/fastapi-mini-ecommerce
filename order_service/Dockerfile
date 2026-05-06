@@ -8,6 +8,7 @@ RUN echo "https://mirror.arvancloud.ir/alpine/v3.23/main" > /etc/apk/repositorie
 RUN echo "https://mirror.arvancloud.ir/alpine/v3.23/community" >> /etc/apk/repositories
 RUN apk update
 
+RUN pip install --upgrade pip
 RUN pip install uv
 RUN uv sync --upgrade --no-cache
 

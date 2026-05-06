@@ -17,7 +17,7 @@ from src.infra.exceptions.exceptions import AppBaseException
     }
 )
 async def get_by_criteria(
-    criteria: FilterOrderInput = Query(None),
+    criteria: FilterOrderInput = Query(...),
     order_service: IOrderService = Depends(order_service_depend),
     user: UserModel = Depends(admin_auth_depend),
 ):

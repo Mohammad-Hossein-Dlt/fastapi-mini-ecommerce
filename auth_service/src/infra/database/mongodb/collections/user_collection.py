@@ -14,7 +14,7 @@ class UserCollection(UserModel, Document):
     password: str
     
     class Settings:
-        name = "Users"
+        name = "User"
         
     @model_validator(mode="before")
     def map_id(cls, values: dict) -> dict:

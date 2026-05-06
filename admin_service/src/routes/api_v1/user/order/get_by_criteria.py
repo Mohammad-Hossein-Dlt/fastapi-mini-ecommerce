@@ -1,7 +1,7 @@
 from ._router import router
 from fastapi import Query, Depends, HTTPException
 from src.routes.http_response.responses import ResponseMessage
-from src.models.schemas.filter.filter_order_input import UserFilterOrderInput
+from src.models.schemas.filter.filter_order_input import FilterOrderInput
 from src.gateway.internal.interface.Iorder_service import IOrderService
 from src.routes.depends.internal_http_depend import order_service_depend
 from src.domain.schemas.user.user_model import UserModel
@@ -17,7 +17,7 @@ from src.infra.exceptions.exceptions import AppBaseException
     }
 )
 async def get_by_criteria(
-    criteria: UserFilterOrderInput = Query(None),
+    criteria: FilterOrderInput = Query(...),
     order_service: IOrderService = Depends(order_service_depend),
     user: UserModel = Depends(admin_auth_depend),
 ):

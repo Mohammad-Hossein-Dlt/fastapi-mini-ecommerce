@@ -40,7 +40,6 @@ class OrderPgRepo(IOrderRepo):
             ).where(
                 OrderDBModel.id == order_id,
             ).first()
-            
             return OrderModel.model_validate(order, from_attributes=True)
         except:
             raise EntityNotFoundError(status_code=404, message="Order not found")
@@ -60,7 +59,6 @@ class OrderPgRepo(IOrderRepo):
                     OrderDBModel.user_id == str(user_id),
                 ),
             ).first()
-            
             return OrderModel.model_validate(order, from_attributes=True)
         except:
             raise EntityNotFoundError(status_code=404, message="Order not found")
@@ -125,7 +123,6 @@ class OrderPgRepo(IOrderRepo):
         try:
             query = OrderDBModel.create_filter_query(criteria)
             orders = self.db.execute(query).scalars().all()
-        
             return [ OrderModel.model_validate(t, from_attributes=True) for t in orders ]
         except:
             raise EntityNotFoundError(status_code=404, message="There are no orders")

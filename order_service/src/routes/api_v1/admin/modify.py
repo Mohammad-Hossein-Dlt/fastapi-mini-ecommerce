@@ -17,7 +17,7 @@ from src.infra.exceptions.exceptions import AppBaseException
     }
 )
 async def modify(
-    entity: ModifyOrderInput = Query(None),
+    entity: ModifyOrderInput = Query(...),
     order_repo: IOrderRepo = Depends(admin_order_repo_depend),
     user: UserModel = Depends(admin_auth_depend),
 ):

@@ -17,7 +17,6 @@ class AdminOrderMongodbRepo(IAdminOrderRepo):
             order = await OrderCollection.find_one(
                 OrderCollection.id == order_id,
             )
-            
             return OrderModel.model_validate(order, from_attributes=True)
         except:
             raise EntityNotFoundError(status_code=404, message="Order not found")
@@ -53,9 +52,7 @@ class AdminOrderMongodbRepo(IAdminOrderRepo):
     ) -> bool:
         
         try:
-            
             order_id = convert_database_id(order_id)
-            
             result = await OrderCollection.find(
                 OrderCollection.id == order_id,
             ).delete()    
@@ -71,8 +68,7 @@ class AdminOrderMongodbRepo(IAdminOrderRepo):
         
         try:
             query = OrderCollection.create_filter_query(criteria)
-            orders = await OrderCollection.find(query).to_list()
-                        
+            orders = await OrderCollection.find(query).to_list()            
             return [ OrderModel.model_validate(t, from_attributes=True) for t in orders ]
         except:
             raise EntityNotFoundError(status_code=404, message="There are no orders")
@@ -83,10 +79,8 @@ class AdminOrderMongodbRepo(IAdminOrderRepo):
     ) -> bool:
         
         try:
-            
             query = OrderCollection.create_filter_query(criteria)
             result = await OrderCollection.find(query).delete()
-            
             return bool(result.deleted_count)
         except:
             raise EntityNotFoundError(status_code=404, message="There are no orders")

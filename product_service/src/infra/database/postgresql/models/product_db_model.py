@@ -6,10 +6,10 @@ from datetime import datetime, timezone
 from src.models.schemas.filter.products_filter_input import ProductFilterInput
 
 class ProductDBModel(UpdateFromSchemaMixin, Base):
-    __tablename__ = "product"
+    __tablename__ = "Product"
 
     id = Column(Integer, nullable=False, unique=True, primary_key=True, autoincrement=True, index=True)
-    category_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
+    category_id = Column(Integer, ForeignKey("Category.id"), nullable=True)
     name = Column(Text, nullable=False)
     description = Column(Text, nullable=True)
     price = Column(Float, nullable=False, default=0)
