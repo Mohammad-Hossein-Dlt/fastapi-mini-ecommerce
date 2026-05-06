@@ -4,13 +4,15 @@ from pydantic import Field
 from src.domain.schemas.order.order_model import OrderModel
 from src.domain.enums import Status
 from src.models.schemas.filter.filter_order_input import FilterOrderInput
-from src.infra.utils.convert_id import convert_object_id
+from src.infra.utils.convert_id import convert_database_id
 
 class OrderCollection(OrderModel, Document):
     
     id: PydanticObjectId = Field(default_factory=ObjectId)
     user_id: int | PydanticObjectId
     product_id: int | PydanticObjectId
+    quantity: int = 0
+    description: str | None = None
     status: Status
     
     class Settings:
@@ -19,33 +21,33 @@ class OrderCollection(OrderModel, Document):
     @classmethod
     def create_filter_query(
         cls,
-        filter_order: FilterOrderInput,
+        criteria: FilterOrderInput,
     ):
         
         query = {}
         
 
-        if filter_order.user_id:
-            query[str(cls.user_id)] = convert_object_id(filter_order.user_id)       
+        if criteria.user_id:
+            query[str(cls.user_id)] = convert_database_id(criteria.user_id)       
 
-        if filter_order.product_id:
-            query[str(cls.product_id)] = convert_object_id(filter_order.product_id)
+        if criteria.product_id:
+            query[str(cls.product_id)] = convert_database_id(criteria.product_id)
 
-        if filter_order.statuses:
-            query[str(cls.status)] = {"$in": filter_order.statuses}
+        if criteria.statuses:
+            query[str(cls.status)] = {"$in": criteria.statuses}
 
-        if filter_order.start_quantity:
-            query[str(cls.quantity)] = {"$gte": filter_order.start_quantity}
+        if criteria.start_quantity:
+            query[str(cls.quantity)] = {"$gte": criteria.start_quantity}
 
-        if filter_order.end_quantity:
+        if criteria.end_quantity:
             query.setdefault(str(cls.quantity), {})
-            query[str(cls.quantity)]["$lte"] = filter_order.end_quantity
+            query[str(cls.quantity)]["$lte"] = criteria.end_quantity
         
-        if filter_order.start_date:
-            query[str(cls.created_at)] = {"$gte": filter_order.start_date}
+        if criteria.start_date:
+            query[str(cls.created_at)] = {"$gte": criteria.start_date}
 
-        if filter_order.end_date:
+        if criteria.end_date:
             query.setdefault(str(cls.created_at), {})
-            query[str(cls.created_at)]["$lte"] = filter_order.end_date
+            query[str(cls.created_at)]["$lte"] = criteria.end_date
                     
         return query

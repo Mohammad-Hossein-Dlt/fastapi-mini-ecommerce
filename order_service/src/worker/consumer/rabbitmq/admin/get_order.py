@@ -2,10 +2,10 @@ from ._subscriber import admin_subscriber, target_routing_key
 from faststream import Depends
 from faststream.rabbit import RabbitMessage
 from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
-from src.worker.depends.order_repo_depend import admin_order_repo_depend
+from src.worker.depends.repo_depend import admin_order_repo_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.worker.depends.auth_depend import admin_auth_depend
-from src.usecases.admin.order.get_order import AdminGetOrder
+from src.usecases.admin.order.get_by_id import GetOrder
 from src.infra.exceptions.exceptions import AppBaseException
 
 routing_key = "order_service.admin.get.one"
@@ -20,7 +20,7 @@ async def get_one_order(
     user: UserModel = Depends(admin_auth_depend),
 ):
     try:
-        get_order_usecase = AdminGetOrder(order_repo)
+        get_order_usecase = GetOrder(order_repo)
         output = await get_order_usecase.execute(order_id)
         return output.model_dump(mode="json")
     except AppBaseException as ex:

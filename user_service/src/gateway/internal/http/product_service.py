@@ -15,14 +15,14 @@ class ProductService(IProductService):
         self.session = session
         self.base_url = base_url
         self.allowed_status_codes = [200, 201]
-
-    async def get_all(
+        
+    async def get_by_id(
         self,
         credentials: AuthCredentials,
-        product_filter: ProductFilterInput,
+        product_id: str,
     ) -> dict:
         
-        target_url = self.base_url + "/get/all"
+        target_url = self.base_url + "/product/"
         
         headers = clean_outbound_request(
             {
@@ -31,7 +31,9 @@ class ProductService(IProductService):
         )
         
         params = clean_outbound_request(
-            product_filter.model_dump(mode="json"),
+            {
+                "product_id": product_id,
+            },
         )
         
         response = await self.session.get(
@@ -46,14 +48,14 @@ class ProductService(IProductService):
             data = await response.json()
             detail = data["detail"]
             raise AppBaseException(response.status, detail)
-        
-    async def get_one(
+
+    async def get_by_criteria(
         self,
         credentials: AuthCredentials,
-        product_id: str,
+        criteria: ProductFilterInput,
     ) -> dict:
         
-        target_url = self.base_url + "/get/one"
+        target_url = self.base_url + "/product/all"
         
         headers = clean_outbound_request(
             {
@@ -62,9 +64,7 @@ class ProductService(IProductService):
         )
         
         params = clean_outbound_request(
-            {
-                "product_id": product_id,
-            },
+            criteria.model_dump(mode="json"),
         )
         
         response = await self.session.get(

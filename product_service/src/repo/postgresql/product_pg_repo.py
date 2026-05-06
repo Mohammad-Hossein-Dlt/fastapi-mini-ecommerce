@@ -3,6 +3,7 @@ from src.models.schemas.filter.products_filter_input import ProductFilterInput
 from src.repo.interface.Iproduct_repo import IProductRepo
 from src.domain.schemas.product.product_model import ProductModel
 from src.infra.database.postgresql.models.product_db_model import ProductDBModel
+from src.infra.utils.convert_id import convert_database_id
 from src.infra.exceptions.exceptions import EntityNotFoundError
 
 class ProductPgRepo(IProductRepo):
@@ -14,64 +15,46 @@ class ProductPgRepo(IProductRepo):
         
         self.db = db
         
-    async def insert_product(
+    async def create(
         self,
         product: ProductModel,
     ) -> ProductModel:
         
         try:
-            new_product = ProductDBModel(**product.model_dump(exclude_none=True))
+            new_product = ProductDBModel(**product.model_dump_for_db())
             self.db.add(new_product)
             self.db.commit()
             return ProductModel.model_validate(new_product, from_attributes=True)
         except:
-            # self.db.rollback()
             raise
-
-    async def get_all_products(
-        self,
-        product_filter: ProductFilterInput,
-    ) ->  list[ProductModel]:
-        
-        try:
-            query = ProductDBModel.create_filter_query(product_filter)
-            products = self.db.execute(query).scalars().all()
-        
-            return [ ProductModel.model_validate(t, from_attributes=True) for t in products ]
-        except:
-            # self.db.rollback()
-            raise EntityNotFoundError(status_code=404, message="There are no products")
     
-    async def get_product_by_id(
+    async def get_by_id(
         self,
-        product_id: int,
-    ) ->  ProductModel:
+        product_id: str,
+    ) -> ProductModel:
         
         try:
+            product_id = convert_database_id(product_id)
             product = self.db.query(
                 ProductDBModel   
             ).where(
-                ProductDBModel.id == int(product_id),
+                ProductDBModel.id == product_id,
             ).first()
             
             return ProductModel.model_validate(product, from_attributes=True)
         except:
-            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Product not found")
     
-    async def update_product(
+    async def update(
         self,
         product: ProductModel,
-    ) ->  ProductModel:
+    ) -> ProductModel:
         
         try:
             
-            to_update: dict = product.custom_model_dump(
+            to_update: dict = product.model_dump_for_db(
+                exclude_none=True,
                 exclude_unset=True,
-                exclude={
-                    "id",
-                },
-                db_stack="sql",
             )
 
             self.db.query(
@@ -85,20 +68,61 @@ class ProductPgRepo(IProductRepo):
             
             self.db.commit()
             
-            return await self.get_product_by_id(product.id)
+            return await self.get_by_id(product.id)
         except EntityNotFoundError:
             raise
         except:
-            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Product not found")
     
-    async def delete_all_products(
+    async def delete_by_id(
+        self,
+        product_id: str,
+    ) -> bool:
+        
+        try:
+            product_id = convert_database_id(product_id)
+            try:
+                product = await self.get_by_id(product_id)
+            except:
+                return False
+            
+            if not product:
+                return False
+            
+            to_delete = self.db.merge(ProductDBModel(**product.model_dump()))
+                
+            if isinstance(to_delete, ProductDBModel):
+                self.db.delete(to_delete)
+                self.db.commit()
+                return True
+
+            return False
+                        
+        except EntityNotFoundError:
+            raise
+        except:
+            raise EntityNotFoundError(status_code=404, message="Product not found")
+        
+    async def get_by_criteria(
+        self,
+        criteria: ProductFilterInput,
+    ) -> list[ProductModel]:
+        
+        try:
+            query = ProductDBModel.create_filter_query(criteria)
+            products = self.db.execute(query).scalars().all()
+        
+            return [ ProductModel.model_validate(t, from_attributes=True) for t in products ]
+        except:
+            raise EntityNotFoundError(status_code=404, message="There are no products")
+        
+    async def delete_all(
         self,
     ) -> bool:
         try:
             
             try:
-                products: list[ProductModel] = await self.get_all_products(
+                products: list[ProductModel] = await self.get_by_criteria(
                     ProductFilterInput(category_id=None),
                 )
             except:
@@ -118,35 +142,4 @@ class ProductPgRepo(IProductRepo):
         except EntityNotFoundError:
             raise
         except:
-            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="There are no products")
-    
-    async def delete_product(
-        self,
-        product_id: int,
-    ) -> bool:
-        
-        try:
-            
-            try:
-                product = await self.get_product_by_id(product_id)
-            except:
-                return False
-            
-            if not product:
-                return False
-            
-            to_delete = self.db.merge(ProductDBModel(**product.model_dump()))
-                
-            if isinstance(to_delete, ProductDBModel):
-                self.db.delete(to_delete)
-                self.db.commit()
-                return True
-
-            return False
-                        
-        except EntityNotFoundError:
-            raise
-        except:
-            # self.db.rollback()
-            raise EntityNotFoundError(status_code=404, message="Product not found")

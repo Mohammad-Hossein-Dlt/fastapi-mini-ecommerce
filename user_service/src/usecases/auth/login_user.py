@@ -16,21 +16,21 @@ class LoginUser:
         
     async def execute(
         self,
-        user_data: UserLoginInput,
+        entity: UserLoginInput,
     ) -> AuthCredentials:        
         
-        response = await self.auth_service.login(user_data)
+        response = await self.auth_service.login(entity)
         
         access_token, refresh_token, token_type = response["access_token"], response["refresh_token"], response["token_type"]
 
-        auth_credentials = AuthCredentials(
+        credentials = AuthCredentials(
             access_token=access_token,
             refresh_token=refresh_token,
             token_type=token_type,
         )
                     
         try:
-            return await self.auth_repo.save_user_auth_credentials(auth_credentials)
+            return await self.auth_repo.save_user_auth_credentials(credentials)
         except:
             raise OperationFailureException(500, "Internal server error")
 

@@ -3,10 +3,10 @@ from faststream import Depends
 from faststream.rabbit import RabbitMessage
 from src.models.schemas.order.modify_order_input import ModifyOrderInput
 from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
-from src.worker.depends.order_repo_depend import admin_order_repo_depend
+from src.worker.depends.repo_depend import admin_order_repo_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.worker.depends.auth_depend import admin_auth_depend
-from src.usecases.admin.order.modify_order import AdminModifyOrder
+from src.usecases.admin.order.modify import ModifyOrder
 from src.infra.exceptions.exceptions import AppBaseException
 
 routing_key = "order_service.admin.modify.one"
@@ -21,7 +21,7 @@ async def modify_one_order(
     user: UserModel = Depends(admin_auth_depend),
 ):
     try:
-        get_order_usecase = AdminModifyOrder(order_repo)
+        get_order_usecase = ModifyOrder(order_repo)
         output = await get_order_usecase.execute(order)
         return output.model_dump(mode="json")
     except AppBaseException as ex:

@@ -2,35 +2,37 @@ from src.repo.interface.Iuser_repo import IUserRepo
 from src.domain.schemas.user.user_model import UserModel
 from src.infra.database.mongodb.collections.user_collection import UserCollection
 from bson.objectid import ObjectId
+from src.infra.utils.convert_id import convert_database_id
 from src.infra.exceptions.exceptions import EntityNotFoundError, InvalidRequestException
 
 class UserMongodbRepo(IUserRepo):
             
-    async def insert_user(
+    async def create(
         self,
         user: UserModel,
     ) -> UserModel:
         
         try:
-            await self.get_user_by_username(user.username)
+            await self.get_by_username(user.username)
             raise InvalidRequestException(409, f"User '{user.username}' already exist")
         except EntityNotFoundError:
             new_user = await UserCollection.insert(
-                UserCollection(**user.model_dump(exclude={"id", "_id"})),
+                UserCollection(**user.model_dump_for_db()),
             )
             return UserModel.model_validate(new_user, from_attributes=True)
     
-    async def get_user_by_id(
+    async def get_by_id(
         self,
         user_id: str,
-    ) ->  UserModel:
+    ) -> UserModel:
         try:
+            user_id = convert_database_id(user_id)
             user = await UserCollection.get(user_id)
             return UserModel.model_validate(user, from_attributes=True)
         except:
             raise EntityNotFoundError(status_code=404, message="User not found")
     
-    async def get_user_by_username(
+    async def get_by_username(
         self,
         username: str,
     ) -> UserModel:
@@ -43,11 +45,12 @@ class UserMongodbRepo(IUserRepo):
         except:
             raise EntityNotFoundError(status_code=404, message="User not found")
     
-    async def delete_user_by_id(
+    async def delete_by_id(
         self,
         user_id: str,
     ) -> bool:
         try:
+            user_id = convert_database_id(user_id)
             result = await UserCollection.find(
                 UserCollection.id == ObjectId(user_id),
             ).delete()
@@ -56,7 +59,7 @@ class UserMongodbRepo(IUserRepo):
         except:
             raise EntityNotFoundError(status_code=404, message="User not found")
     
-    async def delete_user_by_username(
+    async def delete_by_username(
         self,
         username: str,
     ) -> bool:

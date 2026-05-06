@@ -3,38 +3,38 @@ from src.domain.schemas.order.order_model import OrderModel
 from src.models.schemas.filter.filter_order_input import FilterOrderInput
 
 class IAdminOrderRepo(ABC):
-        
+    
     @abstractmethod
-    async def get_all_orders(
-        filter_order: FilterOrderInput,
-    ) ->  list[OrderModel]:
+    async def get_by_id(
+        order_id: str,
+    ) -> OrderModel:
     
         raise NotImplementedError
     
     @abstractmethod
-    async def get_order_by_id(
-        order_id: str | int,
-    ) ->  OrderModel:
-    
-        raise NotImplementedError
-    
-    @abstractmethod
-    async def modify_order(
+    async def modify(
         order: OrderModel,
-    ) ->  OrderModel:
+    ) -> OrderModel:
     
         raise NotImplementedError
-    
+
     @abstractmethod
-    async def delete_all_orders(
-        filter_order: FilterOrderInput,
+    async def delete_by_id(
+        order_id: str,
     ) -> bool:
     
         raise NotImplementedError
     
     @abstractmethod
-    async def delete_order(
-        order_id: str | int,
+    async def get_by_criteria(
+        criteria: FilterOrderInput,
+    ) -> list[OrderModel]:
+    
+        raise NotImplementedError
+    
+    @abstractmethod
+    async def delete_by_criteria(
+        criteria: FilterOrderInput,
     ) -> bool:
     
         raise NotImplementedError

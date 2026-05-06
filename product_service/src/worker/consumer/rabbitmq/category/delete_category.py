@@ -2,10 +2,10 @@ from ._subscriber import category_subscriber, target_routing_key
 from faststream import Depends
 from faststream.rabbit import RabbitMessage
 from src.repo.interface.Icategory_repo import ICategoryRepo
-from src.worker.depends.category_repo_depend import category_repo_depend
+from src.worker.depends.repo_depend import category_repo_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.worker.depends.auth_depend import admin_auth_depend
-from src.usecases.category.delete_category import DeleteCategory
+from src.usecases.category.delete_by_id import DeleteCategory
 from src.infra.exceptions.exceptions import AppBaseException
 
 routing_key = "product_service.category.delete.one"

@@ -21,10 +21,10 @@ class CategoryService(ICategoryService):
     async def create(
         self,
         credentials: AuthCredentials,
-        category_data: CreateCategoryInput,
+        category: CreateCategoryInput,
     ) -> dict:
         
-        target_url = self.base_url + "/create"
+        target_url = self.base_url + "/category/"
         
         headers = clean_outbound_request(
             {
@@ -33,7 +33,7 @@ class CategoryService(ICategoryService):
         )
         
         params = clean_outbound_request(
-            category_data.model_dump(mode="json"),
+            category.model_dump(mode="json"),
         )
         
         response = await self.session.post(
@@ -48,103 +48,14 @@ class CategoryService(ICategoryService):
             data = await response.json()
             detail = data["detail"]
             raise AppBaseException(response.status, detail)
-                                        
-    async def delete_all(
-        self,
-        credentials: AuthCredentials,
-    ) -> dict:
-        
-        target_url = self.base_url + "/delete/all"
-        
-        headers = clean_outbound_request(
-            {
-                "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
-            },
-        )
-        
-        response = await self.session.delete(
-            target_url,
-            headers=headers,
-        )
-        
-        if response.status in self.allowed_status_codes:
-            return await response.json()
-        else:
-            data = await response.json()
-            detail = data["detail"]
-            raise AppBaseException(response.status, detail)
-    
-    async def delete_one(
+
+    async def get_by_id(
         self,
         credentials: AuthCredentials,
         category_id: str,
     ) -> dict:
         
-        target_url = self.base_url + "/delete/one"
-        
-        headers = clean_outbound_request(
-            {
-                "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
-            },
-        )
-        
-        params = clean_outbound_request(
-            {
-                "category_id": category_id,
-            },
-        )
-        
-        response = await self.session.delete(
-            target_url,
-            headers=headers,
-            params=params,
-        )
-        
-        if response.status in self.allowed_status_codes:
-            return await response.json()
-        else:
-            data = await response.json()
-            detail = data["detail"]
-            raise AppBaseException(response.status, detail)
-    
-    async def get_all(
-        self,
-        credentials: AuthCredentials,
-        category_filter: CategoryFilterInput,
-    ) -> dict:
-        
-        target_url = self.base_url + "/get/all"
-        
-        headers = clean_outbound_request(
-            {
-                "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
-            },
-        )
-        
-        params = clean_outbound_request(
-            category_filter.model_dump(mode="json"),
-        )
-        
-        response = await self.session.get(
-            target_url,
-            headers=headers,
-            params=params,
-        )
-        
-        if response.status in self.allowed_status_codes:
-            return await response.json()
-        else:
-            data = await response.json()
-            detail = data["detail"]
-            raise AppBaseException(response.status, detail)
-        
-    async def get_one(
-        self,
-        credentials: AuthCredentials,
-        category_id: str,
-    ) -> dict:
-        
-        target_url = self.base_url + "/get/one"
+        target_url = self.base_url + "/category/"
         
         headers = clean_outbound_request(
             {
@@ -171,13 +82,13 @@ class CategoryService(ICategoryService):
             detail = data["detail"]
             raise AppBaseException(response.status, detail)    
     
-    async def update_one(
+    async def update(
         self,
         credentials: AuthCredentials,
-        category_data: UpdateCategoryInput,
+        category: UpdateCategoryInput,
     ) -> dict:
         
-        target_url = self.base_url + "/update/one"
+        target_url = self.base_url + "/category/"
         
         headers = clean_outbound_request(
             {
@@ -186,7 +97,7 @@ class CategoryService(ICategoryService):
         )
         
         params = clean_outbound_request(
-            category_data.model_dump(mode="json"),
+            category.model_dump(mode="json"),
         )
                 
         response = await self.session.put(
@@ -195,6 +106,94 @@ class CategoryService(ICategoryService):
             params=params,
         )
                 
+        if response.status in self.allowed_status_codes:
+            return await response.json()
+        else:
+            data = await response.json()
+            detail = data["detail"]
+            raise AppBaseException(response.status, detail)                         
+
+    async def delete_by_id(
+        self,
+        credentials: AuthCredentials,
+        category_id: str,
+    ) -> dict:
+        
+        target_url = self.base_url + "/category/"
+        
+        headers = clean_outbound_request(
+            {
+                "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
+            },
+        )
+        
+        params = clean_outbound_request(
+            {
+                "category_id": category_id,
+            },
+        )
+        
+        response = await self.session.delete(
+            target_url,
+            headers=headers,
+            params=params,
+        )
+        
+        if response.status in self.allowed_status_codes:
+            return await response.json()
+        else:
+            data = await response.json()
+            detail = data["detail"]
+            raise AppBaseException(response.status, detail)
+    
+    async def get_by_criteria(
+        self,
+        credentials: AuthCredentials,
+        criteria: CategoryFilterInput,
+    ) -> dict:
+        
+        target_url = self.base_url + "/category/all"
+        
+        headers = clean_outbound_request(
+            {
+                "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
+            },
+        )
+        
+        params = clean_outbound_request(
+            criteria.model_dump(mode="json"),
+        )
+
+        response = await self.session.get(
+            target_url,
+            headers=headers,
+            params=params,
+        )
+        if response.status in self.allowed_status_codes:
+            return await response.json()
+        else:
+            data = await response.json()
+            detail = data["detail"]
+            raise AppBaseException(response.status, detail)
+        
+    async def delete_all(
+        self,
+        credentials: AuthCredentials,
+    ) -> dict:
+        
+        target_url = self.base_url + "/category/all"
+        
+        headers = clean_outbound_request(
+            {
+                "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
+            },
+        )
+        
+        response = await self.session.delete(
+            target_url,
+            headers=headers,
+        )
+        
         if response.status in self.allowed_status_codes:
             return await response.json()
         else:

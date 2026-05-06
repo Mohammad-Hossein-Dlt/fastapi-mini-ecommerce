@@ -19,17 +19,17 @@ class AuthService(IAuthService):
     
     async def register(
         self,
-        user_data: UserRegisterInput,
+        user: UserRegisterInput,
     ) -> dict:
         
         target_url = self.base_url + "/register"
         
-        user_data: dict = user_data.model_dump(mode="json")
-        user_data["role"] = "admin"
+        user: dict = user.model_dump(mode="json")
+        user["role"] = "admin"
                 
         response = await self.session.post(
             target_url,
-            json=user_data,
+            json=user,
         )
         
         if response.status in self.allowed_status_codes:
@@ -41,12 +41,12 @@ class AuthService(IAuthService):
     
     async def login(
         self,
-        user_data: UserLoginInput,
+        user: UserLoginInput,
     ) -> dict:
         
         target_url = self.base_url + "/login"
         
-        data = user_data.model_dump(mode="json")
+        data = user.model_dump(mode="json")
         
         response = await self.session.post(
             target_url,
@@ -90,7 +90,7 @@ class AuthService(IAuthService):
         credentials: AuthCredentials,
     ) -> dict:
         
-        target_url = self.base_url + "/admin/self/get"
+        target_url = self.base_url + "/admin/self/"
         
         headers = clean_outbound_request(
             {
@@ -117,7 +117,7 @@ class AuthService(IAuthService):
         username: str | None = None,
     ) -> dict:
         
-        target_url = self.base_url + "/admin/user/get"
+        target_url = self.base_url + "/admin/user/"
         
         headers = clean_outbound_request(
             {
@@ -152,7 +152,7 @@ class AuthService(IAuthService):
         username: str | None = None,
     ) -> dict:
         
-        target_url = self.base_url + "/admin/user/delete"
+        target_url = self.base_url + "/admin/user/"
         
         headers = clean_outbound_request(
             {
@@ -185,7 +185,7 @@ class AuthService(IAuthService):
         credentials: AuthCredentials,
     ) -> dict:
         
-        target_url = self.base_url + "/user/self/get"
+        target_url = self.base_url + "/user/self/"
         
         headers = clean_outbound_request(
             {
@@ -210,7 +210,7 @@ class AuthService(IAuthService):
         credentials: AuthCredentials,
     ) -> dict:
                 
-        target_url = self.base_url + "/user/self/delete"
+        target_url = self.base_url + "/user/self/"
         
         headers = clean_outbound_request(
             {

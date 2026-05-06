@@ -5,7 +5,7 @@ from src.repo.interface.Iuser_repo import IUserRepo
 from src.worker.depends.user_repo_depend import user_repo_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.worker.depends.auth_depend import admin_auth_depend
-from src.usecases.admin.admin_delete_user import AdminDeleteUser
+from src.usecases.admin.delete_user import DeleteUser
 from src.infra.exceptions.exceptions import AppBaseException
 
 routing_key = "auth_service.admin.user.delete"
@@ -21,7 +21,7 @@ async def delete_user(
     user: UserModel = Depends(admin_auth_depend),
 ):
     try:        
-        delete_user_usecase = AdminDeleteUser(user_repo)
+        delete_user_usecase = DeleteUser(user_repo)
         output = await delete_user_usecase.execute(user_id, username)
         return output.model_dump(mode="json")
     except AppBaseException as ex:

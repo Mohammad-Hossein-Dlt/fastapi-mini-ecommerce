@@ -8,7 +8,7 @@ from src.models.schemas.order.update_order_input import UpdateOrderInput
 class IOrderService(ABC):
     
     @abstractmethod
-    async def admin_get_one(
+    async def get_by_id(
         credentials: AuthCredentials,
         order_id: str,
     ) -> dict:
@@ -16,15 +16,7 @@ class IOrderService(ABC):
         raise NotImplementedError
     
     @abstractmethod
-    async def admin_get_all(
-        credentials: AuthCredentials,
-        order_filter: FilterOrderInput,
-    ) -> dict:
-    
-        raise NotImplementedError
-    
-    @abstractmethod
-    async def admin_modify_one(
+    async def modify(
         credentials: AuthCredentials,
         modify: ModifyOrderInput,
     ) -> dict:
@@ -32,7 +24,7 @@ class IOrderService(ABC):
         raise NotImplementedError
     
     @abstractmethod
-    async def admin_delete_one(
+    async def delete_by_id(
         credentials: AuthCredentials,
         order_id: str,
     ) -> dict:
@@ -40,15 +32,23 @@ class IOrderService(ABC):
         raise NotImplementedError
     
     @abstractmethod
-    async def admin_delete_all(
+    async def get_by_criteria(
         credentials: AuthCredentials,
-        order_filter: FilterOrderInput,
+        criteria: FilterOrderInput,
+    ) -> dict:
+    
+        raise NotImplementedError
+    
+    @abstractmethod
+    async def delete_by_criteria(
+        credentials: AuthCredentials,
+        criteria: FilterOrderInput,
     ) -> dict:
         
         raise NotImplementedError
     
     @abstractmethod
-    async def user_place_order(
+    async def place_order(
         credentials: AuthCredentials,
         order: PlaceOrderInput,
     ) -> dict:
@@ -56,7 +56,7 @@ class IOrderService(ABC):
         raise NotImplementedError
     
     @abstractmethod
-    async def user_get_one(
+    async def user_get_by_id(
         credentials: AuthCredentials,
         order_id: str,
     ) -> dict:
@@ -64,17 +64,17 @@ class IOrderService(ABC):
         raise NotImplementedError
     
     @abstractmethod
-    async def user_get_all(
+    async def user_update(
         credentials: AuthCredentials,
-        order_filter: UserFilterOrderInput,
+        order: UpdateOrderInput,
     ) -> dict:
         
         raise NotImplementedError
     
     @abstractmethod
-    async def user_update_one(
+    async def user_get_by_criteria(
         credentials: AuthCredentials,
-        order: UpdateOrderInput,
+        criteria: UserFilterOrderInput,
     ) -> dict:
         
         raise NotImplementedError

@@ -3,12 +3,12 @@ from faststream import Depends
 from faststream.rabbit import RabbitMessage
 from src.models.schemas.filter.products_filter_input import ProductFilterInput
 from src.repo.interface.Iproduct_repo import IProductRepo
-from src.worker.depends.product_repo_depend import product_repo_depend
+from src.worker.depends.repo_depend import product_repo_depend
 from src.repo.interface.Icategory_repo import ICategoryRepo
-from src.worker.depends.category_repo_depend import category_repo_depend
+from src.worker.depends.repo_depend import category_repo_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.worker.depends.auth_depend import user_auth_depend
-from src.usecases.product.get_all_products import GetAllProducts
+from src.usecases.product.get_by_criteria import GetProducts
 from src.infra.exceptions.exceptions import AppBaseException
 
 routing_key = "product_service.product.get.all"
@@ -18,14 +18,14 @@ routing_key = "product_service.product.get.all"
 )
 async def get_all_products(
     msg: RabbitMessage,
-    filter: ProductFilterInput,
+    criteria: ProductFilterInput,
     product_repo: IProductRepo = Depends(product_repo_depend),
     category_repo: ICategoryRepo = Depends(category_repo_depend),
     user: UserModel = Depends(user_auth_depend),
 ):
     try:
-        get_all_products_usecase = GetAllProducts(product_repo, category_repo)
-        outputs_list = await get_all_products_usecase.execute(filter)
+        get_all_products_usecase = GetProducts(product_repo, category_repo)
+        outputs_list = await get_all_products_usecase.execute(criteria)
         return [ output.model_dump(mode="json") for output in outputs_list ]
     except AppBaseException as ex:
         await msg.reject(requeue=False)

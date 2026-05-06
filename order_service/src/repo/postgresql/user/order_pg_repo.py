@@ -4,6 +4,7 @@ from src.repo.interface.user.Iorder_repo import IOrderRepo
 from src.domain.schemas.order.order_model import OrderModel
 from src.infra.database.postgresql.models.order_db_model import OrderDBModel
 from src.models.schemas.filter.filter_order_input import FilterOrderInput
+from src.infra.utils.convert_id import convert_database_id
 from src.infra.exceptions.exceptions import EntityNotFoundError
 
 class OrderPgRepo(IOrderRepo):
@@ -14,94 +15,68 @@ class OrderPgRepo(IOrderRepo):
     ):
         self.db = db
         
-    async def place_order(
+    async def create(
         self,
         order: OrderModel,
     ) -> OrderModel:
         
         try:                        
-            new_order = OrderDBModel(**order.custom_model_dump(exclude={"id"}))
+            new_order = OrderDBModel(**order.model_dump_for_db())
             self.db.add(new_order)
             self.db.commit()
             return OrderModel.model_validate(new_order, from_attributes=True)
         except:
-            # self.db.rollback()
             raise
     
-    async def get_all_orders(
+    async def get_by_id(
         self,
-        filter_order: FilterOrderInput,
-    ) ->  list[OrderModel]:
+        order_id: str,
+    ) -> OrderModel:
         
         try:
-            query = OrderDBModel.create_filter_query(filter_order)
-            orders = self.db.execute(query).scalars().all()
-        
-            return [ OrderModel.model_validate(t, from_attributes=True) for t in orders ]
+            order_id = convert_database_id(order_id)
+            order = self.db.query(
+                OrderDBModel   
+            ).where(
+                OrderDBModel.id == order_id,
+            ).first()
+            
+            return OrderModel.model_validate(order, from_attributes=True)
         except:
-            # self.db.rollback()
-            raise EntityNotFoundError(status_code=404, message="There are no orders")
-    
-    async def get_order_by_id(
-        self,
-        order_id: int,
-        user_id: str,
-    ) ->  OrderModel:
+            raise EntityNotFoundError(status_code=404, message="Order not found")
         
+    async def get_by_id_and_user_id(
+        self,
+        order_id: str,
+        user_id: str,
+    ) -> OrderModel:        
         try:
-                                    
+            order_id = convert_database_id(order_id)                        
+            user_id = convert_database_id(user_id)                        
             order = self.db.query(
                 OrderDBModel   
             ).where(
                 and_(
-                    OrderDBModel.id == int(order_id),
-                    OrderDBModel.user_id == str(user_id),
+                    OrderDBModel.id == order_id,
+                    OrderDBModel.user_id == user_id,
                 ),
             ).first()
             
             return OrderModel.model_validate(order, from_attributes=True)
         except:
-            # self.db.rollback()
-            raise EntityNotFoundError(status_code=404, message="Order not found")
-        
-    async def check_order(
-        self,
-        user_id: str,
-        product_id: str,
-    ) ->  OrderModel:
-        
-        try:         
-
-            order = self.db.query(
-                OrderDBModel   
-            ).where(
-                and_(
-                    OrderDBModel.user_id == str(user_id),
-                    OrderDBModel.product_id == str(product_id),
-                ),
-            ).first()
-            
-            return OrderModel.model_validate(order, from_attributes=True)
-        except:
-            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Order not found")
     
-    async def update_order(
+    async def update(
         self,
         order: OrderModel,
-    ) ->  OrderModel:
+    ) -> OrderModel:
         
         try:
             
-            to_update: dict = order.custom_model_dump(
-                exclude_unset=True,
+            to_update: dict = order.model_dump_for_db(
                 exclude_none=True,
-                exclude={
-                    "id",
-                    "user_id",
-                    "product_id",
-                },
-                db_stack="sql",
+                exclude_unset=True,
+                exclude={"user_id", "product_id"},
             )
                         
             self.db.query(
@@ -115,22 +90,59 @@ class OrderPgRepo(IOrderRepo):
             
             self.db.commit()
                         
-            return await self.get_order_by_id(order.id, order.user_id)
+            return await self.get_by_id_and_user_id(order.id, order.user_id)
         except EntityNotFoundError:
             raise
         except:
-            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Order not found")
     
-    async def delete_all_orders(
+    async def delete_by_id(
+        self,
+        order_id: str,
+        user_id: str,
+    ) -> bool:
+        
+        try:
+            order_id = convert_database_id(order_id)
+            user_id = convert_database_id(user_id)
+            order = await self.get_by_id_and_user_id(order_id, user_id)
+            if order:
+                order = self.db.merge(OrderDBModel(**order.model_dump()))
+                
+            if isinstance(order, OrderDBModel):
+                self.db.delete(order)
+                self.db.commit()
+                return True
+            else:
+                return False
+        except EntityNotFoundError:
+            raise
+        except:
+            raise EntityNotFoundError(status_code=404, message="Order not found")
+        
+    async def get_by_criteria(
+        self,
+        criteria: FilterOrderInput,
+    ) -> list[OrderModel]:
+        
+        try:
+            query = OrderDBModel.create_filter_query(criteria)
+            orders = self.db.execute(query).scalars().all()
+        
+            return [ OrderModel.model_validate(t, from_attributes=True) for t in orders ]
+        except:
+            raise EntityNotFoundError(status_code=404, message="There are no orders")
+    
+    async def delete_by_user_id(
         self,
         user_id: str,
     ) -> bool:
         
         try:
-            orders = await self.get_all_orders(
+            user_id = convert_database_id(user_id)
+            orders = await self.get_by_criteria(
                 FilterOrderInput(
-                    user_id=str(user_id),
+                    user_id=user_id,
                 ),
             )
             
@@ -147,28 +159,5 @@ class OrderPgRepo(IOrderRepo):
         except EntityNotFoundError:
             raise
         except:
-            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="There are no orders")
     
-    async def delete_order(
-        self,
-        order_id: int,
-        user_id: str,
-    ) -> bool:
-        
-        try:
-            order = await self.get_order_by_id(order_id, user_id)
-            if order:
-                order = self.db.merge(OrderDBModel(**order.model_dump()))
-                
-            if isinstance(order, OrderDBModel):
-                self.db.delete(order)
-                self.db.commit()
-                return True
-            else:
-                return False
-        except EntityNotFoundError:
-            raise
-        except:
-            # self.db.rollback()
-            raise EntityNotFoundError(status_code=404, message="Order not found")

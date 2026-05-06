@@ -1,122 +1,134 @@
 from src.repo.interface.user.Iorder_repo import IOrderRepo
 from src.domain.schemas.order.order_model import OrderModel
-from src.domain.enums import Status
 from src.infra.database.mongodb.collections.order_collection import OrderCollection
 from src.models.schemas.filter.filter_order_input import FilterOrderInput
-from beanie.operators import And
-from src.infra.utils.convert_id import convert_object_id
+from src.infra.utils.convert_id import convert_database_id
 from src.infra.exceptions.exceptions import EntityNotFoundError
+from beanie.operators import And
 
 class OrderMongodbRepo(IOrderRepo):
         
-    async def place_order(
+    async def create(
         self,
         order: OrderModel,
     ) -> OrderModel:
-            
-        new_order = await OrderCollection.insert(
-            OrderCollection(**order.custom_model_dump(exclude={"id"})),
-        )
         
-        return OrderModel.model_validate(new_order, from_attributes=True)
-    
-    async def get_all_orders(
+        try:
+            new_order = await OrderCollection.insert(
+                OrderCollection(**order.model_dump_for_db()),
+            )
+            return OrderModel.model_validate(new_order, from_attributes=True)
+        except:
+            raise
+        
+    async def get_by_id(
         self,
-        filter_order: FilterOrderInput,
-    ) ->  list[OrderModel]:
+        order_id: str,
+    ) -> OrderModel:
         
         try:
             
-            query = OrderCollection.create_filter_query(filter_order)
+            order_id = convert_database_id(order_id)
                         
-            orders = await OrderCollection.find(query).to_list()
-                        
-            return [ OrderModel.model_validate(t, from_attributes=True) for t in orders ]
+            order = await OrderCollection.find_one(
+                OrderCollection.id == order_id,
+            )
+            
+            return OrderModel.model_validate(order, from_attributes=True)
         except:
-            raise EntityNotFoundError(status_code=404, message="There are no orders")
+            raise EntityNotFoundError(status_code=404, message="Order not found")    
     
-    async def get_order_by_id(
+    async def get_by_id_and_user_id(
         self,
         order_id: str,
         user_id: str,
-    ) ->  OrderModel:
-        
+    ) -> OrderModel:
+                
         try:
             
-            order_id = convert_object_id(order_id)
-            user_id = convert_object_id(user_id)
-            
+            order_id = convert_database_id(order_id)
+            user_id = convert_database_id(user_id)
+                        
             order = await OrderCollection.find_one(
-                OrderCollection.id == order_id,
-                OrderCollection.user_id == user_id,
+                And(
+                    OrderCollection.id == order_id,
+                    OrderCollection.user_id == user_id,
+                ),
             )
             
             return OrderModel.model_validate(order, from_attributes=True)
         except:
             raise EntityNotFoundError(status_code=404, message="Order not found")
-        
-    async def check_order(
-        self,
-        user_id: str,
-        product_id: str,
-    ) ->  OrderModel:
-        
-        try:
-            
-            user_id = convert_object_id(user_id)
-            product_id = convert_object_id(product_id)
-            
-            order = await OrderCollection.find_one(
-                OrderCollection.user_id == user_id,
-                OrderCollection.product_id == product_id,
-                OrderCollection.status != Status.cancelled,
-            )
-            
-            return OrderModel.model_validate(order, from_attributes=True)
-        except:
-            raise EntityNotFoundError(status_code=404, message="Order not found")
-    
-    async def update_order(
+
+    async def update(
         self,
         order: OrderModel,
-    ) ->  OrderModel:
+    ) -> OrderModel:
         
         try:
                         
-            to_update: dict = order.custom_model_dump(
-                exclude_unset=True,
+            to_update: dict = order.model_dump_for_db(
                 exclude_none=True,
-                exclude={
-                    "id",
-                    "user_id",
-                    "product_id",
-                },
-                db_stack="no-sql",
+                exclude_unset=True,
+                exclude={"user_id", "product_id"},
             )
-                        
+            
             await OrderCollection.find_one(
                 And(
                     OrderCollection.id == order.id,
                     OrderCollection.user_id == order.user_id,
-                )
+                ),
             ).update(
                 {
                     "$set": to_update,
                 },
             )
                         
-            return await self.get_order_by_id(order.id, order.user_id)
+            return await self.get_by_id_and_user_id(order.id, order.user_id)
         except:
             raise EntityNotFoundError(status_code=404, message="Order not found")
     
-    async def delete_all_orders(
+    async def delete_by_id(
+        self,
+        order_id: str,
+        user_id: str,
+    ) -> bool:
+        
+        try:
+            order_id = convert_database_id(order_id)
+            user_id = convert_database_id(user_id)
+            
+            result = await OrderCollection.find(
+                OrderCollection.id == order_id,
+            ).delete()
+            
+            return bool(result.deleted_count)
+        except:
+            raise EntityNotFoundError(status_code=404, message="Order not found")
+        
+    async def get_by_criteria(
+        self,
+        criteria: FilterOrderInput,
+    ) -> list[OrderModel]:
+        
+        try:
+            
+            query = OrderCollection.create_filter_query(criteria)
+                        
+            orders = await OrderCollection.find(query).to_list()
+                        
+            return [ OrderModel.model_validate(t, from_attributes=True) for t in orders ]
+        except:
+            raise EntityNotFoundError(status_code=404, message="There are no orders")
+        
+    async def delete_by_user_id(
         self,
         user_id: str,
     ) -> bool:
         
         try:
             
-            user_id = convert_object_id(user_id)
+            user_id = convert_database_id(user_id)
             
             result = await OrderCollection.find(
                 OrderCollection.user_id == user_id,
@@ -126,22 +138,3 @@ class OrderMongodbRepo(IOrderRepo):
         except:
             raise EntityNotFoundError(status_code=404, message="There are no orders")
     
-    async def delete_order(
-        self,
-        order_id: str,
-        user_id: str,
-    ) -> bool:
-        
-        try:
-            
-            order_id = convert_object_id(order_id)
-            user_id = convert_object_id(user_id)
-            
-            result = await OrderCollection.find(
-                OrderCollection.id == order_id,
-                OrderCollection.user_id == user_id,
-            ).delete()
-            
-            return bool(result.deleted_count)
-        except:
-            raise EntityNotFoundError(status_code=404, message="Order not found")

@@ -1,5 +1,5 @@
 from src.infra.utils.custom_base_model import CustomBaseModel
-from pydantic import Field, model_validator
+from pydantic import ConfigDict, Field, model_validator
 from beanie import PydanticObjectId
 from datetime import datetime, timezone
 from src.domain.enums import Status
@@ -16,6 +16,11 @@ class OrderModel(CustomBaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
         
+
+    model_config = ConfigDict(
+        extra='allow',
+    )
+
     @model_validator(mode='after')
     def validate_values(
         self

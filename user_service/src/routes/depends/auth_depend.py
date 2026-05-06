@@ -4,11 +4,11 @@ from src.infra.auth.jwt_handler import JWTHandler
 from src.gateway.internal.interface.Iauth_service import IAuthService
 from .internal_http_depend import auth_service_depend
 from src.repo.interface.Iauth_repo import IAuthRepo
-from .auth_repo_depend import auth_repo_depend
+from .repo_depend import auth_repo_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.domain.schemas.auth.auth_credentials import AuthCredentials
 from src.usecases.auth.refresh_token import RefreshToken
-from src.usecases.user.self.user_get_self import UserGetSelf
+from src.usecases.user.self.get_self import GetSelf
 from src.infra.exceptions.exceptions import AppBaseException
 
 auth_schema = OAuth2PasswordBearer(tokenUrl="/user/api/v1/auth/login")
@@ -47,7 +47,7 @@ async def user_auth_depend(
                 raise HTTPException(status_code=refresh_ex.status_code, detail=refresh_ex.message)
                 
     try:
-        get_user_usecase = UserGetSelf(auth_service)
+        get_user_usecase = GetSelf(auth_service)
         user = await get_user_usecase.execute(credentials)
         user.credentials = await auth_repo.get_user_auth_credentials()
         return user

@@ -14,12 +14,12 @@ class AuthService(IAuthService):
         self.base_url = base_url
         self.allowed_status_codes = [200, 201]
     
-    async def admin_get_self(
+    async def get_admin(
         self,
         access_token: str,
     ) -> dict:
         
-        target_url = self.base_url + "/admin/self/get"
+        target_url = self.base_url + "/admin/self/"
         
         headers = clean_outbound_request(
             {
@@ -39,12 +39,12 @@ class AuthService(IAuthService):
             detail = data["detail"]
             raise AppBaseException(response.status, detail)
     
-    async def user_get_self(
+    async def get_user(
         self,
         access_token: str,
     ) -> dict:
         
-        target_url = self.base_url + "/user/self/get"
+        target_url = self.base_url + "/user/self/"
         
         headers = clean_outbound_request(
             {

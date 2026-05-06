@@ -2,10 +2,10 @@ from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from src.infra.context.app_context import AppContext
 from src.infra.auth.jwt_handler import JWTHandler
-from .user_repo_depend import user_repo_depend
+from .repo_depend import user_repo_depend
 from src.repo.interface.Iuser_repo import IUserRepo
 from src.domain.schemas.user.user_model import UserModel
-from src.usecases.user.user_get_self import UserGetSelf
+from src.usecases.user.get import GetUser
 from src.domain.enums import Role
 from src.infra.exceptions.exceptions import AppBaseException
 from typing import Literal
@@ -13,9 +13,7 @@ from typing import Literal
 auth_schema = OAuth2PasswordBearer(tokenUrl="/auth/api/v1/login")
 
 def jwt_handler_depend() -> JWTHandler:
-
-    jwt_handler = JWTHandler(context=AppContext.jwt)
-    return jwt_handler
+    return AppContext.jwt
 
 async def auth_depend(
     token: str = Depends(auth_schema),
@@ -30,7 +28,7 @@ async def auth_depend(
         raise HTTPException(status_code=ex.status_code, detail=ex.message)
         
     if payload.type == token_type:
-        get_user_usecase = UserGetSelf(user_repo)
+        get_user_usecase = GetUser(user_repo)
         try:
             return await get_user_usecase.execute(payload.user_id)
         except AppBaseException as ex:
@@ -76,7 +74,7 @@ async def admin_auth_depend(
         user_repo,
     )
     
-    if user.role == Role.admin:
+    if user.role == Role.ADMIN:
         return user
     else:
         raise HTTPException(status_code=401, detail="Only admin have access")    

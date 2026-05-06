@@ -10,33 +10,33 @@ class ProductDBModel(UpdateFromSchemaMixin, Base):
 
     id = Column(Integer, nullable=False, unique=True, primary_key=True, autoincrement=True, index=True)
     category_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
-    name = Column(Text, nullable=True)
+    name = Column(Text, nullable=False)
     description = Column(Text, nullable=True)
-    price = Column(Float, nullable=True)
-    stock = Column(Integer, nullable=True)
+    price = Column(Float, nullable=False, default=0)
+    stock = Column(Integer, nullable=False, default=0)
     created_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
     
     @classmethod
     def create_filter_query(
         cls,
-        product_filter: ProductFilterInput,
+        criteria: ProductFilterInput,
     ) -> Select["ProductDBModel"]:
         query = select(cls)
         
-        if product_filter.category_id:
+        if criteria.category_id:
             query = query.where(
-                cls.category_id == int(product_filter.category_id)
+                cls.category_id == int(criteria.category_id)
             )
         
-        if product_filter.start_price:
+        if criteria.start_price:
             query = query.where(
-                cls.price >= product_filter.start_price
+                cls.price >= criteria.start_price
             )
         
-        if product_filter.end_price:
+        if criteria.end_price:
             query = query.where(
-                cls.price <= product_filter.end_price
+                cls.price <= criteria.end_price
             )
         
         return query

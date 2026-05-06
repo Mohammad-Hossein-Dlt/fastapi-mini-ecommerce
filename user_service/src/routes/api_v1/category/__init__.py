@@ -1,11 +1,11 @@
 from . import (
     _router,
-    get_category,
-    get_all_categories,
+    get_by_id,
+    get_by_criteria,
 )
 
 __all__ = [
     "_router",
-    "get_category",
-    "get_all_categories",
+    "get_by_id",
+    "get_by_criteria",
 ]

@@ -9,6 +9,7 @@ class CategoryModel(CustomBaseModel):
     id: int | PydanticObjectId | None = None
     parent_id: int | PydanticObjectId | None = None
     name: str | None = None
+    slug: str | None = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 

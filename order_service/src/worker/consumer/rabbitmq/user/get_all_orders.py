@@ -3,10 +3,10 @@ from faststream import Depends
 from faststream.rabbit import RabbitMessage
 from src.models.schemas.filter.filter_order_input import UserFilterOrderInput
 from src.repo.interface.user.Iorder_repo import IOrderRepo
-from src.worker.depends.order_repo_depend import user_order_repo_depend
+from src.worker.depends.repo_depend import user_order_repo_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.worker.depends.auth_depend import user_auth_depend
-from src.usecases.user.order.get_all_orders import GetAllOrders
+from src.usecases.user.order.get_by_criteria import GetOrders
 from src.infra.exceptions.exceptions import AppBaseException
 
 routing_key = "order_service.user.get.all"
@@ -16,13 +16,13 @@ routing_key = "order_service.user.get.all"
 )
 async def get_all_orders(
     msg: RabbitMessage,
-    filter_order: UserFilterOrderInput,
+    criteriaorder: UserFilterOrderInput,
     order_repo: IOrderRepo = Depends(user_order_repo_depend),
     user: UserModel = Depends(user_auth_depend),
 ):
     try:
-        get_order_usecase = GetAllOrders(order_repo)
-        outputs_list = await get_order_usecase.execute(user.id, filter_order)
+        get_order_usecase = GetOrders(order_repo)
+        outputs_list = await get_order_usecase.execute(user.id, criteriaorder)
         return [ output.model_dump(mode="json") for output in outputs_list ]
     except AppBaseException as ex:
         await msg.reject(requeue=False)

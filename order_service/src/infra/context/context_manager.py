@@ -1,7 +1,6 @@
 from .app_context import AppContext
 from src.infra.settings.settings import settings
-from src.infra.schemas.broker.rabbitmq_params import RabbitParams
-from src.infra.schemas.broker.kafka_params import KafkaParams
+from src.infra.bootstrap.broker import init_broker_client, terminate_broker_client
 from src.infra.bootstrap.database import init_database_client, terminate_database_client
 from aiohttp import ClientSession
 
@@ -9,17 +8,23 @@ class AppContextManager:
         
     @classmethod
     def init_context(cls):
-            
+                
         AppContext.auth_base_url = settings.AUTH_BASE_URL
         AppContext.product_base_url = settings.PRODUCT_BASE_URL
-        AppContext.broker_params = RabbitParams.model_validate(settings.RABBITMQ_ORDER)
+        AppContext.broker_client = init_broker_client(settings.RABBITMQ)
         
     @classmethod
     async def lazy_init_context(cls):
         
         print("Starting up...")
         
-        AppContext.db_client = await init_database_client()
+        # await AppContext.broker_client.broker.connect()
+        
+        if settings.ORDER_DB_STACK == "mongo_db":
+            AppContext.db_client = await init_database_client(settings.MONGODB)
+        elif settings.ORDER_DB_STACK == "postgresql":
+            AppContext.db_client = await init_database_client(settings.POSTGRES)
+            
         AppContext.http_client = ClientSession()
 
     @classmethod
@@ -28,6 +33,7 @@ class AppContextManager:
         print("Shutting down...")
         
         await terminate_database_client(AppContext.db_client)
+        await terminate_broker_client(AppContext.broker_client)
         await AppContext.http_client.close()
-
+        
 AppContextManager.init_context()

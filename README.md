@@ -5,31 +5,39 @@
 `.env` file parameters, put it next to the services
 
 ```
-AUTH_BASE_URL = http://nginx-service/auth/api/v1
-PRODUCT_BASE_URL = http://nginx-service/product/api/v1
-ORDER_BASE_URL = http://nginx-service/order/api/v1
+ENVIRONMENT=test
 
-AUTH_DB_STACK = postgresql # postgresql, mongo_db
-PRODUCT_DB_STACK = postgresql # postgresql, mongo_db
-ORDER_DB_STACK = mongo_db # postgresql, mongo_db
+AUTH_BASE_URL=http://nginx-service/auth/api/v1
+PRODUCT_BASE_URL=http://nginx-service/product/api/v1
+ORDER_BASE_URL=http://nginx-service/order/api/v1
 
-MONGO_HOST = mongodb-service
-MONGO_PORT = 27017
-MONGO_INITDB_ROOT_USERNAME = root
-MONGO_INITDB_ROOT_PASSWORD = rootpassword
-MONGO_INITDB_DATABASE = db
+RABBITMQ__URL=amqp://dev:devpass@localhost:5672/app
+RABBITMQ__EXCHANGE=my-exchange
+RABBITMQ__QUEUE=my-queue
+RABBITMQ__ROUTING_KEY='ecommerce.*.#'
 
-POSTGRES_HOST = postgres-service
-POSTGRES_PORT = 5432
-POSTGRES_USER = admin
-POSTGRES_PASSWORD = adminpassword
-POSTGRES_DB = db
+AUTH_DB_STACK=postgresql # postgresql, mongo_db
+PRODUCT_DB_STACK=postgresql # postgresql, mongo_db
+ORDER_DB_STACK=mongo_db # postgresql, mongo_db
 
-JWT_SECRET = 5fd4a7c9-7b61-49bf-8aea-ae8c53727290
-JWT_ALGORITHM = HS256
-JWT_EXPIRATION_MINUTES = 2
-JWT_REFRESH_EXPIRATION_MINUTES = 4
+MONGODB__HOST=mongodb-service
+MONGODB__PORT=27017
+MONGODB__USERNAME=root
+MONGODB__PASSWORD=rootpassword
+MONGODB__DB_NAME=db
 
+POSTGRES__HOST=postgres-service
+POSTGRES__PORT=5432
+POSTGRES__USERNAME=admin
+POSTGRES__PASSWORD=adminpassword
+POSTGRES__DB_NAME=db
+
+JWT__SECRET=5fd4a7c9-7b61-49bf-8aea-ae8c53727290
+JWT__ALGORITHM=HS256
+JWT__ACCESS_TIME=2000000
+JWT__REFRESH_TIME=4000000
+
+# Grafana config
 GF_SECURITY_ADMIN_PASSWORD=admin
 ```
 
@@ -50,15 +58,12 @@ In this layer, the application infrastructure is defined, such as:
 - Database client and its models (tables)
 
 - Errors related to this layer and other layers
-
   - include status code and message
 
 - Services for interacting with external APIs
-
   - include interfaces and their implementation
 
 - Fastapi config such as
-
   - middleware
   - tasks that should be run on startup or shutdown, such as create and close database client
   - implement some states based on settings loaded from .env in main app, to have access them throughout the entire project
@@ -258,39 +263,30 @@ All **Kubernetes manifests** for our services, with databases services, nginx, p
 #### **Workflow configuration**
 
 1. **Environment setup:**
-
    - All environment variables defined in the project repository’s _Variables_ section are stored in a `.env` file.
 
 2. **Docker registry login:**
-
    - Authenticate with the Docker registry.
 
 3. **Kubectl setup:**
-
    - Configure and initialize `kubectl` with Kubeconfig, set in the secrets and access with `secrets.KUBE_CONFIG`.
 
 4. **ConfigMap creation, generate all necessary ConfigMaps:**
-
    - `app-config` – Contains environment variables from the `.env` file.
    - `nginx-config` – Built from the `nginx.conf` file for Nginx configuration.
    - `prometheus-config` – Built from the `prometheus.yml` file for Prometheus configuration.
 
 5. **Secrets creation:**
-
    - Create docker registry secrets for use in the `imagePullSecrets` section of the kubernetes manifests for our project services.
 
 6. **Database services deployment:**
-
    - Deploy database manifests first, to ensure database services are available.
 
 7. **Build and push project services images:**
-
    - Build docker images for all project services and push them to the registry.
 
 8. **Project services deployment:**
-
    - Deploy all project services using their kubernetes manifests.
 
 9. **Other services deployment:**
-
    - Finally, deploy the manifests for other services such as **Nginx**, **Prometheus**, and **Grafana**.

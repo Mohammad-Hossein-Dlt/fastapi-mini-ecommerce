@@ -9,36 +9,13 @@ class IProductService(ABC):
     @abstractmethod
     async def create(
         credentials: AuthCredentials,
-        product_data: CreateProductInput,
+        product: CreateProductInput,
     ) -> dict:
     
         raise NotImplementedError
     
     @abstractmethod
-    async def delete_all(
-        credentials: AuthCredentials,
-    ) -> dict:
-    
-        raise NotImplementedError
-    
-    @abstractmethod
-    async def delete_one(
-        credentials: AuthCredentials,
-        product_id: str,
-    ) -> dict:
-        
-        raise NotImplementedError
-    
-    @abstractmethod
-    async def get_all(
-        credentials: AuthCredentials,
-        product_filter: ProductFilterInput,
-    ) -> dict:
-        
-        raise NotImplementedError
-        
-    @abstractmethod
-    async def get_one(
+    async def get_by_id(
         credentials: AuthCredentials,
         product_id: str,
     ) -> dict:
@@ -46,9 +23,32 @@ class IProductService(ABC):
         raise NotImplementedError        
     
     @abstractmethod
-    async def update_one(
+    async def update(
         credentials: AuthCredentials,
-        product_data: UpdateProductInput,
+        product: UpdateProductInput,
     ) -> dict:
         
+        raise NotImplementedError
+    
+    @abstractmethod
+    async def delete_by_id(
+        credentials: AuthCredentials,
+        product_id: str,
+    ) -> dict:
+        
+        raise NotImplementedError
+    
+    @abstractmethod
+    async def get_by_criteria(
+        credentials: AuthCredentials,
+        criteria: ProductFilterInput,
+    ) -> dict:
+        
+        raise NotImplementedError
+    
+    @abstractmethod
+    async def delete_all(
+        credentials: AuthCredentials,
+    ) -> dict:
+    
         raise NotImplementedError

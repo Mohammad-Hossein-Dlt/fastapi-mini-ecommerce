@@ -17,5 +17,5 @@ def product_service_depend() -> IProductService:
     
     return ProductService(
         AppContext.http_client,
-        AppContext.product_base_url + "/product",
+        AppContext.product_base_url,
     )

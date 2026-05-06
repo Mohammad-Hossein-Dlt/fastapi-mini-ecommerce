@@ -1,0 +1,29 @@
+from ._router import router
+from fastapi import Depends, Query, HTTPException
+from src.routes.http_response.responses import ResponseMessage
+from src.models.schemas.product.update_product_input import UpdateProductInput
+from src.gateway.internal.interface.Iproduct_service import IProductService
+from src.routes.depends.internal_http_depend import product_service_depend
+from src.domain.schemas.user.user_model import UserModel
+from src.routes.depends.auth_depend import admin_auth_depend
+from src.usecases.admin.product.update import UpdateProduct
+from src.infra.exceptions.exceptions import AppBaseException
+
+@router.put(
+    "/",
+    status_code=200,
+    responses={
+        **ResponseMessage.HTTP_500_INTERNAL_SERVER_ERROR("Internal server error"),
+    }
+)
+async def update(
+    entity: UpdateProductInput = Query(...),
+    product_service: IProductService = Depends(product_service_depend),
+    user: UserModel = Depends(admin_auth_depend),
+):
+    try:
+        update_product_usecase = UpdateProduct(product_service)
+        output = await update_product_usecase.execute(user.credentials, entity)
+        return output.model_dump(mode="json")
+    except AppBaseException as ex:
+        raise HTTPException(status_code=ex.status_code, detail=str(ex))

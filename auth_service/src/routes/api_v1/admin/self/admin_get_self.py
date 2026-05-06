@@ -6,7 +6,7 @@ from src.routes.depends.auth_depend import admin_auth_depend
 from src.infra.exceptions.exceptions import AppBaseException
 
 @router.get(
-    "/get",
+    "/",
     status_code=200,
     responses={
         **ResponseMessage.HTTP_401_UNAUTHORIZED("Authentication failed"),

@@ -23,14 +23,14 @@ def category_service_depend() -> ICategoryService:
     
     return CategoryService(
         AppContext.http_client,
-        AppContext.product_base_url + "/category",
+        AppContext.product_base_url,
     )
 
 def product_service_depend() -> IProductService:
     
     return ProductService(
         AppContext.http_client,
-        AppContext.product_base_url + "/product",
+        AppContext.product_base_url,
     )
 
 def order_service_depend() -> IOrderService:

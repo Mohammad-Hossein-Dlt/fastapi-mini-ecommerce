@@ -1,11 +1,11 @@
 from src.repo.interface.user.Iorder_repo import IOrderRepo
 from src.gateway.internal.interface.Iproduct_service import IProductService
-from src.domain.schemas.product.product_model import ProductModel
+from src.domain.schemas.user.user_model import UserModel
 from src.models.schemas.order.place_order_input import PlaceOrderInput
 from src.domain.schemas.order.order_model import OrderModel
+from src.domain.schemas.product.product_model import ProductModel
 from src.domain.enums import Status
 from src.infra.exceptions.exceptions import AppBaseException, InvalidRequestException, OperationFailureException
-
 
 class PlaceOrder:
     
@@ -19,27 +19,23 @@ class PlaceOrder:
     
     async def execute(
         self,
-        access_token: str,
-        order: PlaceOrderInput,
-        user_id: str,
+        user: UserModel,
+        entity: PlaceOrderInput,
     ) -> OrderModel:
-        
+                
         try:
-            product = await self.product_service.get_product(access_token, order.product_id)
+            product = await self.product_service.get_by_id(user.token, entity.product_id)
             product: ProductModel = ProductModel.model_validate(product)
-        except AppBaseException:
-            raise
-        
-        try:
-            order: OrderModel = OrderModel.model_validate(order, from_attributes=True)
-            order.product_id = product.id
-            order.user_id = user_id
-            order.status = Status.pending
             
-            if not order.quantity or order.quantity < 1:
+            order_model: OrderModel = OrderModel.model_validate(entity, from_attributes=True)
+            order_model.user_id = user.id
+            order_model.product_id = product.id
+            order_model.status = Status.PENDING
+
+            if not order_model.quantity or order_model.quantity < 1:
                 raise InvalidRequestException(400, "Quantity must be at least 1")
             
-            return await self.order_repo.place_order(order)
+            return await self.order_repo.create(order_model)
         except AppBaseException:
             raise
         except:

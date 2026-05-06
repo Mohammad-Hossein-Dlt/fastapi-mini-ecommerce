@@ -4,8 +4,8 @@ from src.infra.auth.jwt_handler import JWTHandler
 from src.gateway.internal.interface.Iauth_service import IAuthService
 from .internal_http_depend import auth_service_depend
 from src.domain.schemas.user.user_model import UserModel
-from src.usecases.admin.self.admin_get_self import AdminGetSelf
-from src.usecases.user.self.user_get_self import UserGetSelf
+from src.usecases.admin.self.get import GetAdmin
+from src.usecases.user.self.get import GetUser
 from src.infra.exceptions.exceptions import AppBaseException, InvalidTokenException
 from typing import Annotated
 
@@ -36,7 +36,7 @@ async def admin_auth_depend(
         jwt_handler,
     )
         
-    get_user_usecase = AdminGetSelf(auth_service)
+    get_user_usecase = GetAdmin(auth_service)
     try:
         user = await get_user_usecase.execute(token)
         user.token = bearer_token.credentials
@@ -56,7 +56,7 @@ async def user_auth_depend(
         jwt_handler,
     )
         
-    get_user_usecase = UserGetSelf(auth_service)
+    get_user_usecase = GetUser(auth_service)
     try:
         user = await get_user_usecase.execute(token)
         user.token = bearer_token.credentials

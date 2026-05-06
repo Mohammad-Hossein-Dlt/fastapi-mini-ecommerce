@@ -1,44 +1,45 @@
 from abc import ABC, abstractmethod
 from src.domain.schemas.product.product_model import ProductModel
 from src.models.schemas.filter.products_filter_input import ProductFilterInput
+
 class IProductRepo(ABC):
         
     @abstractmethod
-    async def insert_product(
+    async def create(
         product: ProductModel,
     ) -> ProductModel:
     
         raise NotImplementedError
     
     @abstractmethod
-    async def get_all_products(
-        product_filter: ProductFilterInput,
-    ) ->  list[ProductModel]:
-    
-        raise NotImplementedError
-    
-    @abstractmethod
-    async def get_product_by_id(
+    async def get_by_id(
         product_id: str,
-    ) ->  ProductModel:
+    ) -> ProductModel:
     
         raise NotImplementedError
     
     @abstractmethod
-    async def update_product(
+    async def update(
         product: ProductModel,
-    ) ->  ProductModel:
+    ) -> ProductModel:
     
         raise NotImplementedError
     
     @abstractmethod
-    async def delete_all_products() -> bool:
-    
-        raise NotImplementedError
-    
-    @abstractmethod
-    async def delete_product(
+    async def delete_by_id(
         product_id: str,
     ) -> bool:
+    
+        raise NotImplementedError
+        
+    @abstractmethod
+    async def get_by_criteria(
+        criteria: ProductFilterInput,
+    ) -> list[ProductModel]:
+    
+        raise NotImplementedError
+    
+    @abstractmethod
+    async def delete_all() -> bool:
     
         raise NotImplementedError

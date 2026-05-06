@@ -1,6 +1,8 @@
-from motor.motor_asyncio import AsyncIOMotorClient
 from beanie import init_beanie
 from .collections.order_collection import OrderCollection
+from pymongo.asynchronous.database import AsyncDatabase
+from pymongo.asynchronous.mongo_client import AsyncMongoClient
+from beanie import init_beanie
 
 
 async def init_mongodb_client(
@@ -9,17 +11,22 @@ async def init_mongodb_client(
     username: str,
     password: str,
     db_name: str
-) -> AsyncIOMotorClient:
+) -> AsyncMongoClient:
     
-    client = AsyncIOMotorClient(
+    client = AsyncMongoClient(
         host=host,
         port=port,
         username=username,
-        password=password
+        password=password,
+    )
+    
+    database = AsyncDatabase(
+        client=client,
+        name=db_name,
     )
     
     await init_beanie(
-        database=client[db_name],
+        database=database,
         document_models=[
             OrderCollection,
         ],

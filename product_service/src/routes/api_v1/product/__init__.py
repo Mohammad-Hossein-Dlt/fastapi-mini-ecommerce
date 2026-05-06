@@ -1,19 +1,19 @@
 from . import (
     _router,
-    create_product,
-    update_product,
-    get_product,
-    get_all_products,
-    delete_product,
-    delete_all_products,
+    create,
+    get_by_id,
+    update,
+    delete_by_id,
+    get_by_criteria,
+    delete_all,
 )
 
 __all__ = [
     "_router",
-    "create_product",
-    "delete_all_products",
-    "delete_product",
-    "get_all_products",
-    "get_product",
-    "update_product",
+    "create",
+    "get_by_id",
+    "update",
+    "delete_by_id",
+    "get_by_criteria",
+    "delete_all",
 ]

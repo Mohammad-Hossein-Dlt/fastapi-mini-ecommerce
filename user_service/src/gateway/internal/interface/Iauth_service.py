@@ -7,14 +7,14 @@ class IAuthService(ABC):
     
     @abstractmethod
     async def register(
-        user_data: UserRegisterInput,
+        user: UserRegisterInput,
     ) -> dict:
     
         raise NotImplementedError
     
     @abstractmethod
     async def login(
-        user_data: UserLoginInput,
+        user: UserLoginInput,
     ) -> dict:
     
         raise NotImplementedError
@@ -27,14 +27,14 @@ class IAuthService(ABC):
         raise NotImplementedError
     
     @abstractmethod
-    async def user_get_self(
+    async def get_self(
         credentials: AuthCredentials,
     ) -> dict:
         
         raise NotImplementedError
     
     @abstractmethod
-    async def user_delete_self(
+    async def delete_self(
         credentials: AuthCredentials,
     ) -> dict:
         

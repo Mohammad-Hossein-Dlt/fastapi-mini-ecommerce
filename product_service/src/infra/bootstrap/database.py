@@ -1,45 +1,52 @@
-from src.infra.settings.settings import settings
 from src.infra.database.postgresql.connection import init_postgresql_client, create_tables
 from src.infra.database.mongodb.connection import init_mongodb_client
-from src.infra.schemas.database.sqlalchemy import SqlalchemyClient
-from src.infra.schemas.database.mongodb import MongodbClient
+from src.infra.schemas.database.sqlalchemy import SqlalchemyParams, SqlalchemyClient
+from src.infra.schemas.database.mongodb import MongodbParams, MongodbClient
 
-async def init_postgresql() -> SqlalchemyClient:
+async def init_postgresql(
+    params: SqlalchemyParams,
+) -> SqlalchemyClient:
     
     sql_client, engine = init_postgresql_client(
-        host=settings.POSTGRES_HOST,
-        port=settings.POSTGRES_PORT,
-        username=settings.POSTGRES_USER,
-        password=settings.POSTGRES_PASSWORD,
-        db_name=settings.POSTGRES_DB
+        host=params.host,
+        port=params.port,
+        username=params.username,
+        password=params.password,
+        db_name=params.db_name,
     )
     create_tables(engine)
     
     return SqlalchemyClient(
+        params=params,
         client=sql_client,
         engine=engine,
     )
 
-async def init_mongodb() -> MongodbClient:
+async def init_mongodb(
+    params: MongodbParams,
+) -> MongodbClient:
     
     mongo_client = await init_mongodb_client(
-        host=settings.MONGO_HOST,
-        port=settings.MONGO_PORT,
-        username=settings.MONGO_INITDB_ROOT_USERNAME,
-        password=settings.MONGO_INITDB_ROOT_PASSWORD,
-        db_name=settings.MONGO_INITDB_DATABASE,
+        host=params.host,
+        port=params.port,
+        username=params.username,
+        password=params.password,
+        db_name=params.db_name,
     )
     
     return MongodbClient(
+        params=params,
         client=mongo_client,
     )
 
-async def init_database_client() -> SqlalchemyClient | MongodbClient:
+async def init_database_client(
+    params: SqlalchemyParams | MongodbParams,
+) -> SqlalchemyClient | MongodbClient:
     
-    if settings.PRODUCT_DB_STACK == "postgresql":
-        return await init_postgresql()
-    elif settings.PRODUCT_DB_STACK == "mongo_db":
-        return await init_mongodb()
+    if isinstance(params, SqlalchemyParams):
+        return await init_postgresql(params)
+    elif isinstance(params, MongodbParams):
+        return await init_mongodb(params)
 
 async def terminate_database_client(
     context: SqlalchemyClient | MongodbClient | None = None,
@@ -53,4 +60,4 @@ async def terminate_database_client(
         context.engine.dispose()
         
     if isinstance(context, MongodbClient):
-        context.client.close()
+        await context.client.close()

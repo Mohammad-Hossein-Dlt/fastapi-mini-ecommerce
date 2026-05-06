@@ -61,6 +61,8 @@ services:
       dockerfile: Dockerfile
     container_name: admin_service
     restart: always
+    ports:
+      - 81:80
     env_file:
       - .env
     depends_on:
@@ -74,6 +76,8 @@ services:
       dockerfile: Dockerfile
     container_name: user_service
     restart: always
+    ports:
+      - 82:80
     env_file:
       - .env
     depends_on:
@@ -85,24 +89,31 @@ services:
     image: mongo
     container_name: mongo-db
     restart: always
+    ports:
+      - 27017:27017
     volumes:
       - mongo_data:/data/db
     env_file:
       - .env
-    ports:
-      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB__USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB__PASSWORD}
 
   # Postgresql
   postgres-service:
     image: postgres
     container_name: postgres-db
     restart: always
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    env_file:
-      - .env
     ports:
       - 54032:5432
+    volumes:
+      - pgdata:/var/lib/postgresql
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES__USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES__PASSWORD}
+      POSTGRES_DB: ${POSTGRES__DB_NAME}
 
   # Monitoring
   # prometheus:
@@ -126,7 +137,7 @@ services:
   #   container_name: grafana
   #   restart: always
   #   volumes:
-  #     - grafana_data:/var/lib/grafana 
+  #     - grafana_data:/var/lib/grafana
   #   env_file:
   #     - .env
   #   ports:

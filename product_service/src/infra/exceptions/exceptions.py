@@ -72,3 +72,11 @@ class EntityNotFoundError(AppBaseException):
         self.status_code = status_code
         self.message = message
         super().__init__(status_code, message)
+
+class DuplicateEntityError(AppBaseException):
+    """This exception is raised when an entity is duplicate"""
+
+    def __init__(self, status_code, message):
+        self.status_code = status_code
+        self.message = message
+        super().__init__(status_code, message)

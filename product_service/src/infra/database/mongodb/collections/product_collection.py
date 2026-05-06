@@ -4,7 +4,7 @@ from bson import ObjectId
 from pydantic import Field
 from datetime import datetime, timezone
 from src.models.schemas.filter.products_filter_input import ProductFilterInput
-from src.infra.utils.convert_id import convert_object_id
+from src.infra.utils.convert_id import convert_database_id
 
 class ProductCollection(ProductModel, Document):
     
@@ -23,19 +23,19 @@ class ProductCollection(ProductModel, Document):
     @classmethod
     def create_filter_query(
         cls,
-        product_filter: ProductFilterInput,
+        criteria: ProductFilterInput,
     ) -> dict:
         
         query = {}
 
-        if product_filter.category_id:
-            query[str(cls.category_id)] = convert_object_id(product_filter.category_id)
+        if criteria.category_id:
+            query[str(cls.category_id)] = convert_database_id(criteria.category_id)
 
-        if product_filter.start_price:
-            query[str(cls.price)] = {"$gte": product_filter.start_price}
+        if criteria.start_price:
+            query[str(cls.price)] = {"$gte": criteria.start_price}
 
-        if product_filter.end_price:
+        if criteria.end_price:
             query.setdefault(str(cls.price), {})
-            query[str(cls.price)]["$lte"] = product_filter.end_price
+            query[str(cls.price)]["$lte"] = criteria.end_price
                     
         return query

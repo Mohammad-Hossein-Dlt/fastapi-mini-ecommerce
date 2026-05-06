@@ -19,77 +19,13 @@ class OrderService(IOrderService):
         self.base_url = base_url
         self.allowed_status_codes = [200, 201]
     
-    async def admin_get_one(
-        self,
-        credentials: AuthCredentials,
-        order_id: str,
-    ) -> dict:
-        
-        target_url = self.base_url + "/admin/get/one"
-        
-        headers = clean_outbound_request(
-            {
-                "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
-            },
-        )
-        
-        params = clean_outbound_request(
-            {
-                "order_id": order_id,
-            },
-        )
-        
-        response = await self.session.get(
-            target_url,
-            headers=headers,
-            params=params,
-        )
-        
-        if response.status in self.allowed_status_codes:
-            return await response.json()
-        else:
-            data = await response.json()
-            detail = data["detail"]
-            raise AppBaseException(response.status, detail)
-    
-    async def admin_get_all(
-        self,
-        credentials: AuthCredentials,
-        order_filter: FilterOrderInput,
-    ) -> dict:
-        
-        target_url = self.base_url + "/admin/get/all"
-        
-        headers = clean_outbound_request(
-            {
-                "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
-            },
-        )
-        
-        params = clean_outbound_request(
-            order_filter.model_dump(mode="json"),
-        )
-        
-        response = await self.session.get(
-            target_url,
-            headers=headers,
-            params=params,
-        )
-        
-        if response.status in self.allowed_status_codes:
-            return await response.json()
-        else:
-            data = await response.json()
-            detail = data["detail"]
-            raise AppBaseException(response.status, detail)
-    
-    async def admin_modify_one(
+    async def modify(
         self,
         credentials: AuthCredentials,
         modify: ModifyOrderInput,
     ) -> dict:
         
-        target_url = self.base_url + "/admin/modify/one"
+        target_url = self.base_url + "/admin/"
         
         headers = clean_outbound_request(
             {
@@ -114,13 +50,46 @@ class OrderService(IOrderService):
             detail = data["detail"]
             raise AppBaseException(response.status, detail)
     
-    async def admin_delete_one(
+    async def get_by_id(
         self,
         credentials: AuthCredentials,
         order_id: str,
     ) -> dict:
         
-        target_url = self.base_url + "/admin/delete/one"
+        target_url = self.base_url + "/admin/"
+        
+        headers = clean_outbound_request(
+            {
+                "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
+            },
+        )
+        
+        params = clean_outbound_request(
+            {
+                "order_id": order_id,
+            },
+        )
+        
+        response = await self.session.get(
+            target_url,
+            headers=headers,
+            params=params,
+        )
+        
+        if response.status in self.allowed_status_codes:
+            return await response.json()
+        else:
+            data = await response.json()
+            detail = data["detail"]
+            raise AppBaseException(response.status, detail)
+    
+    async def delete_by_id(
+        self,
+        credentials: AuthCredentials,
+        order_id: str,
+    ) -> dict:
+        
+        target_url = self.base_url + "/admin/"
         
         headers = clean_outbound_request(
             {
@@ -146,14 +115,14 @@ class OrderService(IOrderService):
             data = await response.json()
             detail = data["detail"]
             raise AppBaseException(response.status, detail)
-    
-    async def admin_delete_all(
+        
+    async def get_by_criteria(
         self,
         credentials: AuthCredentials,
-        order_filter: FilterOrderInput,
+        criteria: FilterOrderInput,
     ) -> dict:
         
-        target_url = self.base_url + "/admin/delete/all"
+        target_url = self.base_url + "/admin/all"
         
         headers = clean_outbound_request(
             {
@@ -162,7 +131,38 @@ class OrderService(IOrderService):
         )
         
         params = clean_outbound_request(
-            order_filter.model_dump(mode="json"),
+            criteria.model_dump(mode="json"),
+        )
+        
+        response = await self.session.get(
+            target_url,
+            headers=headers,
+            params=params,
+        )
+        
+        if response.status in self.allowed_status_codes:
+            return await response.json()
+        else:
+            data = await response.json()
+            detail = data["detail"]
+            raise AppBaseException(response.status, detail)
+    
+    async def delete_by_criteria(
+        self,
+        credentials: AuthCredentials,
+        criteria: FilterOrderInput,
+    ) -> dict:
+        
+        target_url = self.base_url + "/admin/all"
+        
+        headers = clean_outbound_request(
+            {
+                "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
+            },
+        )
+        
+        params = clean_outbound_request(
+            criteria.model_dump(mode="json"),
         )
         
         response = await self.session.delete(
@@ -178,14 +178,13 @@ class OrderService(IOrderService):
             detail = data["detail"]
             raise AppBaseException(response.status, detail)
     
-    
-    async def user_place_order(
+    async def place_order(
         self,
         credentials: AuthCredentials,
         order: PlaceOrderInput,
     ) -> dict:
         
-        target_url = self.base_url + "/user/place-order"
+        target_url = self.base_url + "/user/"
         
         headers = clean_outbound_request(
             {
@@ -210,14 +209,13 @@ class OrderService(IOrderService):
             detail = data["detail"]
             raise AppBaseException(response.status, detail)
     
-    
-    async def user_get_one(
+    async def user_get_by_id(
         self,
         credentials: AuthCredentials,
         order_id: str,
     ) -> dict:
         
-        target_url = self.base_url + "/user/get/one"
+        target_url = self.base_url + "/user/"
         
         headers = clean_outbound_request(
             {
@@ -244,45 +242,13 @@ class OrderService(IOrderService):
             detail = data["detail"]
             raise AppBaseException(response.status, detail)
     
-    
-    async def user_get_all(
-        self,
-        credentials: AuthCredentials,
-        order_filter: UserFilterOrderInput,
-    ) -> dict:
-        
-        target_url = self.base_url + "/user/get/all"
-        
-        headers = clean_outbound_request(
-            {
-                "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
-            },
-        )
-        
-        params = clean_outbound_request(
-            order_filter.model_dump(mode="json"),
-        )
-        
-        response = await self.session.get(
-            target_url,
-            headers=headers,
-            params=params,
-        )
-        
-        if response.status in self.allowed_status_codes:
-            return await response.json()
-        else:
-            data = await response.json()
-            detail = data["detail"]
-            raise AppBaseException(response.status, detail)
-    
-    async def user_update_one(
+    async def user_update(
         self,
         credentials: AuthCredentials,
         order: UpdateOrderInput,
     ) -> dict:
        
-        target_url = self.base_url + "/user/update/one"
+        target_url = self.base_url + "/user/"
         
         headers = clean_outbound_request(
             {
@@ -295,6 +261,37 @@ class OrderService(IOrderService):
         )
         
         response = await self.session.put(
+            target_url,
+            headers=headers,
+            params=params,
+        )
+        
+        if response.status in self.allowed_status_codes:
+            return await response.json()
+        else:
+            data = await response.json()
+            detail = data["detail"]
+            raise AppBaseException(response.status, detail)
+        
+    async def user_get_by_criteria(
+        self,
+        credentials: AuthCredentials,
+        criteria: UserFilterOrderInput,
+    ) -> dict:
+        
+        target_url = self.base_url + "/user/all"
+        
+        headers = clean_outbound_request(
+            {
+                "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
+            },
+        )
+        
+        params = clean_outbound_request(
+            criteria.model_dump(mode="json"),
+        )
+        
+        response = await self.session.get(
             target_url,
             headers=headers,
             params=params,

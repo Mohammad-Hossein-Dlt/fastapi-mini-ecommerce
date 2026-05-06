@@ -7,7 +7,7 @@ from src.models.schemas.order.update_order_input import UpdateOrderInput
 class IOrderService(ABC):
     
     @abstractmethod
-    async def user_place_order(
+    async def place_order(
         credentials: AuthCredentials,
         order: PlaceOrderInput,
     ) -> dict:
@@ -15,7 +15,7 @@ class IOrderService(ABC):
         raise NotImplementedError
     
     @abstractmethod
-    async def user_get_one(
+    async def get_by_id(
         credentials: AuthCredentials,
         order_id: str,
     ) -> dict:
@@ -23,17 +23,17 @@ class IOrderService(ABC):
         raise NotImplementedError
     
     @abstractmethod
-    async def user_get_all(
+    async def update(
         credentials: AuthCredentials,
-        order_filter: UserFilterOrderInput,
+        order: UpdateOrderInput,
     ) -> dict:
         
         raise NotImplementedError
     
     @abstractmethod
-    async def user_update_one(
+    async def get_by_criteria(
         credentials: AuthCredentials,
-        order: UpdateOrderInput,
+        criteria: UserFilterOrderInput,
     ) -> dict:
         
         raise NotImplementedError

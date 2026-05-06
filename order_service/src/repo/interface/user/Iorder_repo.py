@@ -5,53 +5,53 @@ from src.models.schemas.filter.filter_order_input import FilterOrderInput
 class IOrderRepo(ABC):
         
     @abstractmethod
-    async def place_order(
+    async def create(
         order: OrderModel,
     ) -> OrderModel:
     
         raise NotImplementedError
     
     @abstractmethod
-    async def get_all_orders(
-        filter_order: FilterOrderInput,
-    ) ->  list[OrderModel]:
+    async def get_by_id(
+        order_id: str,
+    ) -> OrderModel:
     
         raise NotImplementedError
     
     @abstractmethod
-    async def get_order_by_id(
+    async def get_by_id_and_user_id(
         order_id: str,
         user_id: str,
-    ) ->  OrderModel:
+    ) -> OrderModel:
     
         raise NotImplementedError
     
     @abstractmethod
-    async def check_order(
-        user_id: str,
-        product_id: str,
-    ) ->  OrderModel:
-    
-        raise NotImplementedError
-    
-    @abstractmethod
-    async def update_order(
+    async def update(
         order: OrderModel,
-    ) ->  OrderModel:
+    ) -> OrderModel:
     
         raise NotImplementedError
     
     @abstractmethod
-    async def delete_all_orders(
-        user_id: str,
-    ) -> bool:
-    
-        raise NotImplementedError
-    
-    @abstractmethod
-    async def delete_order(
+    async def delete_by_id(
         order_id: str,
         user_id: str,
     ) -> bool:
     
         raise NotImplementedError
+    
+    @abstractmethod
+    async def get_by_criteria(
+        criteria: FilterOrderInput,
+    ) -> list[OrderModel]:
+    
+        raise NotImplementedError
+    
+    @abstractmethod
+    async def delete_by_user_id(
+        user_id: str,
+    ) -> bool:
+    
+        raise NotImplementedError
+    

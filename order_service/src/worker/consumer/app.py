@@ -1,14 +1,12 @@
 from src.infra.broker_config.app import app
-from src.worker.consumer.rabbitmq import broker, exchange
+from src.worker.consumer.rabbitmq import client
 from src.domain.schemas.order.order_model import OrderModel
 from src.models.schemas.filter.filter_order_input import FilterOrderInput
-from src.models.schemas.filter.filter_order_input import UserFilterOrderInput
-from src.models.schemas.order.place_order_input import PlaceOrderInput
 import json
 import time
 from typing import Any
 
-app.set_broker(broker)
+app.set_broker(client.broker)
 
 @app.after_startup
 async def startup():
@@ -22,10 +20,10 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJ0eXBlIjoiYWNjZXNzIiwiZXh
     token = token.strip()
     
     while True:
-        response = await broker.request(
+        response = await client.broker.request(
             
             # message=ModifyOrderInput(id="68f5f70ee8f872d17207e5c3", status=Status.delivered),
-            message=UserFilterOrderInput(),
+            message=FilterOrderInput(),
             
             # message={
             #     "order": PlaceOrderInput(product_id=2, quantity=120),
@@ -44,7 +42,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJ0eXBlIjoiYWNjZXNzIiwiZXh
             },
             
             routing_key="order_service.user.get.all",
-            exchange=exchange,
+            exchange=client.exchange,
             timeout=10,
         )
 

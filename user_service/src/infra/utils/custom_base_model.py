@@ -54,13 +54,17 @@ class CustomBaseModel(BaseModel):
             return str(var)
         return var
 
-    def custom_model_dump(
+    def model_dump_for_db(
         self,
         exclude_unset: bool = False,
         exclude_none: bool = False,
         exclude: set = None,
-        db_stack: db_stack_types = "no-sql",
     ) -> dict[str, Any]:
+        
+        if exclude:
+            exclude.union({"id", "_id"})
+        else:
+            exclude = {"id", "_id"}
         
         dumped = self.model_dump(
             exclude_unset=exclude_unset,
@@ -68,10 +72,5 @@ class CustomBaseModel(BaseModel):
             exclude=exclude,
             mode="python",
         )
-
-        if db_stack == "no-sql": 
-            for key, value in self.aliases.items():
-                if key in dumped:
-                    dumped[value] = dumped.pop(key)
                 
         return dumped

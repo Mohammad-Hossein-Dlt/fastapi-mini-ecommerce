@@ -3,6 +3,7 @@ from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
 from src.domain.schemas.order.order_model import OrderModel
 from src.infra.database.postgresql.models.order_db_model import OrderDBModel
 from src.models.schemas.filter.filter_order_input import FilterOrderInput
+from src.infra.utils.convert_id import convert_database_id
 from src.infra.exceptions.exceptions import EntityNotFoundError
 
 class AdminPgRepo(IAdminOrderRepo):
@@ -13,55 +14,35 @@ class AdminPgRepo(IAdminOrderRepo):
     ):
         
         self.db = db
-        
-    async def get_all_orders(
-        self,
-        filter_order: FilterOrderInput,
-    ) ->  list[OrderModel]:
-        
-        try:
-            query = OrderDBModel.create_filter_query(filter_order)
-            orders = self.db.execute(query).scalars().all()
-                        
-            return [ OrderModel.model_validate(t, from_attributes=True) for t in orders ]
-        except:
-            # self.db.rollback()
-            raise EntityNotFoundError(status_code=404, message="There are no orders")
     
-    async def get_order_by_id(
+    async def get_by_id(
         self,
-        order_id: int,
-    ) ->  OrderModel:
+        order_id: str,
+    ) -> OrderModel:
         
         try:
-
+            order_id = convert_database_id(order_id)
             order = self.db.query(
                 OrderDBModel
             ).where(
-                OrderDBModel.id == int(order_id)
+                OrderDBModel.id == order_id,
             ).first()
             
             return OrderModel.model_validate(order, from_attributes=True)
         except:
-            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Order not found")
     
-    async def modify_order(
+    async def modify(
         self,
         order: OrderModel,
-    ) ->  OrderModel:
+    ) -> OrderModel:
         
         try:
             
-            to_update: dict = order.custom_model_dump(
-                exclude_unset=True,
+            to_update: dict = order.model_dump_for_db(
                 exclude_none=True,
-                exclude={
-                    "id",
-                    "user_id",
-                    "product_id",
-                },
-                db_stack="sql",
+                exclude_unset=True,
+                exclude={"user_id", "product_id"},
             )
                                     
             self.db.query(
@@ -75,51 +56,21 @@ class AdminPgRepo(IAdminOrderRepo):
             
             self.db.commit()
                         
-            return await self.get_order_by_id(order.id)
+            return await self.get_by_id(order.id)
         except EntityNotFoundError:
             raise
         except:
-            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Order not found")
-    
-    async def delete_all_orders(
+
+    async def delete_by_id(
         self,
-        filter_order: FilterOrderInput,
+        order_id: str,
     ) -> bool:
         
         try:
-            
+            order_id = convert_database_id(order_id)
             try:
-                orders = await self.get_all_orders(filter_order)
-            except:
-                return False
-            
-            if orders:
-                for order in orders:
-                    order = self.db.merge(OrderDBModel(**order.model_dump()))
-                    if isinstance(order, OrderDBModel):
-                        self.db.delete(order)
-                
-                self.db.commit()        
-                return True 
-
-            return False
-
-        except EntityNotFoundError:
-            raise
-        except:
-            # self.db.rollback()
-            raise EntityNotFoundError(status_code=404, message="There are no orders")
-    
-    async def delete_order(
-        self,
-        order_id: int,
-    ) -> bool:
-        
-        try:
-            
-            try:
-                order = await self.get_order_by_id(order_id)
+                order = await self.get_by_id(order_id)
             except:
                 return False
             
@@ -138,5 +89,45 @@ class AdminPgRepo(IAdminOrderRepo):
         except EntityNotFoundError:
             raise
         except:
-            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Order not found")
+
+    async def get_by_criteria(
+        self,
+        criteria: FilterOrderInput,
+    ) -> list[OrderModel]:
+        
+        try:
+            query = OrderDBModel.create_filter_query(criteria)
+            orders = self.db.execute(query).scalars().all()
+                        
+            return [ OrderModel.model_validate(t, from_attributes=True) for t in orders ]
+        except:
+            raise EntityNotFoundError(status_code=404, message="There are no orders")
+    
+    async def delete_by_criteria(
+        self,
+        criteria: FilterOrderInput,
+    ) -> bool:
+        
+        try:
+            
+            try:
+                orders = await self.get_by_criteria(criteria)
+            except:
+                return False
+            
+            if orders:
+                for order in orders:
+                    order = self.db.merge(OrderDBModel(**order.model_dump()))
+                    if isinstance(order, OrderDBModel):
+                        self.db.delete(order)
+                
+                self.db.commit()        
+                return True 
+
+            return False
+
+        except EntityNotFoundError:
+            raise
+        except:
+            raise EntityNotFoundError(status_code=404, message="There are no orders")

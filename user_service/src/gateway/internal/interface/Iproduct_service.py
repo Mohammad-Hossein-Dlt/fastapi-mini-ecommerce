@@ -3,19 +3,19 @@ from src.domain.schemas.auth.auth_credentials import AuthCredentials
 from src.models.schemas.filter.products_filter_input import ProductFilterInput
 
 class IProductService(ABC):
-    
+        
     @abstractmethod
-    async def get_all(
+    async def get_by_id(
         credentials: AuthCredentials,
-        product_filter: ProductFilterInput,
+        product_id: str,
     ) -> dict:
         
         raise NotImplementedError
-        
+    
     @abstractmethod
-    async def get_one(
+    async def get_by_criteria(
         credentials: AuthCredentials,
-        product_id: str,
+        criteria: ProductFilterInput,
     ) -> dict:
         
         raise NotImplementedError

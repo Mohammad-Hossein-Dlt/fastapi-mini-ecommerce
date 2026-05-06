@@ -4,11 +4,11 @@ from src.infra.auth.jwt_handler import JWTHandler
 from src.gateway.internal.interface.Iauth_service import IAuthService
 from .internal_http_depend import auth_service_depend
 from src.repo.interface.Iauth_repo import IAuthRepo
-from .auth_repo_depend import auth_repo_depend
+from .repo_depend import auth_repo_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.domain.schemas.auth.auth_credentials import AuthCredentials
 from src.usecases.auth.refresh_token import RefreshToken
-from src.usecases.admin.self.admin_get_self import AdminGetSelf
+from src.usecases.admin.self.get_self import GetSelf
 from src.infra.exceptions.exceptions import AppBaseException
 
 auth_schema = OAuth2PasswordBearer(tokenUrl="/admin/api/v1/auth/login")
@@ -24,7 +24,7 @@ async def admin_auth_depend(
     auth_repo: IAuthRepo = Depends(auth_repo_depend),
 ) -> UserModel:
     try:
-        credentials: AuthCredentials = await auth_repo.get_user_auth_credentials()
+        credentials: AuthCredentials = await auth_repo.get_auth_credentials()
     except AppBaseException as credentials_ex:
         raise HTTPException(status_code=credentials_ex.status_code, detail=credentials_ex.message)
     
@@ -46,9 +46,9 @@ async def admin_auth_depend(
                 raise HTTPException(status_code=refresh_ex.status_code, detail=refresh_ex.message)
                 
     try:
-        get_user_usecase = AdminGetSelf(auth_service)
+        get_user_usecase = GetSelf(auth_service)
         user = await get_user_usecase.execute(credentials)
-        user.credentials = await auth_repo.get_user_auth_credentials()
+        user.credentials = await auth_repo.get_auth_credentials()
         return user
     except AppBaseException as get_user_ex:
         raise HTTPException(status_code=get_user_ex.status_code, detail=get_user_ex.message)

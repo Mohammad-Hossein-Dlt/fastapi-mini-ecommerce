@@ -2,10 +2,10 @@ from ._subscriber import product_subscriber, target_routing_key
 from faststream import Depends
 from faststream.rabbit import RabbitMessage
 from src.repo.interface.Iproduct_repo import IProductRepo
-from src.worker.depends.product_repo_depend import product_repo_depend
+from src.worker.depends.repo_depend import product_repo_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.worker.depends.auth_depend import admin_auth_depend
-from src.usecases.product.delete_product import DeleteProduct
+from src.usecases.product.delete_by_id import DeleteProduct
 from src.infra.exceptions.exceptions import AppBaseException
 
 routing_key = "product_service.product.delete.one"

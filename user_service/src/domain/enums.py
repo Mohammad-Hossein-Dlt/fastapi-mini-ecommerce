@@ -1,9 +1,18 @@
 from enum import Enum
 
+class Environment(str, Enum):
+    DEV = "dev"
+    TEST = "test"
+    PROD = "prod"
+    
+class DBStack(str, Enum):
+    POSTGRESQL = "postgresql"
+    MONGO_DB = "mongo_db"
+
 class Status(str, Enum):
-    pending = "pending"
-    paid  = "paid"
-    shipped = "shipped"
-    delivered = "delivered"
-    cancelled = "cancelled"
+    PENDING = "pending"
+    PAID = "paid"
+    SHIPPED = "shipped"
+    DELIVERED = "delivered"
+    CANCELLED = "cancelled"
     

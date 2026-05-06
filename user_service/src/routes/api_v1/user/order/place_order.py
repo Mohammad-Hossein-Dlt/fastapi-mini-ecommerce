@@ -10,20 +10,20 @@ from src.usecases.user.order.place_order import PlaceOrder
 from src.infra.exceptions.exceptions import AppBaseException
 
 @router.post(
-    "/place-order",
+    "/",
     status_code=201,
     responses={
         **ResponseMessage.HTTP_500_INTERNAL_SERVER_ERROR("Internal server error"),
     }
 )
 async def place_order(
-    order: PlaceOrderInput = Depends(PlaceOrderInput),
+    entity: PlaceOrderInput = Depends(PlaceOrderInput),
     order_service: IOrderService = Depends(order_service_depend),
     user: UserModel = Depends(user_auth_depend),
 ):
     try:
         place_order_usecase = PlaceOrder(order_service)
-        output = await place_order_usecase.execute(user.credentials, order)
+        output = await place_order_usecase.execute(user.credentials, entity)
         return output.model_dump(mode="json")
     except AppBaseException as ex:
         raise HTTPException(status_code=ex.status_code, detail=str(ex))

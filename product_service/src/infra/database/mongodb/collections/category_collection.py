@@ -9,6 +9,7 @@ class CategoryCollection(CategoryModel, Document):
     id: PydanticObjectId = Field(default_factory=ObjectId)
     parent_id: PydanticObjectId | None = None
     name: str
+    slug: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     

@@ -1,12 +1,12 @@
 from src.infra.broker_config.app import app
-from src.worker.consumer.rabbitmq import broker, exchange
+from src.worker.consumer.rabbitmq import client
 from src.domain.schemas.category.category_model import CategoryModel
 from src.models.schemas.filter.categories_filter_input import CategoryFilterInput
 import json
 import time
 from typing import Any
 
-app.set_broker(broker)
+app.set_broker(client.broker)
 
 @app.after_startup
 async def startup():
@@ -27,7 +27,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ0eXBlIjoicmVmcmVzaCIsImV
     refresh_token = refresh_token.strip()
     
     while True:
-        response = await broker.request(
+        response = await client.broker.request(
             
             message=CategoryFilterInput(id=2, based_on="child-to-parent"),
                         
@@ -36,7 +36,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ0eXBlIjoicmVmcmVzaCIsImV
             },
             
             routing_key="product_service.category.get.all",
-            exchange=exchange,
+            exchange=client.exchange,
             timeout=10,
         )
 

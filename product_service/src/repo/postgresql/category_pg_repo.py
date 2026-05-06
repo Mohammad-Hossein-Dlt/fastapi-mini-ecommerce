@@ -3,7 +3,8 @@ from src.repo.interface.Icategory_repo import ICategoryRepo
 from src.domain.schemas.category.category_model import CategoryModel
 from src.infra.database.postgresql.models.category_db_model import CategoryDBModel
 from src.models.schemas.filter.categories_filter_input import CategoryFilterInput
-from src.infra.exceptions.exceptions import EntityNotFoundError
+from src.infra.utils.convert_id import convert_database_id
+from src.infra.exceptions.exceptions import EntityNotFoundError, DuplicateEntityError
 
 class CategoryPgRepo(ICategoryRepo):
     
@@ -14,148 +15,65 @@ class CategoryPgRepo(ICategoryRepo):
         
         self.db = db
         
-    async def insert_category(
+    async def create(
         self,
         category: CategoryModel,
     ) -> CategoryModel:
+        
         try:
-            new_category = CategoryDBModel(**category.model_dump(exclude_none=True))
+            await self.check_unique(category)
+            raise DuplicateEntityError(409, "Category already exist")
+        except EntityNotFoundError:
+            new_category = CategoryDBModel(**category.model_dump_for_db())
             self.db.add(new_category)
             self.db.commit()
-
             return CategoryModel.model_validate(new_category, from_attributes=True)
-        except:
-            # self.db.rollback()
-            raise
-
-    async def get_categories_with_filter(
+        
+    async def check_unique(
         self,
-        filter: CategoryFilterInput,
-    ) ->  list[CategoryModel]:
-        
-        try:
-            if filter.based_on == "parent-id":
-                return await self.get_parent_to_child(filter)
-            elif filter.based_on == "child-to-parent":
-                return await self.get_child_to_parent(filter)
-        except EntityNotFoundError:
-            raise EntityNotFoundError(status_code=404, message="There are no categories")
-        except:
-            # self.db.rollback()
-            raise
-        
-    async def get_child_to_parent(
-        self,
-        filter: CategoryFilterInput,
-    ) ->  list[CategoryModel]:
-        
-        async def get_parent(
-            parent_id: int | None = None,
-        ) -> CategoryModel | None:
-            try:
-                return await self.get_category_by_id(parent_id)
-            except:
-                return None
-        
-        async def get_categories(
-            category: CategoryModel = None,
-        ) -> list[CategoryModel]:
-                                 
-            result: list[CategoryModel] = []
-            
-            if not category:
-                category = await get_parent(filter.id)
-            
-            if not category:
-                return result    
-                        
-            result.append(category)
-                            
-            parent = await get_parent(category.parent_id)
-
-            if parent and parent.parent_id:
-                result.extend( await get_categories(parent) )
-                return result
-            elif parent:
-                result.append(parent)
-                return result
-            else:
-                return result
-                
-        categories = await get_categories()
-        categories.reverse()
-        
-        return categories
-    
-    async def get_parent_to_child(
-        self,
-        filter: CategoryFilterInput,
-    ) -> list[CategoryModel]:
-        
-        parents_list = await self.get_categories_with_parent_id(filter.id)
-            
-        for parent in parents_list:
-            children = await self.get_categories_with_parent_id(parent.id)
-            
-            if children:
-                setattr(parent, "children", children)
-                
-        return parents_list
-                    
-    async def get_categories_with_parent_id(
-        self,
-        parent_id: int | None,
-    ) -> list[CategoryModel]:
-        
-        try:
-            
-            parent_id = int(parent_id) if parent_id else None
-            
-            categories_list = self.db.query(
-                CategoryDBModel
-            ).where(
-                CategoryDBModel.parent_id == parent_id,
-            ).order_by(
-                CategoryDBModel.id.asc(),
-            ).all()
-            
-            return [ CategoryModel.model_validate(category, from_attributes=True) for category in categories_list ]
-        except:
-            # self.db.rollback()
-            raise EntityNotFoundError(status_code=404, message="There are no categories")
-    
-    async def get_category_by_id(
-        self,
-        category_id: int,
-    ) ->  CategoryModel:
+        category: CategoryModel,
+    ) -> CategoryModel:
         
         try:
             category = self.db.query(
                 CategoryDBModel   
             ).where(
-                CategoryDBModel.id == int(category_id),
+                CategoryDBModel.name == category.name,
+                CategoryDBModel.slug == category.slug,
+            ).first()
+            return CategoryModel.model_validate(category, from_attributes=True)
+        except:
+            raise EntityNotFoundError(status_code=404, message="Category not found")
+        
+    async def get_by_id(
+        self,
+        category_id: str,
+    ) -> CategoryModel:
+        
+        try:
+            category_id = convert_database_id(category_id)
+            category = self.db.query(
+                CategoryDBModel   
+            ).where(
+                CategoryDBModel.id == category_id,
             ).first()
             
             return CategoryModel.model_validate(category, from_attributes=True)
         except:
-            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Category not found")
-    
-    async def update_category(
+        
+    async def update(
         self,
         category: CategoryModel,
-    ) ->  CategoryModel:
+    ) -> CategoryModel:
         
         try:
             
-            to_update: dict = category.custom_model_dump(
+            to_update: dict = category.model_dump_for_db(
+                exclude_none=True,
                 exclude_unset=True,
-                exclude={
-                    "id",
-                },
-                db_stack="sql",
             )
- 
+            
             self.db.query(
                 CategoryDBModel   
             ).where(
@@ -167,22 +85,179 @@ class CategoryPgRepo(ICategoryRepo):
             
             self.db.commit()
             
-            return await self.get_category_by_id(category.id)
+            return await self.get_by_id(category.id)
         except EntityNotFoundError:
             raise
         except:
-            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="Category not found")
+        
+    async def delete_by_id(
+        self,
+        category_id: str,
+    ) -> bool:
+        
+        try:
+            
+            category_id = convert_database_id(category_id)
+            category = await self.get_by_id(category_id)                
+            to_delete = self.db.merge(CategoryDBModel(**category.model_dump()))
+                
+            if isinstance(to_delete, CategoryDBModel):
+                self.db.delete(to_delete)
+                self.db.commit()
+                return True
+            
+            return False            
+        
+        except EntityNotFoundError:
+            raise
+        except:
+            raise EntityNotFoundError(status_code=404, message="Category not found")
+        
+    async def get_all(
+        self,
+    ) -> list[CategoryModel]:
+        
+        try:
+            categories_list = await self.db.query().all()
+            return [ CategoryModel.model_validate(category, from_attributes=True) for category in categories_list ]
+        except EntityNotFoundError:
+            raise EntityNotFoundError(status_code=404, message="Categories not found")
+        
+    async def get_by_criteria(
+        self,
+        criteria: CategoryFilterInput,
+    ) -> list[CategoryModel]:
+        
+        try:
+            if criteria.based_on == "parent-id":
+                return await self.get_tree_from_parent(criteria)
+            elif criteria.based_on == "child-to-parent":
+                return await self.get_ancestors(criteria)
+        except EntityNotFoundError:
+            raise EntityNotFoundError(status_code=404, message="Categories not found")
+        
+    async def get_tree_from_parent(
+        self,
+        criteria: CategoryFilterInput,
+    ) -> list[CategoryModel]:
+        
+        parents_list: list[CategoryModel] = await self.get_by_parent_id(criteria.id, criteria.contains_danglings)
+            
+        for parent in parents_list:
+            children = await self.get_by_parent_id(parent.id, criteria.contains_danglings)
+            
+            if children:
+                setattr(parent, "children", children)
+                
+        return parents_list
     
-    async def delete_all_categories(
+    async def get_ancestors(
+        self,
+        criteria: CategoryFilterInput,
+    ) -> list[CategoryModel]:
+        
+        async def _get_ancestors(
+            p_id: str | None = None,
+        ) -> list[CategoryModel]:
+            
+            
+            result: list[CategoryModel] = []
+            if not p_id:
+                return result
+                          
+            p_id = convert_database_id(p_id)
+            category = await self.get_by_id(p_id)
+            result.append(category)
+            if category.parent_id:
+                parent = await _get_ancestors(category.parent_id)
+                result.extend(parent)
+            
+            return result
+                        
+        categories = await _get_ancestors(criteria.id)
+        categories.reverse()
+        return categories
+    
+    async def get_by_parent_id(
+        self,
+        parent_id: str | None = None,
+        contains_danglings: bool = False,
+    ) -> list[CategoryModel]:
+        
+        try:
+            parent_id = convert_database_id(parent_id)
+            if not parent_id and contains_danglings:
+                categories_list = self.db.query(
+                    CategoryDBModel
+                ).where(
+                    CategoryDBModel.parent_id == parent_id,
+                    CategoryDBModel.parent_id == None,
+                ).order_by(
+                    CategoryDBModel.id.asc(),
+                ).all()
+            else:
+                categories_list = self.db.query(
+                    CategoryDBModel
+                ).where(
+                    CategoryDBModel.parent_id == parent_id,
+                ).order_by(
+                    CategoryDBModel.id.asc(),
+                ).all()
+                    
+            return [ CategoryModel.model_validate(category, from_attributes=True) for category in categories_list ]
+        except:
+            raise EntityNotFoundError(status_code=404, message="Categories not found")
+
+    async def get_descendants(
+        self,
+        parent_id: str,
+    ) -> list[CategoryModel]:
+        
+        async def _get_descendants(
+            p_id: str | None = None,
+        ) -> list[CategoryModel]:
+            
+            result: list[CategoryModel] = []
+            p_id = convert_database_id(p_id)
+            categories = await self.get_by_parent_id(p_id)
+                        
+            for c in categories:
+                result.append(c)
+                if c and c.parent_id:
+                    result.extend(await _get_descendants(c.id))
+
+            return result
+                
+        return await _get_descendants(parent_id)
+    
+    async def delete_by_parent_id(
+        self,
+        parent_id: str,
+    ) -> bool:
+        try:
+            parent_id = convert_database_id(parent_id)
+            categories: list[CategoryModel] = await self.get_by_parent_id(parent_id)
+            if categories:
+                for record in categories:
+                    record = self.db.merge(CategoryDBModel(**record.model_dump()))
+                    if isinstance(record, CategoryDBModel):
+                        self.db.delete(record)
+                
+                self.db.commit()        
+                return True 
+
+            return False
+        except:
+            raise EntityNotFoundError(status_code=404, message="Categories not found")
+    
+    async def delete_all(
         self,
     ) -> bool:
         try:
             
             try:
-                categories: list[CategoryModel] = await self.get_categories_with_parent_id(
-                    parent_id=None,
-                )
+                categories: list[CategoryModel] = await self.get_by_parent_id(None)
             except:
                 return False
                         
@@ -200,35 +275,4 @@ class CategoryPgRepo(ICategoryRepo):
         except EntityNotFoundError:
             raise
         except:
-            # self.db.rollback()
             raise EntityNotFoundError(status_code=404, message="There are no categories")
-        
-    async def delete_category(
-        self,
-        category_id: int,
-    ) -> bool:
-        
-        try:
-            
-            try:
-                category = await self.get_category_by_id(category_id)
-            except:
-                return False
-            
-            if not category:
-                return False
-                
-            to_delete = self.db.merge(CategoryDBModel(**category.model_dump()))
-                
-            if isinstance(to_delete, CategoryDBModel):
-                self.db.delete(to_delete)
-                self.db.commit()
-                return True
-            
-            return False            
-        
-        except EntityNotFoundError:
-            raise
-        except:
-            # self.db.rollback()
-            raise EntityNotFoundError(status_code=404, message="Category not found")

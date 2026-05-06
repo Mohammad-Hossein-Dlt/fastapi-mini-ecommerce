@@ -1,5 +1,5 @@
 import jwt
-from src.infra.schemas.auth.jwt_params import JWTParams
+from src.infra.schemas.jwt.jwt_params import JWTParams
 from src.domain.schemas.auth.jwt_payload import JWTPayload
 from src.infra.exceptions.exceptions import InvalidTokenException
 from datetime import datetime, timezone, timedelta
@@ -20,9 +20,9 @@ class JWTHandler:
         now = datetime.now(timezone.utc).replace(microsecond=0)
         
         if payload.type == "access":
-            payload.exp = now + timedelta(minutes=self.context.access_expiration_minutes)
+            payload.exp = now + timedelta(minutes=self.context.access_time)
         elif payload.type == "refresh":
-            payload.exp = now + timedelta(minutes=self.context.refresh_expiration_minutes)
+            payload.exp = now + timedelta(minutes=self.context.refresh_time)
         
         return jwt.encode(payload.model_dump(), self.context.secret, self.context.algorithm)
 

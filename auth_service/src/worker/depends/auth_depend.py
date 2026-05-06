@@ -6,7 +6,7 @@ from src.infra.auth.jwt_handler import JWTHandler
 from src.repo.interface.Iuser_repo import IUserRepo
 from .user_repo_depend import user_repo_depend
 from src.domain.schemas.user.user_model import UserModel
-from src.usecases.user.user_get_self import UserGetSelf
+from src.usecases.user.get import GetUser
 from src.domain.enums import Role
 from src.infra.exceptions.exceptions import AppBaseException
 from typing import Literal
@@ -36,7 +36,7 @@ async def auth_depend(
     payload = jwt_handler.decode_jwt_token(token)
         
     if payload.type == token_type:
-        get_user_usecase = UserGetSelf(user_repo)
+        get_user_usecase = GetUser(user_repo)
         return await get_user_usecase.execute(payload.user_id)
     else:
         raise AppBaseException(status_code=401, message=f"You have not access with {payload.type}-token")
@@ -79,7 +79,7 @@ async def admin_auth_depend(
         user_repo,
     )
     
-    if user.role == Role.admin:
+    if user.role == Role.ADMIN:
         return user
     else:
         raise AppBaseException(status_code=401, message="Only admin have access")    

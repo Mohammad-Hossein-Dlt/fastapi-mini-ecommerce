@@ -7,7 +7,7 @@ from src.usecases.auth.login_user import LoginUser
 from src.gateway.internal.interface.Iauth_service import IAuthService
 from src.routes.depends.internal_http_depend import auth_service_depend
 from src.repo.interface.Iauth_repo import IAuthRepo
-from src.routes.depends.auth_repo_depend import auth_repo_depend
+from src.routes.depends.repo_depend import auth_repo_depend
 from src.infra.exceptions.exceptions import AppBaseException
 
 

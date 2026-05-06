@@ -21,10 +21,10 @@ class ProductService(IProductService):
     async def create(
         self,
         credentials: AuthCredentials,
-        product_data: CreateProductInput,
+        product: CreateProductInput,
     ) -> dict:
         
-        target_url = self.base_url + "/create"
+        target_url = self.base_url + "/product/"
         
         headers = clean_outbound_request(
             {
@@ -33,7 +33,7 @@ class ProductService(IProductService):
         )
         
         params = clean_outbound_request(
-            product_data.model_dump(mode="json"),
+            product.model_dump(mode="json"),
         )
         
         response = await self.session.post(
@@ -48,103 +48,14 @@ class ProductService(IProductService):
             data = await response.json()
             detail = data["detail"]
             raise AppBaseException(response.status, detail)
-                                        
-    async def delete_all(
-        self,
-        credentials: AuthCredentials,
-    ) -> dict:
         
-        target_url = self.base_url + "/delete/all"
-        
-        headers = clean_outbound_request(
-            {
-                "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
-            },
-        )
-        
-        response = await self.session.delete(
-            target_url,
-            headers=headers,
-        )
-        
-        if response.status in self.allowed_status_codes:
-            return await response.json()
-        else:
-            data = await response.json()
-            detail = data["detail"]
-            raise AppBaseException(response.status, detail)
-    
-    async def delete_one(
+    async def get_by_id(
         self,
         credentials: AuthCredentials,
         product_id: str,
     ) -> dict:
         
-        target_url = self.base_url + "/delete/one"
-        
-        headers = clean_outbound_request(
-            {
-                "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
-            },
-        )
-        
-        params = clean_outbound_request(
-            {
-                "product_id": product_id,
-            },
-        )
-        
-        response = await self.session.delete(
-            target_url,
-            headers=headers,
-            params=params,
-        )
-        
-        if response.status in self.allowed_status_codes:
-            return await response.json()
-        else:
-            data = await response.json()
-            detail = data["detail"]
-            raise AppBaseException(response.status, detail)
-    
-    async def get_all(
-        self,
-        credentials: AuthCredentials,
-        product_filter: ProductFilterInput,
-    ) -> dict:
-        
-        target_url = self.base_url + "/get/all"
-        
-        headers = clean_outbound_request(
-            {
-                "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
-            },
-        )
-        
-        params = clean_outbound_request(
-            product_filter.model_dump(mode="json"),
-        )
-        
-        response = await self.session.get(
-            target_url,
-            headers=headers,
-            params=params,
-        )
-        
-        if response.status in self.allowed_status_codes:
-            return await response.json()
-        else:
-            data = await response.json()
-            detail = data["detail"]
-            raise AppBaseException(response.status, detail)
-        
-    async def get_one(
-        self,
-        credentials: AuthCredentials,
-        product_id: str,
-    ) -> dict:
-        
-        target_url = self.base_url + "/get/one"
+        target_url = self.base_url + "/product/"
         
         headers = clean_outbound_request(
             {
@@ -171,13 +82,13 @@ class ProductService(IProductService):
             detail = data["detail"]
             raise AppBaseException(response.status, detail)    
     
-    async def update_one(
+    async def update(
         self,
         credentials: AuthCredentials,
-        product_data: UpdateProductInput,
+        product: UpdateProductInput,
     ) -> dict:
         
-        target_url = self.base_url + "/update/one"
+        target_url = self.base_url + "/product/"
         
         headers = clean_outbound_request(
             {
@@ -186,13 +97,102 @@ class ProductService(IProductService):
         )
         
         params = clean_outbound_request(
-            product_data.model_dump(mode="json"),
+            product.model_dump(mode="json"),
         )
         
         response = await self.session.put(
             target_url,
             headers=headers,
             params=params,
+        )
+        
+        if response.status in self.allowed_status_codes:
+            return await response.json()
+        else:
+            data = await response.json()
+            detail = data["detail"]
+            raise AppBaseException(response.status, detail)
+
+    async def delete_by_id(
+        self,
+        credentials: AuthCredentials,
+        product_id: str,
+    ) -> dict:
+        
+        target_url = self.base_url + "/product/"
+        
+        headers = clean_outbound_request(
+            {
+                "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
+            },
+        )
+        
+        params = clean_outbound_request(
+            {
+                "product_id": product_id,
+            },
+        )
+        
+        response = await self.session.delete(
+            target_url,
+            headers=headers,
+            params=params,
+        )
+        
+        if response.status in self.allowed_status_codes:
+            return await response.json()
+        else:
+            data = await response.json()
+            detail = data["detail"]
+            raise AppBaseException(response.status, detail)
+    
+    async def get_by_criteria(
+        self,
+        credentials: AuthCredentials,
+        criteria: ProductFilterInput,
+    ) -> dict:
+        
+        target_url = self.base_url + "/product/all"
+        
+        headers = clean_outbound_request(
+            {
+                "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
+            },
+        )
+        
+        params = clean_outbound_request(
+            criteria.model_dump(mode="json"),
+        )
+        
+        response = await self.session.get(
+            target_url,
+            headers=headers,
+            params=params,
+        )
+        
+        if response.status in self.allowed_status_codes:
+            return await response.json()
+        else:
+            data = await response.json()
+            detail = data["detail"]
+            raise AppBaseException(response.status, detail)
+                                        
+    async def delete_all(
+        self,
+        credentials: AuthCredentials,
+    ) -> dict:
+        
+        target_url = self.base_url + "/product/all"
+        
+        headers = clean_outbound_request(
+            {
+                "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
+            },
+        )
+        
+        response = await self.session.delete(
+            target_url,
+            headers=headers,
         )
         
         if response.status in self.allowed_status_codes:

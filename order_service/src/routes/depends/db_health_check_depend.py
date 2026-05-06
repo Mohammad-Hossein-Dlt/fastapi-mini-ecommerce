@@ -1,24 +1,24 @@
 from fastapi import Depends
-from .db_depend import db_depend
-from motor.motor_asyncio import AsyncIOMotorClient
+from .db_depend import db_client_depend
+from pymongo.asynchronous.mongo_client import AsyncMongoClient
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 async def db_health_check_depend(
-    db: AsyncIOMotorClient | Session = Depends(db_depend)
+    client: AsyncMongoClient | Session = Depends(db_client_depend)
 ):
-    if isinstance(db, Session):
+    if isinstance(client, Session):
         try:
-            request = db.execute(text("SELECT 1"))
+            request = client.execute(text("SELECT 1"))
             _ = request.scalar()
             return True
         except:
-            db.rollback()
+            client.rollback()
             return False
     
-    if isinstance(db, AsyncIOMotorClient):
+    if isinstance(client, AsyncMongoClient):
         try:
-            await db.admin.command("ping")
+            await client.admin.command("ping")
             return True
-        except Exception:
+        except:
             return False

@@ -3,7 +3,7 @@ from faststream import Depends
 from faststream.rabbit import RabbitMessage
 from src.models.schemas.order.place_order_input import PlaceOrderInput
 from src.repo.interface.user.Iorder_repo import IOrderRepo
-from src.worker.depends.order_repo_depend import user_order_repo_depend
+from src.worker.depends.repo_depend import user_order_repo_depend
 from src.gateway.internal.interface.Iproduct_service import IProductService
 from src.worker.depends.internal_http_depend import product_service_depend
 from src.domain.schemas.user.user_model import UserModel

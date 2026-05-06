@@ -15,12 +15,12 @@ from src.infra.exceptions.exceptions import AppBaseException
     }
 )
 async def register_user(
-    user_data: UserRegisterInput = Body(),
+    entity: UserRegisterInput = Body(),
     auth_service: IAuthService = Depends(auth_service_depend),  
 ):
     try:
         create_user_usecase = RegisterUser(auth_service)
-        output = await create_user_usecase.execute(user_data)
+        output = await create_user_usecase.execute(entity)
         return output.model_dump(mode="json")
     except AppBaseException as ex:
         raise HTTPException(status_code=ex.status_code, detail=str(ex))

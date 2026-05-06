@@ -14,13 +14,13 @@ class ProductService(IProductService):
         self.base_url = base_url
         self.allowed_status_codes = [200, 201]
     
-    async def get_product(
+    async def get_by_id(
         self,
         access_token: str,
         product_id: str,
     ) -> dict:
                 
-        target_url = self.base_url + "/get/one"
+        target_url = self.base_url + "/product/"
                 
         headers = clean_outbound_request(
             {

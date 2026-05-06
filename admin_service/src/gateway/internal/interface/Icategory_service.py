@@ -9,36 +9,13 @@ class ICategoryService(ABC):
     @abstractmethod
     async def create(
         credentials: AuthCredentials,
-        category_data: CreateCategoryInput,
+        category: CreateCategoryInput,
     ) -> dict:
     
         raise NotImplementedError
     
     @abstractmethod
-    async def delete_all(
-        credentials: AuthCredentials,
-    ) -> dict:
-    
-        raise NotImplementedError
-    
-    @abstractmethod
-    async def delete_one(
-        credentials: AuthCredentials,
-        category_id: str,
-    ) -> dict:
-        
-        raise NotImplementedError
-    
-    @abstractmethod
-    async def get_all(
-        credentials: AuthCredentials,
-        category_filter: CategoryFilterInput,
-    ) -> dict:
-        
-        raise NotImplementedError
-        
-    @abstractmethod
-    async def get_one(
+    async def get_by_id(
         credentials: AuthCredentials,
         category_id: str,
     ) -> dict:
@@ -46,9 +23,33 @@ class ICategoryService(ABC):
         raise NotImplementedError        
     
     @abstractmethod
-    async def update_one(
+    async def update(
         credentials: AuthCredentials,
-        category_data: UpdateCategoryInput,
+        category: UpdateCategoryInput,
     ) -> dict:
         
         raise NotImplementedError
+    
+    @abstractmethod
+    async def delete_by_id(
+        credentials: AuthCredentials,
+        category_id: str,
+    ) -> dict:
+        
+        raise NotImplementedError
+    
+    @abstractmethod
+    async def get_by_criteria(
+        credentials: AuthCredentials,
+        criteria: CategoryFilterInput,
+    ) -> dict:
+        
+        raise NotImplementedError
+
+    @abstractmethod
+    async def delete_all(
+        credentials: AuthCredentials,
+    ) -> dict:
+    
+        raise NotImplementedError
+        

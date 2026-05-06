@@ -3,12 +3,12 @@ from faststream import Depends
 from faststream.rabbit import RabbitMessage
 from src.models.schemas.product.update_product_input import UpdateProductInput
 from src.repo.interface.Iproduct_repo import IProductRepo
-from src.worker.depends.product_repo_depend import product_repo_depend
+from src.worker.depends.repo_depend import product_repo_depend
 from src.repo.interface.Icategory_repo import ICategoryRepo
-from src.worker.depends.category_repo_depend import category_repo_depend
+from src.worker.depends.repo_depend import category_repo_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.worker.depends.auth_depend import admin_auth_depend
-from src.usecases.product.update_product import UpdateProduct
+from src.usecases.product.update import UpdateProduct
 from src.infra.exceptions.exceptions import AppBaseException
 
 routing_key = "product_service.product.update.one"

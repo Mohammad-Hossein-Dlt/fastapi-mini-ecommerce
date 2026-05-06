@@ -15,11 +15,11 @@ class PlaceOrder:
     async def execute(
         self,
         credentials: AuthCredentials,
-        order: PlaceOrderInput,
+        entity: PlaceOrderInput,
     ) -> OrderModel:
         
         try:
-            response: dict = await self.order_service.user_place_order(credentials, order)
+            response: dict = await self.order_service.place_order(credentials, entity)
             return OrderModel.model_validate(response)
         except AppBaseException:
             raise

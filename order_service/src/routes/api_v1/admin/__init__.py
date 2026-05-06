@@ -1,17 +1,17 @@
 from . import (
     _router,
-    modify_order,
-    get_order,
-    get_all_orders,
-    delete_order,
-    delete_all_orders,
+    modify,
+    get_by_id,
+    delete_by_id,
+    get_by_criteria,
+    delete_by_criteria,
 )
 
 __all__ = [
     "_router",
-    "get_order",
-    "get_all_orders",
-    "modify_order",
-    "delete_order",
-    "delete_all_orders",
+    "modify",
+    "get_by_id",
+    "delete_by_id",
+    "get_by_criteria",
+    "delete_by_criteria",
 ]

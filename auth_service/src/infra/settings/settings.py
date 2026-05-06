@@ -1,37 +1,29 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from src.infra.schemas.broker.rabbitmq import RabbitParams
+from src.domain.enums import Environment, DBStack
+from src.infra.schemas.database.mongodb import MongodbParams
+from src.infra.schemas.database.sqlalchemy import SqlalchemyParams
+from src.infra.schemas.jwt.jwt_params import JWTParams
+import os
 
 class Settings(BaseSettings):
     
-    # Broker params
-    BROKER_STACK: str
-    RABBITMQ_AUTH: dict
-    
-    # Database params
-    AUTH_DB_STACK: str
-    
-    MONGO_HOST: str
-    MONGO_PORT: int
-    MONGO_INITDB_ROOT_USERNAME: str
-    MONGO_INITDB_ROOT_PASSWORD: str
-    MONGO_INITDB_DATABASE: str
-    
-    POSTGRES_HOST: str
-    POSTGRES_PORT: int
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_DB: str
-    
-    # JWT params
-    JWT: dict
+    ENVIRONMENT: Environment
+    RABBITMQ: RabbitParams
+    AUTH_DB_STACK: DBStack
+    MONGODB: MongodbParams    
+    POSTGRES: SqlalchemyParams
+    JWT: JWTParams
             
     model_config = SettingsConfigDict(
         case_sensitive=False,
         env_file=[
-            ".env",
-            "../.env",
+            f".env.{os.getenv("ENVIRONMENT", "dev")}",
+            f"../.env.{os.getenv("ENVIRONMENT", "dev")}",
         ],
         env_file_encoding="utf-8",
-        extra="ignore"
+        env_nested_delimiter="__",
+        extra="ignore",
     )
 
 

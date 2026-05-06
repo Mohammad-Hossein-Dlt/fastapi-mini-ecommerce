@@ -3,14 +3,14 @@ from abc import ABC, abstractmethod
 class IAuthService(ABC):
     
     @abstractmethod
-    async def admin_get_self(
+    async def get_admin(
         access_token: str,
     ) -> dict:
         
         raise NotImplementedError
     
     @abstractmethod
-    async def user_get_self(
+    async def get_user(
         access_token: str,
     ) -> dict:
         

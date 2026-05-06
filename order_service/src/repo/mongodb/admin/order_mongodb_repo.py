@@ -2,31 +2,18 @@ from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
 from src.domain.schemas.order.order_model import OrderModel
 from src.infra.database.mongodb.collections.order_collection import OrderCollection
 from src.models.schemas.filter.filter_order_input import FilterOrderInput
-from src.infra.utils.convert_id import convert_object_id
+from src.infra.utils.convert_id import convert_database_id
 from src.infra.exceptions.exceptions import EntityNotFoundError
 
 class AdminOrderMongodbRepo(IAdminOrderRepo):
-        
-    async def get_all_orders(
-        self,
-        filter_order: FilterOrderInput,
-    ) ->  list[OrderModel]:
-        
-        try:
-            query = OrderCollection.create_filter_query(filter_order)
-            orders = await OrderCollection.find(query).to_list()
-                        
-            return [ OrderModel.model_validate(t, from_attributes=True) for t in orders ]
-        except:
-            raise EntityNotFoundError(status_code=404, message="There are no orders")
     
-    async def get_order_by_id(
+    async def get_by_id(
         self,
         order_id: str,
-    ) ->  OrderModel:
+    ) -> OrderModel:
         
         try:
-            order_id = convert_object_id(order_id)
+            order_id = convert_database_id(order_id)
             order = await OrderCollection.find_one(
                 OrderCollection.id == order_id,
             )
@@ -35,22 +22,17 @@ class AdminOrderMongodbRepo(IAdminOrderRepo):
         except:
             raise EntityNotFoundError(status_code=404, message="Order not found")
     
-    async def modify_order(
+    async def modify(
         self,
         order: OrderModel,
-    ) ->  OrderModel:
+    ) -> OrderModel:
         
         try:
             
-            to_update: dict = order.custom_model_dump(
-                exclude_unset=True,
+            to_update: dict = order.model_dump_for_db(
                 exclude_none=True,
-                exclude={
-                    "id",
-                    "user_id",
-                    "product_id",
-                },
-                db_stack="no-sql",
+                exclude_unset=True,
+                exclude={"user_id", "product_id"},
             )
             
             await OrderCollection.find(
@@ -61,32 +43,18 @@ class AdminOrderMongodbRepo(IAdminOrderRepo):
                 },
             )
                         
-            return await self.get_order_by_id(order.id)
+            return await self.get_by_id(order.id)
         except:
             raise EntityNotFoundError(status_code=404, message="Order not found")
-    
-    async def delete_all_orders(
-        self,
-        filter_order: FilterOrderInput,
-    ) -> bool:
         
-        try:
-            
-            query = OrderCollection.create_filter_query(filter_order)
-            result = await OrderCollection.find(query).delete()
-            
-            return bool(result.deleted_count)
-        except:
-            raise EntityNotFoundError(status_code=404, message="There are no orders")
-    
-    async def delete_order(
+    async def delete_by_id(
         self,
         order_id: str,
     ) -> bool:
         
         try:
             
-            order_id = convert_object_id(order_id)
+            order_id = convert_database_id(order_id)
             
             result = await OrderCollection.find(
                 OrderCollection.id == order_id,
@@ -95,3 +63,30 @@ class AdminOrderMongodbRepo(IAdminOrderRepo):
             return bool(result.deleted_count)
         except:
             raise EntityNotFoundError(status_code=404, message="Order not found")
+        
+    async def get_by_criteria(
+        self,
+        criteria: FilterOrderInput,
+    ) -> list[OrderModel]:
+        
+        try:
+            query = OrderCollection.create_filter_query(criteria)
+            orders = await OrderCollection.find(query).to_list()
+                        
+            return [ OrderModel.model_validate(t, from_attributes=True) for t in orders ]
+        except:
+            raise EntityNotFoundError(status_code=404, message="There are no orders")
+    
+    async def delete_by_criteria(
+        self,
+        criteria: FilterOrderInput,
+    ) -> bool:
+        
+        try:
+            
+            query = OrderCollection.create_filter_query(criteria)
+            result = await OrderCollection.find(query).delete()
+            
+            return bool(result.deleted_count)
+        except:
+            raise EntityNotFoundError(status_code=404, message="There are no orders")

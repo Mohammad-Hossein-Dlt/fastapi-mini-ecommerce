@@ -4,7 +4,7 @@ from faststream.rabbit import RabbitMessage
 from src.models.schemas.user.create_user_input import CreateUserInput
 from src.repo.interface.Iuser_repo import IUserRepo
 from src.worker.depends.user_repo_depend import user_repo_depend
-from src.usecases.auth.register_user import RegisterUser
+from src.usecases.auth.register import RegisterUser
 from src.infra.exceptions.exceptions import AppBaseException
 
 routing_key = "auth_service.auth.register"

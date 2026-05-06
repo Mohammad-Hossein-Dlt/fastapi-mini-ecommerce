@@ -3,10 +3,10 @@ from faststream import Depends
 from faststream.rabbit import RabbitMessage
 from src.models.schemas.category.update_category_input import UpdateCategoryInput
 from src.repo.interface.Icategory_repo import ICategoryRepo
-from src.worker.depends.category_repo_depend import category_repo_depend
+from src.worker.depends.repo_depend import category_repo_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.worker.depends.auth_depend import admin_auth_depend
-from src.usecases.category.update_category import UpdateCategory
+from src.usecases.category.update import UpdateCategory
 from src.infra.exceptions.exceptions import AppBaseException
 
 routing_key = "product_service.category.update.one"

@@ -12,12 +12,9 @@ class OrderDBModel(UpdateFromSchemaMixin, Base):
     id = Column(Integer, nullable=False, unique=True, primary_key=True, autoincrement=True, index=True)
     user_id = Column(Text, nullable=False)
     product_id = Column(Text, nullable=False)
-    
-    quantity = Column(Integer, nullable=True)
+    quantity = Column(Integer, nullable=False, default=0)
     description = Column(Text, nullable=True)
-    
     status = Column(Enum(Status), nullable=False)
-    
     created_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
     
@@ -35,46 +32,46 @@ class OrderDBModel(UpdateFromSchemaMixin, Base):
     @classmethod
     def create_filter_query(
         cls,
-        order_filter: FilterOrderInput,
+        criteria: FilterOrderInput,
     ) -> Select["OrderDBModel"]:
         query = select(cls)
         
-        if order_filter.user_id:
+        if criteria.user_id:
             query = query.where(
-                cls.user_id == str(order_filter.user_id)
+                cls.user_id == str(criteria.user_id)
             )        
             
-        if order_filter.product_id:
+        if criteria.product_id:
             query = query.where(
-                cls.product_id == str(order_filter.product_id)
+                cls.product_id == str(criteria.product_id)
             )
         
-        if order_filter.statuses:
+        if criteria.statuses:
             query = query.where(
                 cls.status.in_(
-                    order_filter.statuses,   
+                    criteria.statuses,   
                 )
             )
         
-        if order_filter.start_quantity:
+        if criteria.start_quantity:
             query = query.where(
-                cls.quantity >= order_filter.start_quantity
+                cls.quantity >= criteria.start_quantity
             )
         
         
-        if order_filter.end_quantity:
+        if criteria.end_quantity:
             query = query.where(
-                cls.quantity <= order_filter.end_quantity
+                cls.quantity <= criteria.end_quantity
             )
         
-        if order_filter.start_date:
+        if criteria.start_date:
             query = query.where(
-                cls.created_at >= order_filter.start_date
+                cls.created_at >= criteria.start_date
             )
         
-        if order_filter.end_date:
+        if criteria.end_date:
             query = query.where(
-                cls.created_at <= order_filter.end_date
+                cls.created_at <= criteria.end_date
             )
         
         return query

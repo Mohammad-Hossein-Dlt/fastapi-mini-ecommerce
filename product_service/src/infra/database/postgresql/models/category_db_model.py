@@ -8,6 +8,7 @@ class CategoryDBModel(UpdateFromSchemaMixin, Base):
 
     id = Column(Integer, nullable=False, unique=True, primary_key=True, autoincrement=True, index=True)
     parent_id = Column(Integer, ForeignKey("categories.id", ondelete="CASCADE"), nullable=True)
-    name = Column(Text, nullable=True)
+    name = Column(Text, nullable=False)
+    slug = Column(Text, nullable=False)
     created_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))

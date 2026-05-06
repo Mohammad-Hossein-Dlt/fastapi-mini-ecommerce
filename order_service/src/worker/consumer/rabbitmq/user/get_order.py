@@ -2,10 +2,10 @@ from ._subscriber import user_subscriber, target_routing_key
 from faststream import Depends
 from faststream.rabbit import RabbitMessage
 from src.repo.interface.user.Iorder_repo import IOrderRepo
-from src.worker.depends.order_repo_depend import user_order_repo_depend
+from src.worker.depends.repo_depend import user_order_repo_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.worker.depends.auth_depend import user_auth_depend
-from src.usecases.user.order.get_order import GetOrder
+from src.usecases.user.order.get_by_id import GetOrder
 from src.infra.exceptions.exceptions import AppBaseException
 
 routing_key = "order_service.user.get.one"
