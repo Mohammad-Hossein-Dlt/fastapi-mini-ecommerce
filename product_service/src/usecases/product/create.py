@@ -29,7 +29,7 @@ class CreateProduct:
             product_model = ProductModel.model_validate(entity, from_attributes=True)
             product: ProductModel = await self.product_repo.create(product_model)
             
-            category_filter = CategoryFilterInput(id=entity.category_id, based_on="child-to-parent")
+            category_filter = CategoryFilterInput(id=str(entity.category_id), based_on="child-to-parent")
             categories_list: list[CategoryModel] = await self.category_repo.get_ancestors(category_filter)
             
             related_categories = []

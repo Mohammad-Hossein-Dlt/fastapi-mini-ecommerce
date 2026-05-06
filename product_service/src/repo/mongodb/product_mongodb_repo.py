@@ -12,11 +12,14 @@ class ProductMongodbRepo(IProductRepo):
         product: ProductModel,
     ) -> ProductModel:
         
-        new_product = await ProductCollection.insert(
-            ProductCollection(**product.model_dump_for_db()),
-        )
-        return ProductModel.model_validate(new_product, from_attributes=True)
-    
+        try:
+            new_product = await ProductCollection.insert(
+                ProductCollection(**product.model_dump_for_db()),
+            )
+            return ProductModel.model_validate(new_product, from_attributes=True)
+        except:
+            raise
+            
     async def get_by_id(
         self,
         product_id: str,
@@ -27,7 +30,6 @@ class ProductMongodbRepo(IProductRepo):
             product = await ProductCollection.find_one(
                 ProductCollection.id == product_id,
             )
-            
             return ProductModel.model_validate(product, from_attributes=True)
         except:
             raise EntityNotFoundError(status_code=404, message="Product not found")
@@ -80,7 +82,6 @@ class ProductMongodbRepo(IProductRepo):
         try:
             query = ProductCollection.create_filter_query(criteria)
             products = await ProductCollection.find(query).to_list()
-        
             return [ ProductModel.model_validate(t, from_attributes=True) for t in products ]
         except:
             raise EntityNotFoundError(status_code=404, message="There are no products")

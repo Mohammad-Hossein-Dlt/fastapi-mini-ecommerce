@@ -20,7 +20,7 @@ class GetOrders:
         
         try:
             criteria: FilterOrderInput = FilterOrderInput.model_validate(criteria, from_attributes=True)
-            criteria.user_id = user.id if user and user.id else criteria.user_id
+            criteria.user_id = user.id
             orders: list[OrderModel] = await self.order_repo.get_by_criteria(criteria)
             return orders
         except AppBaseException:

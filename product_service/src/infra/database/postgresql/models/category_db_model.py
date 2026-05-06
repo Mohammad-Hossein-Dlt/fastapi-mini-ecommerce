@@ -4,7 +4,7 @@ from sqlalchemy import Column, DateTime, ForeignKey, Integer, Text
 from datetime import datetime, timezone
 
 class CategoryDBModel(UpdateFromSchemaMixin, Base):
-    __tablename__ = "categories"
+    __tablename__ = "category"
 
     id = Column(Integer, nullable=False, unique=True, primary_key=True, autoincrement=True, index=True)
     parent_id = Column(Integer, ForeignKey("categories.id", ondelete="CASCADE"), nullable=True)

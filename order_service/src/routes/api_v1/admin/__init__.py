@@ -1,7 +1,7 @@
 from . import (
     _router,
-    modify,
     get_by_id,
+    modify,
     delete_by_id,
     get_by_criteria,
     delete_by_criteria,

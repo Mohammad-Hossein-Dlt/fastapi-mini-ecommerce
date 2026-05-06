@@ -68,24 +68,16 @@ class AdminPgRepo(IAdminOrderRepo):
     ) -> bool:
         
         try:
-            order_id = convert_database_id(order_id)
-            try:
-                order = await self.get_by_id(order_id)
-            except:
-                return False
-            
-            if not order:
-                return False
-            
-            to_delete = self.db.merge(OrderDBModel(**order.model_dump()))  
-            
-            if isinstance(to_delete, OrderDBModel):
-                self.db.delete(to_delete)
+            order = await self.get_by_id(order_id)
+            if order:
+                order = self.db.merge(OrderDBModel(**order.model_dump()))
+                
+            if isinstance(order, OrderDBModel):
+                self.db.delete(order)
                 self.db.commit()
                 return True
-
-            return False
-
+            else:
+                return False
         except EntityNotFoundError:
             raise
         except:
@@ -110,12 +102,7 @@ class AdminPgRepo(IAdminOrderRepo):
     ) -> bool:
         
         try:
-            
-            try:
-                orders = await self.get_by_criteria(criteria)
-            except:
-                return False
-            
+            orders = await self.get_by_criteria(criteria)            
             if orders:
                 for order in orders:
                     order = self.db.merge(OrderDBModel(**order.model_dump()))
@@ -126,7 +113,6 @@ class AdminPgRepo(IAdminOrderRepo):
                 return True 
 
             return False
-
         except EntityNotFoundError:
             raise
         except:

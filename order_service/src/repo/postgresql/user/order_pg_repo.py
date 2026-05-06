@@ -52,13 +52,12 @@ class OrderPgRepo(IOrderRepo):
     ) -> OrderModel:        
         try:
             order_id = convert_database_id(order_id)                        
-            user_id = convert_database_id(user_id)                        
             order = self.db.query(
                 OrderDBModel   
             ).where(
                 and_(
                     OrderDBModel.id == order_id,
-                    OrderDBModel.user_id == user_id,
+                    OrderDBModel.user_id == str(user_id),
                 ),
             ).first()
             
@@ -103,8 +102,6 @@ class OrderPgRepo(IOrderRepo):
     ) -> bool:
         
         try:
-            order_id = convert_database_id(order_id)
-            user_id = convert_database_id(user_id)
             order = await self.get_by_id_and_user_id(order_id, user_id)
             if order:
                 order = self.db.merge(OrderDBModel(**order.model_dump()))
@@ -139,7 +136,7 @@ class OrderPgRepo(IOrderRepo):
     ) -> bool:
         
         try:
-            user_id = convert_database_id(user_id)
+
             orders = await self.get_by_criteria(
                 FilterOrderInput(
                     user_id=user_id,

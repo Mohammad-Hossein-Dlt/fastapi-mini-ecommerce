@@ -18,7 +18,7 @@ class ProductCollection(ProductModel, Document):
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     
     class Settings:
-        name = "Products"
+        name = "Product"
     
     @classmethod
     def create_filter_query(

@@ -16,7 +16,7 @@ class OrderCollection(OrderModel, Document):
     status: Status
     
     class Settings:
-        name = "Orders"
+        name = "Order"
 
     @classmethod
     def create_filter_query(
@@ -33,8 +33,8 @@ class OrderCollection(OrderModel, Document):
         if criteria.product_id:
             query[str(cls.product_id)] = convert_database_id(criteria.product_id)
 
-        if criteria.statuses:
-            query[str(cls.status)] = {"$in": criteria.statuses}
+        if criteria.status:
+            query[str(cls.status)] = {"$in": criteria.status}
 
         if criteria.start_quantity:
             query[str(cls.quantity)] = {"$gte": criteria.start_quantity}

@@ -44,13 +44,10 @@ class CategoryMongodbRepo(ICategoryRepo):
     ) -> CategoryModel:
         
         try:
-                                    
             category_id = convert_database_id(category_id)
-            
             category = await CategoryCollection.find_one(
                 CategoryCollection.id == category_id,
-            )
-                        
+            )            
             return CategoryModel.model_validate(category, from_attributes=True)
         except:
             raise EntityNotFoundError(status_code=404, message="Category not found")

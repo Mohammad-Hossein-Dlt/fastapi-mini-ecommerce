@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from src.models.schemas.filter.filter_order_input import FilterOrderInput
 
 class OrderDBModel(UpdateFromSchemaMixin, Base):
-    __tablename__ = "orders"
+    __tablename__ = "order"
 
     id = Column(Integer, nullable=False, unique=True, primary_key=True, autoincrement=True, index=True)
     user_id = Column(Text, nullable=False)
@@ -46,10 +46,10 @@ class OrderDBModel(UpdateFromSchemaMixin, Base):
                 cls.product_id == str(criteria.product_id)
             )
         
-        if criteria.statuses:
+        if criteria.status:
             query = query.where(
                 cls.status.in_(
-                    criteria.statuses,   
+                    criteria.status,   
                 )
             )
         

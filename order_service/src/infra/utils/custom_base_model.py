@@ -1,4 +1,4 @@
-from pydantic import BaseModel, model_validator, field_validator, field_serializer
+from pydantic import BaseModel, ConfigDict, model_validator, field_validator, field_serializer
 from bson.objectid import ObjectId
 from typing import TypeAlias, Literal, ClassVar, Any
 
@@ -9,6 +9,10 @@ class CustomBaseModel(BaseModel):
     aliases: ClassVar[dict[str, str]] = {
         "id": "_id"
     }
+        
+    model_config = ConfigDict(
+        use_enum_values=True,
+    )
     
     def __setattr__(self, name, value):
         
@@ -62,10 +66,10 @@ class CustomBaseModel(BaseModel):
     ) -> dict[str, Any]:
         
         if exclude:
-            exclude.union({"id", "_id"})
+            exclude = exclude.union({"id", "_id"})
         else:
             exclude = {"id", "_id"}
-        
+            
         dumped = self.model_dump(
             exclude_unset=exclude_unset,
             exclude_none=exclude_none,

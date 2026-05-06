@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from src.models.schemas.filter.products_filter_input import ProductFilterInput
 
 class ProductDBModel(UpdateFromSchemaMixin, Base):
-    __tablename__ = "products"
+    __tablename__ = "product"
 
     id = Column(Integer, nullable=False, unique=True, primary_key=True, autoincrement=True, index=True)
     category_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
