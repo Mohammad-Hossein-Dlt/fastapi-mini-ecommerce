@@ -9,3 +9,4 @@ based_on_const: TypeAlias = Literal[
 class CategoryFilterInput(BaseModel):
     id: int | str | None = None
     based_on: based_on_const = "parent-id"
+    contains_danglings: bool = False

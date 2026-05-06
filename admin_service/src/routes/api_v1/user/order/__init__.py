@@ -1,6 +1,6 @@
 from . import (
     _router,
-    create,
+    place_order,
     get_by_id,
     update,
     get_by_criteria,
@@ -8,7 +8,7 @@ from . import (
 
 __all__ = [
     "_router",
-    "create",
+    "place_order",
     "get_by_id",
     "update",
     "get_by_criteria",

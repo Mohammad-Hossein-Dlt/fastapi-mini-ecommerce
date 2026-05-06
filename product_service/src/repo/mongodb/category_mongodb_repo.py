@@ -1,7 +1,7 @@
 from src.repo.interface.Icategory_repo import ICategoryRepo
 from src.domain.schemas.category.category_model import CategoryModel
 from src.infra.database.mongodb.collections.category_collection import CategoryCollection
-from src.models.schemas.filter.categories_filter_input import CategoryFilterInput
+from src.models.schemas.filter.category_filter_input import CategoryFilterInput
 from src.infra.utils.convert_id import convert_database_id
 from src.infra.exceptions.exceptions import EntityNotFoundError, DuplicateEntityError
 from beanie.operators import And, Or, NotIn

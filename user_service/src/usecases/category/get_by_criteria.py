@@ -1,5 +1,5 @@
 from src.gateway.internal.interface.Icategory_service import ICategoryService
-from src.models.schemas.filter.categories_filter_input import CategoryFilterInput
+from src.models.schemas.filter.category_filter_input import CategoryFilterInput
 from src.domain.schemas.category.category_model import CategoryModel
 from src.domain.schemas.auth.auth_credentials import AuthCredentials
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException

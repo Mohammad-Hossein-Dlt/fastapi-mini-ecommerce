@@ -1,7 +1,7 @@
 from ._subscriber import category_subscriber, target_routing_key
 from faststream import Depends
 from faststream.rabbit import RabbitMessage
-from src.models.schemas.filter.categories_filter_input import CategoryFilterInput
+from src.models.schemas.filter.category_filter_input import CategoryFilterInput
 from src.repo.interface.Icategory_repo import ICategoryRepo
 from src.worker.depends.repo_depend import category_repo_depend
 from src.domain.schemas.user.user_model import UserModel

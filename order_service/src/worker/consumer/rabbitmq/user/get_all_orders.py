@@ -1,7 +1,7 @@
 from ._subscriber import user_subscriber, target_routing_key
 from faststream import Depends
 from faststream.rabbit import RabbitMessage
-from src.models.schemas.filter.filter_order_input import UserFilterOrderInput
+from src.models.schemas.filter.order_filter_input import UserFilterOrderInput
 from src.repo.interface.user.Iorder_repo import IOrderRepo
 from src.worker.depends.repo_depend import user_order_repo_depend
 from src.domain.schemas.user.user_model import UserModel

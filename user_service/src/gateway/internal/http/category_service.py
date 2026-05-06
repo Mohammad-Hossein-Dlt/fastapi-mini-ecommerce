@@ -1,7 +1,7 @@
 import aiohttp
 from src.gateway.internal.interface.Icategory_service import ICategoryService
 from src.domain.schemas.auth.auth_credentials import AuthCredentials
-from src.models.schemas.filter.categories_filter_input import CategoryFilterInput
+from src.models.schemas.filter.category_filter_input import CategoryFilterInput
 from src.infra.exceptions.exceptions import AppBaseException
 from src.infra.utils.http_cleaner import clean_outbound_request
 

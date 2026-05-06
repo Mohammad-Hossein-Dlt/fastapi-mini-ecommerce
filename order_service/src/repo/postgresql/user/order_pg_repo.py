@@ -3,7 +3,7 @@ from sqlalchemy import and_
 from src.repo.interface.user.Iorder_repo import IOrderRepo
 from src.domain.schemas.order.order_model import OrderModel
 from src.infra.database.postgresql.models.order_db_model import OrderDBModel
-from src.models.schemas.filter.filter_order_input import FilterOrderInput
+from src.models.schemas.filter.order_filter_input import OrderFilterInput
 from src.infra.utils.convert_id import convert_database_id
 from src.infra.exceptions.exceptions import EntityNotFoundError
 
@@ -117,7 +117,7 @@ class OrderPgRepo(IOrderRepo):
         
     async def get_by_criteria(
         self,
-        criteria: FilterOrderInput,
+        criteria: OrderFilterInput,
     ) -> list[OrderModel]:
         
         try:
@@ -135,7 +135,7 @@ class OrderPgRepo(IOrderRepo):
         try:
 
             orders = await self.get_by_criteria(
-                FilterOrderInput(
+                OrderFilterInput(
                     user_id=user_id,
                 ),
             )

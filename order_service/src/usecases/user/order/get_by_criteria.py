@@ -1,5 +1,5 @@
 from src.repo.interface.user.Iorder_repo import IOrderRepo
-from src.models.schemas.filter.filter_order_input import FilterOrderInput
+from src.models.schemas.filter.order_filter_input import OrderFilterInput
 from src.domain.schemas.user.user_model import UserModel
 from src.domain.schemas.order.order_model import OrderModel
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
@@ -15,11 +15,11 @@ class GetOrders:
     async def execute(
         self,
         user: UserModel,
-        criteria: FilterOrderInput,
+        criteria: OrderFilterInput,
     ) -> list[OrderModel]:
         
         try:
-            criteria: FilterOrderInput = FilterOrderInput.model_validate(criteria, from_attributes=True)
+            criteria: OrderFilterInput = OrderFilterInput.model_validate(criteria, from_attributes=True)
             criteria.user_id = user.id
             orders: list[OrderModel] = await self.order_repo.get_by_criteria(criteria)
             return orders

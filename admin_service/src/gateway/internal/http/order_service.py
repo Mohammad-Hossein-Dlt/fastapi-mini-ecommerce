@@ -2,7 +2,7 @@ import aiohttp
 from src.gateway.internal.interface.Iorder_service import IOrderService
 from src.domain.schemas.auth.auth_credentials import AuthCredentials
 from src.models.schemas.order.modify_order_input import ModifyOrderInput
-from src.models.schemas.filter.filter_order_input import FilterOrderInput
+from src.models.schemas.filter.order_filter_input import OrderFilterInput
 from src.models.schemas.order.place_order_input import PlaceOrderInput
 from src.models.schemas.order.update_order_input import UpdateOrderInput
 from src.infra.exceptions.exceptions import AppBaseException
@@ -119,7 +119,7 @@ class OrderService(IOrderService):
     async def get_by_criteria(
         self,
         credentials: AuthCredentials,
-        criteria: FilterOrderInput,
+        criteria: OrderFilterInput,
     ) -> dict:
         
         target_url = self.base_url + "/admin/all"
@@ -150,7 +150,7 @@ class OrderService(IOrderService):
     async def delete_by_criteria(
         self,
         credentials: AuthCredentials,
-        criteria: FilterOrderInput,
+        criteria: OrderFilterInput,
     ) -> dict:
         
         target_url = self.base_url + "/admin/all"
@@ -276,7 +276,7 @@ class OrderService(IOrderService):
     async def user_get_by_criteria(
         self,
         credentials: AuthCredentials,
-        criteria: FilterOrderInput,
+        criteria: OrderFilterInput,
     ) -> dict:
         
         target_url = self.base_url + "/user/all"

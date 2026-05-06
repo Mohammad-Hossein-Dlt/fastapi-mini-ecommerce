@@ -1,7 +1,7 @@
 from src.infra.broker_config.app import app
 from src.worker.consumer.rabbitmq import client
 from src.domain.schemas.order.order_model import OrderModel
-from src.models.schemas.filter.filter_order_input import FilterOrderInput
+from src.models.schemas.filter.order_filter_input import OrderFilterInput
 import json
 import time
 from typing import Any
@@ -23,7 +23,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJ0eXBlIjoiYWNjZXNzIiwiZXh
         response = await client.broker.request(
             
             # message=ModifyOrderInput(id="68f5f70ee8f872d17207e5c3", status=Status.delivered),
-            message=FilterOrderInput(),
+            message=OrderFilterInput(),
             
             # message={
             #     "order": PlaceOrderInput(product_id=2, quantity=120),

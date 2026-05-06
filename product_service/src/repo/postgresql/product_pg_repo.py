@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from src.models.schemas.filter.products_filter_input import ProductFilterInput
+from src.models.schemas.filter.product_filter_input import ProductFilterInput
 from src.repo.interface.Iproduct_repo import IProductRepo
 from src.domain.schemas.product.product_model import ProductModel
 from src.infra.database.postgresql.models.product_db_model import ProductDBModel

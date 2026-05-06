@@ -4,7 +4,7 @@ from sqlalchemy import Column, DateTime, Integer, Text, Enum, select
 from sqlalchemy.sql import Select
 from src.domain.enums import Status
 from datetime import datetime, timezone
-from src.models.schemas.filter.filter_order_input import FilterOrderInput
+from src.models.schemas.filter.order_filter_input import OrderFilterInput
 
 class OrderDBModel(UpdateFromSchemaMixin, Base):
     __tablename__ = "Order"
@@ -32,7 +32,7 @@ class OrderDBModel(UpdateFromSchemaMixin, Base):
     @classmethod
     def create_filter_query(
         cls,
-        criteria: FilterOrderInput,
+        criteria: OrderFilterInput,
     ) -> Select["OrderDBModel"]:
         query = select(cls)
         

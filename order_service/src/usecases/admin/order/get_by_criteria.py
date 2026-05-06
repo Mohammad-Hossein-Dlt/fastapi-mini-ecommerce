@@ -1,5 +1,5 @@
 from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
-from src.models.schemas.filter.filter_order_input import FilterOrderInput
+from src.models.schemas.filter.order_filter_input import OrderFilterInput
 from src.domain.schemas.order.order_model import OrderModel
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
@@ -13,7 +13,7 @@ class GetOrders:
     
     async def execute(
         self,
-        criteria: FilterOrderInput,
+        criteria: OrderFilterInput,
     ) -> list[OrderModel]:
         
         try:

@@ -1,5 +1,5 @@
 from src.gateway.internal.interface.Iorder_service import IOrderService
-from src.models.schemas.filter.filter_order_input import FilterOrderInput
+from src.models.schemas.filter.order_filter_input import OrderFilterInput
 from src.domain.schemas.order.order_model import OrderModel
 from src.domain.schemas.auth.auth_credentials import AuthCredentials
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
@@ -15,7 +15,7 @@ class GetOrders:
     async def execute(
         self,
         credentials: AuthCredentials,
-        criteria: FilterOrderInput,
+        criteria: OrderFilterInput,
     ) -> list[OrderModel]:
         
         try:

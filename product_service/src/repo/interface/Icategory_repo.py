@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from src.domain.schemas.category.category_model import CategoryModel
-from src.models.schemas.filter.categories_filter_input import CategoryFilterInput
+from src.models.schemas.filter.category_filter_input import CategoryFilterInput
 
 class ICategoryRepo(ABC):
         

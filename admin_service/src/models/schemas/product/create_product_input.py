@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+
 class CreateProductInput(BaseModel):
     category_id: int | str
     name: str

@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
 from src.domain.schemas.order.order_model import OrderModel
 from src.infra.database.postgresql.models.order_db_model import OrderDBModel
-from src.models.schemas.filter.filter_order_input import FilterOrderInput
+from src.models.schemas.filter.order_filter_input import OrderFilterInput
 from src.infra.utils.convert_id import convert_database_id
 from src.infra.exceptions.exceptions import EntityNotFoundError
 
@@ -84,7 +84,7 @@ class AdminPgRepo(IAdminOrderRepo):
 
     async def get_by_criteria(
         self,
-        criteria: FilterOrderInput,
+        criteria: OrderFilterInput,
     ) -> list[OrderModel]:
         
         try:
@@ -96,7 +96,7 @@ class AdminPgRepo(IAdminOrderRepo):
     
     async def delete_by_criteria(
         self,
-        criteria: FilterOrderInput,
+        criteria: OrderFilterInput,
     ) -> bool:
         
         try:

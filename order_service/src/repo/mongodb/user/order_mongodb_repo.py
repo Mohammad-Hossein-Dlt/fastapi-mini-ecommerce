@@ -1,7 +1,7 @@
 from src.repo.interface.user.Iorder_repo import IOrderRepo
 from src.domain.schemas.order.order_model import OrderModel
 from src.infra.database.mongodb.collections.order_collection import OrderCollection
-from src.models.schemas.filter.filter_order_input import FilterOrderInput
+from src.models.schemas.filter.order_filter_input import OrderFilterInput
 from src.infra.utils.convert_id import convert_database_id
 from src.infra.exceptions.exceptions import EntityNotFoundError
 from beanie.operators import And
@@ -100,7 +100,7 @@ class OrderMongodbRepo(IOrderRepo):
         
     async def get_by_criteria(
         self,
-        criteria: FilterOrderInput,
+        criteria: OrderFilterInput,
     ) -> list[OrderModel]:
         
         try:

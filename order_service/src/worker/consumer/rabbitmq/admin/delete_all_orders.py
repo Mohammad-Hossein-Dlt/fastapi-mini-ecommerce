@@ -1,7 +1,7 @@
 from ._subscriber import admin_subscriber, target_routing_key
 from faststream import Depends
 from faststream.rabbit import RabbitMessage
-from src.models.schemas.filter.filter_order_input import FilterOrderInput
+from src.models.schemas.filter.order_filter_input import OrderFilterInput
 from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
 from src.worker.depends.repo_depend import admin_order_repo_depend
 from src.domain.schemas.user.user_model import UserModel
@@ -16,7 +16,7 @@ routing_key = "order_service.admin.delete.all"
 )
 async def delete_all_orders(
     msg: RabbitMessage,
-    criteria: FilterOrderInput,
+    criteria: OrderFilterInput,
     order_repo: IAdminOrderRepo = Depends(admin_order_repo_depend),
     user: UserModel = Depends(admin_auth_depend),
 ):

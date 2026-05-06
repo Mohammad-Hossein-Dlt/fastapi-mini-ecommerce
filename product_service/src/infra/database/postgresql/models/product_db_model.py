@@ -3,7 +3,7 @@ from src.infra.mixins.update_from_schema import UpdateFromSchemaMixin
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, Text, Float, select
 from sqlalchemy.sql import Select
 from datetime import datetime, timezone
-from src.models.schemas.filter.products_filter_input import ProductFilterInput
+from src.models.schemas.filter.product_filter_input import ProductFilterInput
 
 class ProductDBModel(UpdateFromSchemaMixin, Base):
     __tablename__ = "Product"

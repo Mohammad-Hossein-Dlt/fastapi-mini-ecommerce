@@ -3,7 +3,7 @@ from beanie import Document, PydanticObjectId
 from bson import ObjectId
 from pydantic import Field
 from datetime import datetime, timezone
-from src.models.schemas.filter.products_filter_input import ProductFilterInput
+from src.models.schemas.filter.product_filter_input import ProductFilterInput
 from src.infra.utils.convert_id import convert_database_id
 
 class ProductCollection(ProductModel, Document):

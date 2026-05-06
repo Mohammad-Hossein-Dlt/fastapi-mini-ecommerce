@@ -6,7 +6,7 @@ from src.gateway.internal.interface.Iorder_service import IOrderService
 from src.routes.depends.internal_http_depend import order_service_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import admin_auth_depend
-from src.usecases.user.order.create import PlaceOrder
+from src.usecases.user.order.place_order import PlaceOrder
 from src.infra.exceptions.exceptions import AppBaseException
 
 @router.post(
@@ -16,7 +16,7 @@ from src.infra.exceptions.exceptions import AppBaseException
         **ResponseMessage.HTTP_500_INTERNAL_SERVER_ERROR("Internal server error"),
     }
 )
-async def create(
+async def place_order(
     entity: PlaceOrderInput = Depends(PlaceOrderInput),
     order_service: IOrderService = Depends(order_service_depend),
     user: UserModel = Depends(admin_auth_depend),

@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from src.domain.enums import Status
 from datetime import datetime
 
-class FilterOrderInput(BaseModel):
+class OrderFilterInput(BaseModel):
     user_id: int | str | None = None
     product_id: int | str | None = None
     status: list[Status] | None = None

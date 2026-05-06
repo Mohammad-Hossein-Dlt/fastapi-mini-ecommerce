@@ -1,7 +1,7 @@
 from ._router import router
 from fastapi import Depends, Query, HTTPException
 from src.routes.http_response.responses import ResponseMessage
-from src.models.schemas.filter.products_filter_input import ProductFilterInput
+from src.models.schemas.filter.product_filter_input import ProductFilterInput
 from src.usecases.product.get_by_criteria import GetProducts
 from src.repo.interface.Iproduct_repo import IProductRepo
 from src.routes.depends.repo_depend import product_repo_depend

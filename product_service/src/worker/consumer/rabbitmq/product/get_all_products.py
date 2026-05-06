@@ -1,7 +1,7 @@
 from ._subscriber import product_subscriber, target_routing_key
 from faststream import Depends
 from faststream.rabbit import RabbitMessage
-from src.models.schemas.filter.products_filter_input import ProductFilterInput
+from src.models.schemas.filter.product_filter_input import ProductFilterInput
 from src.repo.interface.Iproduct_repo import IProductRepo
 from src.worker.depends.repo_depend import product_repo_depend
 from src.repo.interface.Icategory_repo import ICategoryRepo

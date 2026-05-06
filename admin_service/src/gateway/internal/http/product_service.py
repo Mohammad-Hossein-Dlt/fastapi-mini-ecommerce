@@ -3,7 +3,7 @@ from src.gateway.internal.interface.Iproduct_service import IProductService
 from src.domain.schemas.auth.auth_credentials import AuthCredentials
 from src.models.schemas.product.create_product_input import CreateProductInput
 from src.models.schemas.product.update_product_input import UpdateProductInput
-from src.models.schemas.filter.products_filter_input import ProductFilterInput
+from src.models.schemas.filter.product_filter_input import ProductFilterInput
 from src.infra.exceptions.exceptions import AppBaseException
 from src.infra.utils.http_cleaner import clean_outbound_request
 
