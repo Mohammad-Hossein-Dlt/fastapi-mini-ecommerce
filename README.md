@@ -11,7 +11,7 @@ AUTH_BASE_URL=http://nginx-service/auth/api/v1
 PRODUCT_BASE_URL=http://nginx-service/product/api/v1
 ORDER_BASE_URL=http://nginx-service/order/api/v1
 
-RABBITMQ__URL=amqp://dev:devpass@localhost:5672/app
+RABBITMQ__URL=amqp://dev:devpass@broker:5672/app
 RABBITMQ__EXCHANGE=my-exchange
 RABBITMQ__QUEUE=my-queue
 RABBITMQ__ROUTING_KEY='ecommerce.*.#'
@@ -34,8 +34,8 @@ POSTGRES__DB_NAME=db
 
 JWT__SECRET=5fd4a7c9-7b61-49bf-8aea-ae8c53727290
 JWT__ALGORITHM=HS256
-JWT__ACCESS_TIME=2000000
-JWT__REFRESH_TIME=4000000
+JWT__ACCESS_TIME=2
+JWT__REFRESH_TIME=4
 
 # Grafana config
 GF_SECURITY_ADMIN_PASSWORD=admin
