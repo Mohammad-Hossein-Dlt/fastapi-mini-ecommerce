@@ -30,7 +30,7 @@ class LoginUser:
         )
                     
         try:
-            return await self.auth_repo.save_user_auth_credentials(credentials)
+            return await self.auth_repo.save_auth_credentials(credentials)
         except:
             raise OperationFailureException(500, "Internal server error")
 

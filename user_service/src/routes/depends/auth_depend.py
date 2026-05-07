@@ -25,7 +25,7 @@ async def user_auth_depend(
 ) -> UserModel:
     
     try:
-        credentials: AuthCredentials = await auth_repo.get_user_auth_credentials()
+        credentials: AuthCredentials = await auth_repo.get_auth_credentials()
     except AppBaseException as credentials_ex:
         raise HTTPException(status_code=credentials_ex.status_code, detail=credentials_ex.message)
     
@@ -49,7 +49,7 @@ async def user_auth_depend(
     try:
         get_user_usecase = GetSelf(auth_service)
         user = await get_user_usecase.execute(credentials)
-        user.credentials = await auth_repo.get_user_auth_credentials()
+        user.credentials = await auth_repo.get_auth_credentials()
         return user
     except AppBaseException as get_user_ex:
         raise HTTPException(status_code=get_user_ex.status_code, detail=get_user_ex.message)

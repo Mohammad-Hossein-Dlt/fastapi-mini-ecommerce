@@ -4,7 +4,7 @@ from beanie import PydanticObjectId
 from datetime import datetime
 
 class UserModel(CustomBaseModel):
-    
+        
     id: int | PydanticObjectId | None = None
     role: str | None = None
     name: str | None = None
@@ -12,6 +12,6 @@ class UserModel(CustomBaseModel):
     username: str | None = None
     password: str | None = None
     created_at: datetime | None = None
+    updated_at: datetime | None = None
     
     token: str | None = Field(default=None, exclude=True)
-    

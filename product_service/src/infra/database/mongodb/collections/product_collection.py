@@ -1,10 +1,10 @@
 from src.domain.schemas.product.product_model import ProductModel
-from beanie import Document, PydanticObjectId
+from src.models.schemas.filter.product_filter_input import ProductFilterInput
+from src.infra.utils.convert_id import convert_database_id
+from beanie import Document, PydanticObjectId, before_event, Update
 from bson import ObjectId
 from pydantic import Field
 from datetime import datetime, timezone
-from src.models.schemas.filter.product_filter_input import ProductFilterInput
-from src.infra.utils.convert_id import convert_database_id
 
 class ProductCollection(ProductModel, Document):
     
@@ -14,11 +14,13 @@ class ProductCollection(ProductModel, Document):
     description: str | None = None
     price: float | None = None
     stock: int | None = None
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     
     class Settings:
         name = "Product"
+        
+    @before_event(Update)
+    def set_updated_at(self):
+        self.updated_at = datetime.now(timezone.utc)
     
     @classmethod
     def create_filter_query(

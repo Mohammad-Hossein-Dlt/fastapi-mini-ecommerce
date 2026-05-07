@@ -1,10 +1,11 @@
-from beanie import Document, PydanticObjectId
-from bson import ObjectId
-from pydantic import Field
 from src.domain.schemas.order.order_model import OrderModel
 from src.domain.enums import Status
 from src.models.schemas.filter.order_filter_input import OrderFilterInput
 from src.infra.utils.convert_id import convert_database_id
+from beanie import Document, PydanticObjectId, before_event, Update
+from bson import ObjectId
+from pydantic import Field
+from datetime import datetime, timezone
 
 class OrderCollection(OrderModel, Document):
     
@@ -17,6 +18,10 @@ class OrderCollection(OrderModel, Document):
     
     class Settings:
         name = "Order"
+
+    @before_event(Update)
+    def set_updated_at(self):
+        self.updated_at = datetime.now(timezone.utc)
 
     @classmethod
     def create_filter_query(

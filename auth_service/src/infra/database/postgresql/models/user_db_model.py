@@ -14,3 +14,4 @@ class UserDBModel(UpdateFromSchemaMixin, Base):
     username = Column(Text, nullable=False)
     password = Column(Text, nullable=False)
     created_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
