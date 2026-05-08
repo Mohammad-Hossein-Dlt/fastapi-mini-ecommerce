@@ -25,7 +25,7 @@ class CategoryPgRepo(ICategoryRepo):
             await self.check_unique(category)
             raise DuplicateEntityError(409, "Category already exist")
         except EntityNotFoundError:
-            new_category = CategoryDBModel(**category.model_dump_for_db(mode="json"))
+            new_category = CategoryDBModel(**category.model_dump_for_db(dump_for="create", mode="json"))
             self.db.add(new_category)
             self.db.commit()
             return CategoryModel.model_validate(new_category, from_attributes=True)
@@ -73,6 +73,7 @@ class CategoryPgRepo(ICategoryRepo):
         try:
             
             to_update: dict = category.model_dump_for_db(
+                dump_for="update",
                 exclude_none=True,
                 exclude_unset=True,
                 mode="json",

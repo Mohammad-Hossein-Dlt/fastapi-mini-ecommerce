@@ -14,7 +14,7 @@ class ProductMongodbRepo(IProductRepo):
         
         try:
             new_product = await ProductCollection.insert(
-                ProductCollection(**product.model_dump_for_db()),
+                ProductCollection(**product.model_dump_for_db(dump_for="create")),
             )
             return ProductModel.model_validate(new_product, from_attributes=True)
         except:
@@ -42,6 +42,7 @@ class ProductMongodbRepo(IProductRepo):
         try:
             
             to_update: dict = product.model_dump_for_db(
+                dump_for="update",
                 exclude_none=True,
                 exclude_unset=True,
             )

@@ -18,7 +18,7 @@ class CategoryMongodbRepo(ICategoryRepo):
             raise DuplicateEntityError(409, "Category already exist")
         except EntityNotFoundError:
             new_category = await CategoryCollection.insert(
-                CategoryCollection(**category.model_dump_for_db()),
+                CategoryCollection(**category.model_dump_for_db(dump_for="create")),
             )
             return CategoryModel.model_validate(new_category, from_attributes=True)
     
@@ -60,6 +60,7 @@ class CategoryMongodbRepo(ICategoryRepo):
         try:               
             
             to_update: dict = category.model_dump_for_db(
+                dump_for="update",
                 exclude_none=True,
                 exclude_unset=True,
             )

@@ -15,7 +15,7 @@ class OrderMongodbRepo(IOrderRepo):
         
         try:
             new_order = await OrderCollection.insert(
-                OrderCollection(**order.model_dump_for_db()),
+                OrderCollection(**order.model_dump_for_db(dump_for="create")),
             )
             return OrderModel.model_validate(new_order, from_attributes=True)
         except:
@@ -62,6 +62,7 @@ class OrderMongodbRepo(IOrderRepo):
         try:
                         
             to_update: dict = order.model_dump_for_db(
+                dump_for="update",
                 exclude_none=True,
                 exclude_unset=True,
                 exclude={"user_id", "product_id"},

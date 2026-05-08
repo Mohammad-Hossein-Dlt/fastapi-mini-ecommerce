@@ -34,6 +34,7 @@ class OrderDBModel(UpdateFromSchemaMixin, Base):
         cls,
         criteria: OrderFilterInput,
     ) -> Select["OrderDBModel"]:
+        
         query = select(cls)
         
         if criteria.user_id:

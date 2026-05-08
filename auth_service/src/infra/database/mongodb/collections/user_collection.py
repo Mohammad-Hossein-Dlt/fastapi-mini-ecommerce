@@ -1,13 +1,11 @@
 from src.domain.schemas.user.user_model import UserModel
 from src.domain.enums import Role
-from pydantic import Field
 from beanie import Document, PydanticObjectId, before_event, Update
-from bson import ObjectId
 from datetime import datetime, timezone
 
 class UserCollection(UserModel, Document):
     
-    id: PydanticObjectId = Field(default_factory=ObjectId)
+    id: PydanticObjectId = None
     role: Role
     name: str
     email: str

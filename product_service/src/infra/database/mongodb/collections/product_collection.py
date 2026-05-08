@@ -2,13 +2,11 @@ from src.domain.schemas.product.product_model import ProductModel
 from src.models.schemas.filter.product_filter_input import ProductFilterInput
 from src.infra.utils.convert_id import convert_database_id
 from beanie import Document, PydanticObjectId, before_event, Update
-from bson import ObjectId
-from pydantic import Field
 from datetime import datetime, timezone
 
 class ProductCollection(ProductModel, Document):
     
-    id: PydanticObjectId = Field(default_factory=ObjectId)
+    id: PydanticObjectId = None
     category_id: int | PydanticObjectId | None = None
     name: str | None = None
     description: str | None = None

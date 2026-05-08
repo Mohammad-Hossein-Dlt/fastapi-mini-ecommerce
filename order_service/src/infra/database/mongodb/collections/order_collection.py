@@ -3,13 +3,11 @@ from src.domain.enums import Status
 from src.models.schemas.filter.order_filter_input import OrderFilterInput
 from src.infra.utils.convert_id import convert_database_id
 from beanie import Document, PydanticObjectId, before_event, Update
-from bson import ObjectId
-from pydantic import Field
 from datetime import datetime, timezone
 
 class OrderCollection(OrderModel, Document):
     
-    id: PydanticObjectId = Field(default_factory=ObjectId)
+    id: PydanticObjectId = None
     user_id: int | PydanticObjectId
     product_id: int | PydanticObjectId
     quantity: int = 0
@@ -31,7 +29,6 @@ class OrderCollection(OrderModel, Document):
         
         query = {}
         
-
         if criteria.user_id:
             query[str(cls.user_id)] = convert_database_id(criteria.user_id)       
 

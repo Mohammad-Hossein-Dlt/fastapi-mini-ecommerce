@@ -29,6 +29,7 @@ class AdminOrderMongodbRepo(IAdminOrderRepo):
         try:
             
             to_update: dict = order.model_dump_for_db(
+                dump_for="update",
                 exclude_none=True,
                 exclude_unset=True,
                 exclude={"user_id", "product_id"},

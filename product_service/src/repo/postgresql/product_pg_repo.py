@@ -21,7 +21,7 @@ class ProductPgRepo(IProductRepo):
     ) -> ProductModel:
         
         try:
-            new_product = ProductDBModel(**product.model_dump_for_db(mode="json"))
+            new_product = ProductDBModel(**product.model_dump_for_db(dump_for="create", mode="json"))
             self.db.add(new_product)
             self.db.commit()
             return ProductModel.model_validate(new_product, from_attributes=True)
@@ -53,6 +53,7 @@ class ProductPgRepo(IProductRepo):
         try:
             
             to_update: dict = product.model_dump_for_db(
+                dump_for="update",
                 exclude_none=True,
                 exclude_unset=True,
                 mode="json",

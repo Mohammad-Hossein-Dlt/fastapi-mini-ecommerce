@@ -22,6 +22,7 @@ class ProductDBModel(UpdateFromSchemaMixin, Base):
         cls,
         criteria: ProductFilterInput,
     ) -> Select["ProductDBModel"]:
+        
         query = select(cls)
         
         if criteria.category_id:
