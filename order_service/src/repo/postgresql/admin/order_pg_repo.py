@@ -42,6 +42,7 @@ class AdminPgRepo(IAdminOrderRepo):
                 exclude_none=True,
                 exclude_unset=True,
                 exclude={"user_id", "product_id"},
+                mode="json",
             )
                                     
             self.db.query(

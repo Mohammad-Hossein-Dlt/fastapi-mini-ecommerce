@@ -21,7 +21,7 @@ class OrderPgRepo(IOrderRepo):
     ) -> OrderModel:
         
         try:                        
-            new_order = OrderDBModel(**order.model_dump_for_db())
+            new_order = OrderDBModel(**order.model_dump_for_db(mode="json"))
             self.db.add(new_order)
             self.db.commit()
             return OrderModel.model_validate(new_order, from_attributes=True)
@@ -74,6 +74,7 @@ class OrderPgRepo(IOrderRepo):
                 exclude_none=True,
                 exclude_unset=True,
                 exclude={"user_id", "product_id"},
+                mode="json"
             )
                         
             self.db.query(

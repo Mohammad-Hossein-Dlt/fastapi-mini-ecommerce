@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import and_, or_
 from src.repo.interface.Icategory_repo import ICategoryRepo
 from src.domain.schemas.category.category_model import CategoryModel
 from src.infra.database.postgresql.models.category_db_model import CategoryDBModel
@@ -24,7 +25,7 @@ class CategoryPgRepo(ICategoryRepo):
             await self.check_unique(category)
             raise DuplicateEntityError(409, "Category already exist")
         except EntityNotFoundError:
-            new_category = CategoryDBModel(**category.model_dump_for_db())
+            new_category = CategoryDBModel(**category.model_dump_for_db(mode="json"))
             self.db.add(new_category)
             self.db.commit()
             return CategoryModel.model_validate(new_category, from_attributes=True)
@@ -38,8 +39,10 @@ class CategoryPgRepo(ICategoryRepo):
             category = self.db.query(
                 CategoryDBModel   
             ).where(
-                CategoryDBModel.name == category.name,
-                CategoryDBModel.slug == category.slug,
+                and_(
+                    CategoryDBModel.name == category.name,
+                    CategoryDBModel.slug == category.slug,
+                ),
             ).first()
             return CategoryModel.model_validate(category, from_attributes=True)
         except:
@@ -72,6 +75,7 @@ class CategoryPgRepo(ICategoryRepo):
             to_update: dict = category.model_dump_for_db(
                 exclude_none=True,
                 exclude_unset=True,
+                mode="json",
             )
             
             self.db.query(
@@ -163,13 +167,15 @@ class CategoryPgRepo(ICategoryRepo):
             p_id: str | None = None,
         ) -> list[CategoryModel]:
             
-            
             result: list[CategoryModel] = []
             if not p_id:
                 return result
                           
-            p_id = convert_database_id(p_id)
-            category = await self.get_by_id(p_id)
+            try:
+                category = await self.get_by_id(p_id)
+            except:
+                return []
+            
             result.append(category)
             if category.parent_id:
                 parent = await _get_ancestors(category.parent_id)
@@ -178,7 +184,6 @@ class CategoryPgRepo(ICategoryRepo):
             return result
                         
         categories = await _get_ancestors(criteria.id)
-        categories.reverse()
         return categories
     
     async def get_by_parent_id(
@@ -193,8 +198,10 @@ class CategoryPgRepo(ICategoryRepo):
                 categories_list = self.db.query(
                     CategoryDBModel
                 ).where(
-                    CategoryDBModel.parent_id == parent_id,
-                    CategoryDBModel.parent_id == None,
+                    or_(
+                        CategoryDBModel.parent_id == parent_id,
+                        CategoryDBModel.parent_id == None,
+                    ),
                 ).order_by(
                     CategoryDBModel.id.asc(),
                 ).all()

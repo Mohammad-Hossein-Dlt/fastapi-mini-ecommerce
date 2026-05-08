@@ -142,8 +142,12 @@ class CategoryMongodbRepo(ICategoryRepo):
             result: list[CategoryModel] = []
             if not p_id:
                 return result
-                          
-            category = await self.get_by_id(p_id)
+            
+            try:
+                category = await self.get_by_id(p_id)
+            except:
+                return []
+            
             result.append(category)
             if category.parent_id:
                 parent = await _get_ancestors(category.parent_id)
@@ -152,7 +156,6 @@ class CategoryMongodbRepo(ICategoryRepo):
             return result
                         
         categories = await _get_ancestors(criteria.id)
-        categories.reverse()
         return categories
                     
     async def get_by_parent_id(
@@ -164,7 +167,8 @@ class CategoryMongodbRepo(ICategoryRepo):
         try:
             parent_id = convert_database_id(parent_id)
             if not parent_id and contains_danglings:
-                valid_ids = await CategoryCollection.distinct("_id")        
+                valid_ids = await CategoryCollection.distinct("_id")
+                valid_ids = [ convert_database_id(_id) for _id in valid_ids ]    
                 categories_list = await CategoryCollection.find_many(
                     Or(
                         CategoryCollection.parent_id == parent_id,
