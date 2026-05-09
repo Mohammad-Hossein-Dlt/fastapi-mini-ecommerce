@@ -1,11 +1,9 @@
 from . import (
-    _subscriber,
-    admin_get_user,
-    admin_delete_user,
+    get,
+    delete,
 )
 
 __all__ = [
-    "_subscriber",
-    "admin_get_user",
-    "admin_delete_user",
+    "get",
+    "delete",
 ]

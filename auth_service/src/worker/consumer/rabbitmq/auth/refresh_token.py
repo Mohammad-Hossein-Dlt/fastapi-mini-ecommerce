@@ -1,15 +1,16 @@
-from ._subscriber import auth_subscriber, target_routing_key
 from faststream import Depends
 from faststream.rabbit import RabbitMessage
+from src.worker.consumer.rabbitmq.broker import subscriber
+from src.worker.depends.rabbitmq_depend import target_routing_key
 from src.worker.depends.auth_depend import jwt_handler_depend, refresh_token_depend
 from src.infra.auth.jwt_handler import JWTHandler
 from src.domain.schemas.user.user_model import UserModel
 from src.usecases.auth.refresh_token import RefreshToken
 from src.infra.exceptions.exceptions import AppBaseException
 
-routing_key = "auth_service.auth.refresh_token"
+routing_key = "auth_service.auth.refresh-token"
 
-@auth_subscriber(
+@subscriber(
     filter=target_routing_key(routing_key),
 )
 async def refresh_token(

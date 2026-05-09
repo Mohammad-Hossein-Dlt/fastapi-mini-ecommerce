@@ -1,5 +1,4 @@
 services:
-  # Nginx
   nginx-service:
     image: nginx:latest
     restart: always
@@ -14,7 +13,49 @@ services:
       - admin-service
       - user-service
 
-  # Project services
+  broker:
+    image: rabbitmq:3.13-management
+    container_name: broker_service
+    restart: always
+    ports:
+      - 5672:5672 # AMQP
+      - 15672:15672 # Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: dev
+      RABBITMQ_DEFAULT_PASS: devpass
+      RABBITMQ_DEFAULT_VHOST: app
+
+  mongodb-service:
+    image: mongo
+    container_name: mongo-db
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+    env_file:
+      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB__USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB__PASSWORD}
+
+  postgres-service:
+    image: postgres
+    container_name: postgres-db
+    restart: always
+    ports:
+      - 54032:5432
+    volumes:
+      - pgdata:/var/lib/postgresql
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES__USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES__PASSWORD}
+      POSTGRES_DB: ${POSTGRES__DB_NAME}
+
   auth-service:
     working_dir: /app
     build:
@@ -84,37 +125,6 @@ services:
       - mongodb-service
       - postgres-service
 
-  # Mongo-db
-  mongodb-service:
-    image: mongo
-    container_name: mongo-db
-    restart: always
-    ports:
-      - 27017:27017
-    volumes:
-      - mongo_data:/data/db
-    env_file:
-      - .env
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGODB__USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB__PASSWORD}
-
-  # Postgresql
-  postgres-service:
-    image: postgres
-    container_name: postgres-db
-    restart: always
-    ports:
-      - 54032:5432
-    volumes:
-      - pgdata:/var/lib/postgresql
-    env_file:
-      - .env
-    environment:
-      POSTGRES_USER: ${POSTGRES__USERNAME}
-      POSTGRES_PASSWORD: ${POSTGRES__PASSWORD}
-      POSTGRES_DB: ${POSTGRES__DB_NAME}
-
   # Monitoring
   # prometheus:
   #   image: prom/prometheus:latest
@@ -144,6 +154,7 @@ services:
   #     - 3000:3000
 
 volumes:
+  rabbitmq_data:
   pgdata:
   mongo_data:
   # prometheus_data:

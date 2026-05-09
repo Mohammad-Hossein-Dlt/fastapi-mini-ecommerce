@@ -1,13 +1,11 @@
 from . import (
-    _subscriber,
-    register_user,
-    login_user,
+    register,
+    login,
     refresh_token,
 )
 
 __all__ = [
-    "_subscriber",
-    "register_user",
-    "login_user",
+    "register",
+    "login",
     "refresh_token",
 ]

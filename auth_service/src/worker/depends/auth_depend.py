@@ -22,9 +22,7 @@ def token_from_message_depend(
     return token
     
 def jwt_handler_depend() -> JWTHandler:
-
-    jwt_handler = JWTHandler(context=AppContext.jwt)
-    return jwt_handler
+    return AppContext.jwt
 
 async def auth_depend(
     token: str,

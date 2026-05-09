@@ -13,4 +13,5 @@ RUN pip install uv
 RUN uv sync --upgrade --no-cache
 
 EXPOSE 80
-CMD ["uv", "run", "fastapi", "run", "./src/main.py", "--proxy-headers", "--port", "80"]
+# CMD ["uv", "run", "fastapi", "run", "./src/main.py", "--proxy-headers", "--port", "80"]
+CMD ["uv", "run", "faststream", "run", "src.main:app"]

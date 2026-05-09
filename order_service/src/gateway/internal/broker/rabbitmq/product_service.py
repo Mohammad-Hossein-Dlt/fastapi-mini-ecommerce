@@ -8,31 +8,23 @@ class ProductService(IProductService):
         self,
         client: RabbitClient,
     ):
-        
         self.client = client
-                
-        self.allowed_status_codes = [200, 201]
-    
+            
     async def get_by_id(
         self,
         access_token: str,
         product_id: str,
     ) -> dict:
         
-        response = await self.client.broker.request(
-            message={
-                "access_token": access_token,
-                "product_id": product_id,
-            },
-            routing_key="product_service.product.get.one",
-            exchange=self.client.exchange,
-            timeout=10,
-        )
-        
-        if response.status_code in self.allowed_status_codes:
-            return response.json()
-        else:
-            data = response.json()
-            detail = data["detail"]
-            raise AppBaseException(response.status_code, detail)
-        
+        try:
+            return await self.client.broker.request(
+                message={
+                    "token": access_token,
+                    "product_id": product_id,
+                },
+                routing_key="product_service.product.get.by-id",
+                exchange=self.client.exchange,
+                timeout=10,
+            )
+        except:
+            raise

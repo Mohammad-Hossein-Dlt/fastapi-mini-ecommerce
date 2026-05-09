@@ -3,7 +3,7 @@ from fastapi import Query, Depends, HTTPException
 from src.routes.http_response.responses import ResponseMessage
 from src.repo.interface.Icategory_repo import ICategoryRepo
 from src.routes.depends.repo_depend import category_repo_depend
-from src.usecases.category.delete_by_parent_id import DeleteCategoriesByParentId
+from src.usecases.category.delete_by_parent_id import DeleteCategories
 from src.infra.exceptions.exceptions import AppBaseException
 
 @router.delete(
@@ -18,7 +18,7 @@ async def delete_by_parent_id(
     category_repo: ICategoryRepo = Depends(category_repo_depend),
 ):
     try:
-        delete_category_usecase = DeleteCategoriesByParentId(category_repo)
+        delete_category_usecase = DeleteCategories(category_repo)
         output = await delete_category_usecase.execute(parent_id)
         return output.model_dump(mode="json")
     except AppBaseException as ex:

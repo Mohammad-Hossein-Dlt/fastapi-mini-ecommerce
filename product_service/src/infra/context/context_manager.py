@@ -17,7 +17,7 @@ class AppContextManager:
         
         print("Starting up...")
         
-        # await AppContext.broker_client.broker.connect()
+        await AppContext.broker_client.broker.connect()
         
         if settings.PRODUCT_DB_STACK == "mongo_db":
             AppContext.db_client = await init_database_client(settings.MONGODB)

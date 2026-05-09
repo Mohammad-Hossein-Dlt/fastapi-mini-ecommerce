@@ -10,6 +10,6 @@ __all__ = [
     "_router",
     "place_order",
     "get_by_id",
-    "get_by_criteria",
     "update",
+    "get_by_criteria",
 ]

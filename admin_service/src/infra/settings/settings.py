@@ -1,10 +1,12 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
 from src.domain.enums import Environment
+from src.infra.schemas.broker.rabbitmq import RabbitParams
+from pydantic_settings import BaseSettings, SettingsConfigDict
 import os
 
 class Settings(BaseSettings):
     
     ENVIRONMENT: Environment
+    RABBITMQ: RabbitParams
     AUTH_BASE_URL: str
     PRODUCT_BASE_URL: str
     ORDER_BASE_URL: str

@@ -1,6 +1,7 @@
-from ._subscriber import user_subscriber, target_routing_key
 from faststream import Depends
 from faststream.rabbit import RabbitMessage
+from src.worker.consumer.rabbitmq.broker import subscriber
+from src.worker.depends.rabbitmq_depend import target_routing_key
 from src.models.schemas.order.place_order_input import PlaceOrderInput
 from src.repo.interface.user.Iorder_repo import IOrderRepo
 from src.worker.depends.repo_depend import user_order_repo_depend
@@ -13,7 +14,7 @@ from src.infra.exceptions.exceptions import AppBaseException
 
 routing_key = "order_service.user.place-order"
 
-@user_subscriber(
+@subscriber(
     filter=target_routing_key(routing_key),
 )
 async def place_order(
