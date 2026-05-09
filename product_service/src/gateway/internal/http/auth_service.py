@@ -3,7 +3,7 @@ from src.gateway.internal.interface.Iauth_service import IAuthService
 from src.infra.exceptions.exceptions import AppBaseException
 from src.infra.utils.http_cleaner import clean_outbound_request
 
-class AuthService(IAuthService):
+class AuthHttpService(IAuthService):
     
     def __init__(
         self,

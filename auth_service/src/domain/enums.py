@@ -5,6 +5,10 @@ class Environment(str, Enum):
     TEST = "test"
     PROD = "prod"
     
+class ServiceCommunication(str, Enum):
+    BROKER = "broker"
+    HTTP = "http"    
+
 class DBStack(str, Enum):
     POSTGRESQL = "postgresql"
     MONGO_DB = "mongo_db"

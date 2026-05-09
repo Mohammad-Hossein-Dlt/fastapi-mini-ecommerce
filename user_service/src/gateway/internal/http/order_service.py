@@ -7,7 +7,7 @@ from src.models.schemas.order.update_order_input import UpdateOrderInput
 from src.infra.exceptions.exceptions import AppBaseException
 from src.infra.utils.http_cleaner import clean_outbound_request
 
-class OrderService(IOrderService):
+class OrderHttpService(IOrderService):
         
     def __init__(
         self,
@@ -117,7 +117,7 @@ class OrderService(IOrderService):
         self,
         credentials: AuthCredentials,
         criteria: OrderFilterInput,
-    ) -> dict:
+    ) -> list:
         
         target_url = self.base_url + "/user/all"
         

@@ -1,5 +1,7 @@
 from src.infra.schemas.broker.rabbitmq import RabbitParams, RabbitClient
+from src.infra.schemas.broker.nats import NatsParams, NatsClient
 from faststream.rabbit import RabbitBroker, RabbitQueue, RabbitExchange, ExchangeType
+from faststream.nats import NatsBroker
 from src.infra.middlewares.faststream.exception_middleware import exc_middleware
 
 def init_rabbitmq(
@@ -30,12 +32,28 @@ def init_rabbitmq(
         queue=queue,
     )
     
+def init_nats(
+    params: NatsParams, 
+) -> NatsClient:
+    
+    client = NatsBroker(
+        servers=[params.url]
+    )
+    
+    return NatsClient(
+        params=params,
+        broker=client
+    )
+    
 def init_broker_client(
-    params: RabbitParams,
-) -> RabbitClient:
+    params: RabbitParams | NatsParams,
+) -> RabbitClient | NatsClient:
     
     if isinstance(params, RabbitParams):
         return init_rabbitmq(params)
+    
+    if isinstance(params, NatsParams):
+        return init_nats(params)
 
 async def terminate_broker_client(
     context: RabbitClient | None = None,
@@ -45,4 +63,7 @@ async def terminate_broker_client(
         return
     
     if isinstance(context, RabbitClient):
+        await context.broker.stop()    
+        
+    if isinstance(context, NatsClient):
         await context.broker.stop()

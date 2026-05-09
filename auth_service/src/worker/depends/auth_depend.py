@@ -4,7 +4,7 @@ from faststream import Depends
 from src.infra.context.app_context import AppContext
 from src.infra.auth.jwt_handler import JWTHandler
 from src.repo.interface.Iuser_repo import IUserRepo
-from .user_repo_depend import user_repo_depend
+from .repo_depend import user_repo_depend
 from src.domain.schemas.user.user_model import UserModel
 from src.usecases.user.get import GetUser
 from src.domain.enums import Role

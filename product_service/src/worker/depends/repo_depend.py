@@ -1,8 +1,8 @@
 from faststream import Depends
 from .db_depend import db_client_depend
 
-from pymongo.asynchronous.mongo_client import AsyncMongoClient
 from sqlalchemy.orm import Session
+from pymongo.asynchronous.mongo_client import AsyncMongoClient
 
 from src.repo.interface.Iproduct_repo import IProductRepo
 from src.repo.postgresql.product_pg_repo import ProductPgRepo

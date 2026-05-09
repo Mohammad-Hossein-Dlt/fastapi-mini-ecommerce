@@ -7,7 +7,7 @@ from src.models.schemas.filter.category_filter_input import CategoryFilterInput
 from src.infra.exceptions.exceptions import AppBaseException
 from src.infra.utils.http_cleaner import clean_outbound_request
 
-class CategoryService(ICategoryService):
+class CategoryHttpService(ICategoryService):
     
     def __init__(
         self,
@@ -150,7 +150,7 @@ class CategoryService(ICategoryService):
         self,
         credentials: AuthCredentials,
         criteria: CategoryFilterInput,
-    ) -> dict:
+    ) -> list:
         
         target_url = self.base_url + "/category/all"
         

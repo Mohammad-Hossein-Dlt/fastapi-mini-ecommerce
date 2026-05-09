@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from src.infra.schemas.broker.rabbitmq import RabbitParams
-from src.domain.enums import Environment, DBStack
+from src.infra.schemas.broker.nats import NatsParams
+from src.domain.enums import Environment, ServiceCommunication, DBStack
 from src.infra.schemas.database.mongodb import MongodbParams
 from src.infra.schemas.database.sqlalchemy import SqlalchemyParams
 from src.infra.schemas.jwt.jwt_params import JWTParams
@@ -9,11 +9,17 @@ import os
 class Settings(BaseSettings):        
     
     ENVIRONMENT: Environment
+    
     AUTH_BASE_URL: str
-    RABBITMQ: RabbitParams
-    PRODUCT_DB_STACK: DBStack    
+    
+    AUTH_COMMUNICATION_TYPE: ServiceCommunication
+
+    NATS: NatsParams
+
+    PRODUCT_DB_STACK: DBStack
     MONGODB: MongodbParams    
     POSTGRES: SqlalchemyParams
+
     JWT: JWTParams
     
     model_config = SettingsConfigDict(

@@ -16,6 +16,6 @@ class IProductService(ABC):
     async def get_by_criteria(
         credentials: AuthCredentials,
         criteria: ProductFilterInput,
-    ) -> dict:
+    ) -> list:
         
         raise NotImplementedError

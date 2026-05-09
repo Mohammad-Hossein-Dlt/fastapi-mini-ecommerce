@@ -10,7 +10,7 @@ class AppContextManager:
     @classmethod
     def init_context(cls):
                 
-        AppContext.broker_client = init_broker_client(settings.RABBITMQ)
+        AppContext.broker_client = init_broker_client(settings.NATS)
         AppContext.jwt = JWTHandler(settings.JWT)
         
     @classmethod

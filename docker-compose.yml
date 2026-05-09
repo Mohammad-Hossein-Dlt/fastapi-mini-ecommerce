@@ -14,18 +14,13 @@ services:
       - user-service
 
   broker:
-    image: rabbitmq:3.13-management
+    image: nats:latest
     container_name: broker_service
     restart: always
     ports:
-      - 5672:5672 # AMQP
-      - 15672:15672 # Management UI
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
-    environment:
-      RABBITMQ_DEFAULT_USER: dev
-      RABBITMQ_DEFAULT_PASS: devpass
-      RABBITMQ_DEFAULT_VHOST: app
+      - 4222:4222
+      - 8222:8222
+    command: ["-js"]
 
   mongodb-service:
     image: mongo
@@ -66,6 +61,7 @@ services:
     env_file:
       - .env
     depends_on:
+      - broker
       - mongodb-service
       - postgres-service
 
@@ -79,6 +75,7 @@ services:
     env_file:
       - .env
     depends_on:
+      - broker
       - mongodb-service
       - postgres-service
 
@@ -92,6 +89,7 @@ services:
     env_file:
       - .env
     depends_on:
+      - broker
       - mongodb-service
       - postgres-service
 
@@ -107,6 +105,7 @@ services:
     env_file:
       - .env
     depends_on:
+      - broker
       - mongodb-service
       - postgres-service
 
@@ -122,6 +121,7 @@ services:
     env_file:
       - .env
     depends_on:
+      - broker
       - mongodb-service
       - postgres-service
 

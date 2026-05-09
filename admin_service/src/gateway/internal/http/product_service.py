@@ -7,7 +7,7 @@ from src.models.schemas.filter.product_filter_input import ProductFilterInput
 from src.infra.exceptions.exceptions import AppBaseException
 from src.infra.utils.http_cleaner import clean_outbound_request
 
-class ProductService(IProductService):
+class ProductHttpService(IProductService):
     
     def __init__(
         self,
@@ -150,7 +150,7 @@ class ProductService(IProductService):
         self,
         credentials: AuthCredentials,
         criteria: ProductFilterInput,
-    ) -> dict:
+    ) -> list:
         
         target_url = self.base_url + "/product/all"
         

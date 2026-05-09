@@ -22,15 +22,3 @@ class RabbitClient(BaseBrokerClient, BaseModel):
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
     )
-    
-    def get_params_dependency(self):
-        yield self.params
-        
-    def get_broker_dependency(self):
-        yield self.broker
-        
-    def get_exchange_dependency(self):
-        yield self.exchange
-        
-    def get_queue_dependency(self):
-        yield self.queue

@@ -35,7 +35,7 @@ class IOrderService(ABC):
     async def get_by_criteria(
         credentials: AuthCredentials,
         criteria: OrderFilterInput,
-    ) -> dict:
+    ) -> list:
     
         raise NotImplementedError
     
@@ -75,6 +75,6 @@ class IOrderService(ABC):
     async def user_get_by_criteria(
         credentials: AuthCredentials,
         criteria: OrderFilterInput,
-    ) -> dict:
+    ) -> list:
         
         raise NotImplementedError

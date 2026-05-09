@@ -3,7 +3,7 @@ from src.gateway.internal.interface.Iproduct_service import IProductService
 from src.infra.exceptions.exceptions import AppBaseException
 from src.infra.utils.http_cleaner import clean_outbound_request
 
-class ProductService(IProductService):
+class ProductHttpService(IProductService):
     
     def __init__(
         self,

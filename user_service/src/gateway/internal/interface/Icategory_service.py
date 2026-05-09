@@ -16,6 +16,6 @@ class ICategoryService(ABC):
     async def get_by_criteria(
         credentials: AuthCredentials,
         criteria: CategoryFilterInput,
-    ) -> dict:
+    ) -> list:
         
         raise NotImplementedError
