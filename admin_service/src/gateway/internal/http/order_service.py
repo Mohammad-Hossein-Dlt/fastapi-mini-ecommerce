@@ -1,12 +1,12 @@
 import aiohttp
 from src.gateway.internal.interface.Iorder_service import IOrderService
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
-from src.models.schemas.order.modify_order_input import ModifyOrderInput
-from src.models.schemas.filter.order_filter_input import OrderFilterInput
-from src.models.schemas.order.place_order_input import PlaceOrderInput
-from src.models.schemas.order.update_order_input import UpdateOrderInput
+from src.dto.schemas.auth.auth_credentials import AuthCredentials
+from src.schemas.order.modify_order_input import ModifyOrderInput
+from src.schemas.filter.order_filter_input import OrderFilterInput
+from src.schemas.order.place_order_input import PlaceOrderInput
+from src.schemas.order.update_order_input import UpdateOrderInput
 from src.infra.exceptions.exceptions import AppBaseException
-from src.infra.utils.http_cleaner import clean_outbound_request
+from src.infra.utils.outbound_serializer import outbound_serializer
 
 class OrderHttpService(IOrderService):
     
@@ -27,13 +27,13 @@ class OrderHttpService(IOrderService):
         
         target_url = self.base_url + "/admin/"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             modify.model_dump(mode="json"),
         )
         
@@ -58,13 +58,13 @@ class OrderHttpService(IOrderService):
         
         target_url = self.base_url + "/admin/"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             {
                 "order_id": order_id,
             },
@@ -91,13 +91,13 @@ class OrderHttpService(IOrderService):
         
         target_url = self.base_url + "/admin/"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             {
                 "order_id": order_id,
             },
@@ -124,13 +124,13 @@ class OrderHttpService(IOrderService):
         
         target_url = self.base_url + "/admin/all"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             criteria.model_dump(mode="json"),
         )
         
@@ -155,13 +155,13 @@ class OrderHttpService(IOrderService):
         
         target_url = self.base_url + "/admin/all"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             criteria.model_dump(mode="json"),
         )
         
@@ -186,13 +186,13 @@ class OrderHttpService(IOrderService):
         
         target_url = self.base_url + "/user/"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             order.model_dump(mode="json"),
         )
                 
@@ -217,13 +217,13 @@ class OrderHttpService(IOrderService):
         
         target_url = self.base_url + "/user/"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             {
                 "order_id": order_id,
             },
@@ -250,13 +250,13 @@ class OrderHttpService(IOrderService):
        
         target_url = self.base_url + "/user/"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             order.model_dump(mode="json"),
         )
         
@@ -281,13 +281,13 @@ class OrderHttpService(IOrderService):
         
         target_url = self.base_url + "/user/all"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             criteria.model_dump(mode="json"),
         )
         

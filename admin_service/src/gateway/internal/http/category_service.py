@@ -1,11 +1,11 @@
 import aiohttp
 from src.gateway.internal.interface.Icategory_service import ICategoryService
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
-from src.models.schemas.category.create_category_input import CreateCategoryInput
-from src.models.schemas.category.update_category_input import UpdateCategoryInput
-from src.models.schemas.filter.category_filter_input import CategoryFilterInput
+from src.dto.schemas.auth.auth_credentials import AuthCredentials
+from src.schemas.category.create_category_input import CreateCategoryInput
+from src.schemas.category.update_category_input import UpdateCategoryInput
+from src.schemas.filter.category_filter_input import CategoryFilterInput
 from src.infra.exceptions.exceptions import AppBaseException
-from src.infra.utils.http_cleaner import clean_outbound_request
+from src.infra.utils.outbound_serializer import outbound_serializer
 
 class CategoryHttpService(ICategoryService):
     
@@ -26,13 +26,13 @@ class CategoryHttpService(ICategoryService):
         
         target_url = self.base_url + "/category/"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             category.model_dump(mode="json"),
         )
         
@@ -57,13 +57,13 @@ class CategoryHttpService(ICategoryService):
         
         target_url = self.base_url + "/category/"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             {
                 "category_id": category_id,
             },
@@ -90,13 +90,13 @@ class CategoryHttpService(ICategoryService):
         
         target_url = self.base_url + "/category/"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             category.model_dump(mode="json"),
         )
                 
@@ -121,13 +121,13 @@ class CategoryHttpService(ICategoryService):
         
         target_url = self.base_url + "/category/"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             {
                 "category_id": category_id,
             },
@@ -154,13 +154,13 @@ class CategoryHttpService(ICategoryService):
         
         target_url = self.base_url + "/category/all"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             criteria.model_dump(mode="json"),
         )
 
@@ -183,7 +183,7 @@ class CategoryHttpService(ICategoryService):
         
         target_url = self.base_url + "/category/all"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },

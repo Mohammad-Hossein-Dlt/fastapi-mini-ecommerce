@@ -1,0 +1,65 @@
+syntax = "proto3";
+package category;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/empty.proto";
+
+service ICategoryService {
+    rpc create (CreateCategoryInput) returns (CreateResponse);
+    rpc get_by_id (GetByIdRequest) returns (GetByIdResponse);
+    rpc update (UpdateCategoryInput) returns (UpdateResponse);
+    rpc delete_by_id (DeleteByIdRequest) returns (DeleteByIdResponse);
+    rpc get_by_criteria (CategoryFilterInput) returns (GetByCriteriaResponse);
+    rpc delete_all (google.protobuf.Empty) returns (DeleteAllResponse);
+}
+
+message CreateCategoryInput {
+    optional google.protobuf.Value parent_id = 1;
+    string name = 2;
+    string slug = 3;
+}
+
+message UpdateCategoryInput {
+    google.protobuf.Value id = 1;
+    optional google.protobuf.Value parent_id = 2;
+    optional string name = 3;
+    optional string slug = 4;
+}
+
+message CategoryFilterInput {
+    optional google.protobuf.Value id = 1;
+    string based_on = 2;
+    bool contains_danglings = 3;
+}
+
+message CreateResponse {
+    google.protobuf.Struct return_value = 1;
+}
+
+message GetByIdRequest {
+    string category_id = 1;
+}
+
+message GetByIdResponse {
+    google.protobuf.Struct return_value = 1;
+}
+
+message UpdateResponse {
+    google.protobuf.Struct return_value = 1;
+}
+
+message DeleteByIdRequest {
+    string category_id = 1;
+}
+
+message DeleteByIdResponse {
+    google.protobuf.Struct return_value = 1;
+}
+
+message GetByCriteriaResponse {
+    google.protobuf.ListValue return_value = 1;
+}
+
+message DeleteAllResponse {
+    google.protobuf.Struct return_value = 1;
+}

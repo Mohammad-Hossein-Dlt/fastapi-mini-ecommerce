@@ -3,7 +3,7 @@ from fastapi import Depends, HTTPException
 from src.routes.http_response.responses import ResponseMessage
 from src.repo.interface.user.Iorder_repo import IOrderRepo
 from src.routes.depends.repo_depend import admin_order_repo_depend
-from src.domain.schemas.user.user_model import UserModel
+from src.dto.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import admin_auth_depend
 from src.usecases.admin.order.delete_by_id import DeleteOrder
 from src.infra.exceptions.exceptions import AppBaseException

@@ -1,10 +1,10 @@
 from ._router import router
 from fastapi import Depends, Body, HTTPException
 from src.routes.http_response.responses import ResponseMessage
-from src.models.schemas.user.user_register_input import UserRegisterInput
+from src.schemas.user.user_register_input import UserRegisterInput
 from src.usecases.auth.register_user import RegisterUser
 from src.gateway.internal.interface.Iauth_service import IAuthService
-from src.routes.depends.internal_http_depend import auth_service_depend
+from src.routes.depends.internal_service_depend import auth_service_depend
 from src.infra.exceptions.exceptions import AppBaseException
 
 @router.post(

@@ -1,5 +1,5 @@
-from src.domain.schemas.product.product_model import ProductModel
-from src.models.schemas.filter.product_filter_input import ProductFilterInput
+from src.dto.schemas.product.product_model import ProductModel
+from src.schemas.filter.product_filter_input import ProductFilterInput
 from src.infra.utils.convert_id import convert_database_id
 from beanie import Document, PydanticObjectId, before_event, Update
 from datetime import datetime, timezone

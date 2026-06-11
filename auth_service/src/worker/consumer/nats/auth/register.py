@@ -1,6 +1,6 @@
 from faststream import Depends
 from src.worker.consumer.nats.broker import client
-from src.models.schemas.user.create_user_input import CreateUserInput
+from src.schemas.user.create_user_input import CreateUserInput
 from src.repo.interface.Iuser_repo import IUserRepo
 from src.worker.depends.repo_depend import user_repo_depend
 from src.usecases.auth.register import RegisterUser

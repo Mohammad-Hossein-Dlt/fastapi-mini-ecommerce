@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_
 from src.repo.interface.Icategory_repo import ICategoryRepo
-from src.domain.schemas.category.category_model import CategoryModel
+from src.dto.schemas.category.category_model import CategoryModel
 from src.infra.database.postgresql.models.category_db_model import CategoryDBModel
-from src.models.schemas.filter.category_filter_input import CategoryFilterInput
+from src.schemas.filter.category_filter_input import CategoryFilterInput
 from src.infra.utils.convert_id import convert_database_id
 from src.infra.exceptions.exceptions import EntityNotFoundError, DuplicateEntityError
 
@@ -267,7 +267,7 @@ class CategoryPgRepo(ICategoryRepo):
         try:
             
             try:
-                categories: list[CategoryModel] = await self.get_by_parent_id(None)
+                categories: list[CategoryModel] = await self.get_by_parent_id(None, True)
             except:
                 return False
                         

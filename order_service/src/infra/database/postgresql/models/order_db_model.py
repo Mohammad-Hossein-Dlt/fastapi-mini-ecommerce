@@ -2,9 +2,9 @@ from ._base import Base
 from src.infra.mixins.update_from_schema import UpdateFromSchemaMixin
 from sqlalchemy import Column, DateTime, Integer, Text, Enum, select
 from sqlalchemy.sql import Select
-from src.domain.enums import Status
+from src.dto.enums import Status
 from datetime import datetime, timezone
-from src.models.schemas.filter.order_filter_input import OrderFilterInput
+from src.schemas.filter.order_filter_input import OrderFilterInput
 
 class OrderDBModel(UpdateFromSchemaMixin, Base):
     __tablename__ = "Order"

@@ -1,7 +1,7 @@
 from src.infra.auth.jwt_handler import JWTHandler
-from src.domain.schemas.auth.jwt_payload import JWTPayload
-from src.domain.schemas.user.user_model import UserModel
-from src.models.schemas.user.login_user_output import LoginUserOutput
+from src.dto.schemas.auth.jwt_payload import JWTPayload
+from src.dto.schemas.user.user_model import UserModel
+from src.schemas.user.login_user_output import LoginUserOutput
 
 class RefreshToken:
     

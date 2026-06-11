@@ -2,8 +2,8 @@ from ._router import router
 from fastapi import Depends, HTTPException
 from src.routes.http_response.responses import ResponseMessage
 from src.gateway.internal.interface.Iproduct_service import IProductService
-from src.routes.depends.internal_http_depend import product_service_depend
-from src.domain.schemas.user.user_model import UserModel
+from src.routes.depends.internal_service_depend import product_service_depend
+from src.dto.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import admin_auth_depend
 from src.usecases.admin.product.delete_all import DeleteProducts
 from src.infra.exceptions.exceptions import AppBaseException

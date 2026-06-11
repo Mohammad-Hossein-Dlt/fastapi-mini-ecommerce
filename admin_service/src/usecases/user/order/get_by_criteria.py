@@ -1,7 +1,7 @@
 from src.gateway.internal.interface.Iorder_service import IOrderService
-from src.models.schemas.filter.order_filter_input import OrderFilterInput
-from src.domain.schemas.order.order_model import OrderModel
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
+from src.schemas.filter.order_filter_input import OrderFilterInput
+from src.dto.schemas.order.order_model import OrderModel
+from src.dto.schemas.auth.auth_credentials import AuthCredentials
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
 class GetOrders:

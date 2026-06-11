@@ -1,11 +1,11 @@
 from ._router import router
 from fastapi import Depends, Query, HTTPException
 from src.routes.http_response.responses import ResponseMessage
-from src.models.schemas.filter.category_filter_input import CategoryFilterInput
+from src.schemas.filter.category_filter_input import CategoryFilterInput
 from src.usecases.category.get_by_criteria import GetCategories
 from src.repo.interface.Icategory_repo import ICategoryRepo
 from src.routes.depends.repo_depend import category_repo_depend
-from src.domain.schemas.user.user_model import UserModel
+from src.dto.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import user_auth_depend
 from src.infra.exceptions.exceptions import AppBaseException
 

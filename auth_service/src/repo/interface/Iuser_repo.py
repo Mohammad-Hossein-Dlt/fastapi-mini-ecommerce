@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from src.domain.schemas.user.user_model import UserModel
+from src.dto.schemas.user.user_model import UserModel
 
 class IUserRepo(ABC):
         

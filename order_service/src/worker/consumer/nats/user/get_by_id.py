@@ -2,7 +2,7 @@ from faststream import Depends
 from src.worker.consumer.nats.broker import client
 from src.repo.interface.user.Iorder_repo import IOrderRepo
 from src.worker.depends.repo_depend import user_order_repo_depend
-from src.domain.schemas.user.user_model import UserModel
+from src.dto.schemas.user.user_model import UserModel
 from src.worker.depends.auth_depend import user_auth_depend
 from src.usecases.user.order.get_by_id import GetOrder
 from src.infra.exceptions.exceptions import AppBaseException

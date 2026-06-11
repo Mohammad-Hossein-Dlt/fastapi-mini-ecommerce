@@ -1,7 +1,7 @@
 import aiohttp
 from src.gateway.internal.interface.Iauth_service import IAuthService
 from src.infra.exceptions.exceptions import AppBaseException
-from src.infra.utils.http_cleaner import clean_outbound_request
+from src.infra.utils.outbound_serializer import outbound_serializer
 
 class AuthHttpService(IAuthService):
     
@@ -21,7 +21,7 @@ class AuthHttpService(IAuthService):
         
         target_url = self.base_url + "/admin/self/"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"Bearer {access_token}",
             },
@@ -46,7 +46,7 @@ class AuthHttpService(IAuthService):
         
         target_url = self.base_url + "/user/self/"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"Bearer {access_token}",
             },

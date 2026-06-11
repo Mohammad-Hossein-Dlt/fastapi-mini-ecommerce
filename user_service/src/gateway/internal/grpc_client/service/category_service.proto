@@ -1,0 +1,27 @@
+syntax = "proto3";
+package category;
+
+import "google/protobuf/struct.proto";
+
+service ICategoryService {
+    rpc get_by_id (GetByIdRequest) returns (GetByIdResponse);
+    rpc get_by_criteria (CategoryFilterInput) returns (GetByCriteriaResponse);
+}
+
+message CategoryFilterInput {
+    optional google.protobuf.Value id = 1;
+    string based_on = 2;
+    bool contains_danglings = 3;
+}
+
+message GetByIdRequest {
+    string category_id = 1;
+}
+
+message GetByIdResponse {
+    google.protobuf.Struct return_value = 1;
+}
+
+message GetByCriteriaResponse {
+    google.protobuf.ListValue return_value = 1;
+}

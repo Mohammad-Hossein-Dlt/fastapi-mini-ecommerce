@@ -1,6 +1,6 @@
 from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
-from src.models.schemas.filter.order_filter_input import OrderFilterInput
-from src.models.schemas.operation.operation_output import OperationOutput
+from src.schemas.filter.order_filter_input import OrderFilterInput
+from src.schemas.operation.operation_output import OperationOutput
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
 class DeleteOrders:

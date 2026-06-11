@@ -1,5 +1,5 @@
 from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
-from src.domain.schemas.order.order_model import OrderModel
+from src.dto.schemas.order.order_model import OrderModel
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
 class GetOrder:

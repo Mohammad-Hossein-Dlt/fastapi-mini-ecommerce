@@ -1,0 +1,41 @@
+syntax = "proto3";
+package auth;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/empty.proto";
+
+service IAuthService {
+    rpc register (RegisterInput) returns (RegisterResponse);
+    rpc login (LoginInput) returns (LoginResponse);
+    rpc refresh_token (google.protobuf.Empty) returns (RefreshTokenResponse);
+}
+
+enum Role{
+    ADMIN = 0;
+    USER = 1;
+}
+
+message RegisterInput {
+    string name = 1;
+    string email = 2;
+    string username = 3;
+    string password = 4;
+    Role role = 5;
+}
+
+message LoginInput {
+    string username = 1;
+    string password = 2;
+}
+
+message RegisterResponse {
+    google.protobuf.Struct return_value = 1;
+}
+
+message LoginResponse {
+    google.protobuf.Struct return_value = 1;
+}
+
+message RefreshTokenResponse {
+    google.protobuf.Struct return_value = 1;
+}

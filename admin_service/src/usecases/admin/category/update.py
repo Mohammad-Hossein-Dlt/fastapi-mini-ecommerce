@@ -1,7 +1,7 @@
 from src.gateway.internal.interface.Icategory_service import ICategoryService
-from src.models.schemas.category.update_category_input import UpdateCategoryInput
-from src.domain.schemas.category.category_model import CategoryModel
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
+from src.schemas.category.update_category_input import UpdateCategoryInput
+from src.dto.schemas.category.category_model import CategoryModel
+from src.dto.schemas.auth.auth_credentials import AuthCredentials
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
 class UpdateCategory:

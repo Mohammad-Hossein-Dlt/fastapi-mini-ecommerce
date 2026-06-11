@@ -2,8 +2,8 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi import Depends, HTTPException
 from src.infra.auth.jwt_handler import JWTHandler
 from src.gateway.internal.interface.Iauth_service import IAuthService
-from .internal_http_depend import auth_service_depend
-from src.domain.schemas.user.user_model import UserModel
+from .internal_service_depend import auth_service_depend
+from src.dto.schemas.user.user_model import UserModel
 from src.usecases.admin.get import GetAdmin
 from src.usecases.user.get import GetUser
 from src.infra.exceptions.exceptions import AppBaseException, InvalidTokenException

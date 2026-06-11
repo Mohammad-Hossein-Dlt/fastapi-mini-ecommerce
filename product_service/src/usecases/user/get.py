@@ -1,5 +1,5 @@
 from src.gateway.internal.interface.Iauth_service import IAuthService
-from src.domain.schemas.user.user_model import UserModel
+from src.dto.schemas.user.user_model import UserModel
 
 class GetUser:
     

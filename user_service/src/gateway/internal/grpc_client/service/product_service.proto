@@ -1,0 +1,27 @@
+syntax = "proto3";
+package product;
+
+import "google/protobuf/struct.proto";
+
+service IProductService {
+    rpc get_by_id (GetByIdRequest) returns (GetByIdResponse);
+    rpc get_by_criteria (ProductFilterInput) returns (GetByCriteriaResponse);
+}
+
+message ProductFilterInput {
+    optional google.protobuf.Value category_id = 1;
+    optional float start_price = 2;
+    optional float end_price = 3;
+}
+
+message GetByIdRequest {
+    string product_id = 1;
+}
+
+message GetByIdResponse {
+    google.protobuf.Struct return_value = 1;
+}
+
+message GetByCriteriaResponse {
+    google.protobuf.ListValue return_value = 1;
+}

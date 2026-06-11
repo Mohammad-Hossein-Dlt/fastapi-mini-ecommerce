@@ -2,7 +2,7 @@ from ._base import Base
 from src.infra.mixins.update_from_schema import UpdateFromSchemaMixin
 from sqlalchemy import Column, DateTime, Integer, Text, Enum
 from datetime import datetime, timezone
-from src.domain.enums import Role
+from src.dto.enums import Role
 
 class UserDBModel(UpdateFromSchemaMixin, Base):
     __tablename__ = "User"

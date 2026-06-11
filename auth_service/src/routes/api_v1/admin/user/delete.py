@@ -3,7 +3,7 @@ from fastapi import Depends, Query, HTTPException
 from src.routes.http_response.responses import ResponseMessage
 from src.repo.interface.Iuser_repo import IUserRepo
 from src.routes.depends.repo_depend import user_repo_depend
-from src.domain.schemas.user.user_model import UserModel
+from src.dto.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import admin_auth_depend
 from src.usecases.admin.delete_user import DeleteUser
 from src.infra.exceptions.exceptions import AppBaseException

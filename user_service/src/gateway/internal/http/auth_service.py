@@ -1,10 +1,10 @@
 import aiohttp
 from src.gateway.internal.interface.Iauth_service import IAuthService
-from src.models.schemas.user.user_register_input import UserRegisterInput
-from src.models.schemas.user.user_login_input import UserLoginInput
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
+from src.schemas.user.user_register_input import UserRegisterInput
+from src.schemas.user.user_login_input import UserLoginInput
+from src.dto.schemas.auth.auth_credentials import AuthCredentials
 from src.infra.exceptions.exceptions import AppBaseException
-from src.infra.utils.http_cleaner import clean_outbound_request
+from src.infra.utils.outbound_serializer import outbound_serializer
 
 class AuthHttpService(IAuthService):
     
@@ -65,7 +65,7 @@ class AuthHttpService(IAuthService):
                 
         target_url = self.base_url + "/refresh-token"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.refresh_token}",
             },
@@ -90,7 +90,7 @@ class AuthHttpService(IAuthService):
         
         target_url = self.base_url + "/user/self/"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
@@ -115,7 +115,7 @@ class AuthHttpService(IAuthService):
                 
         target_url = self.base_url + "/user/self/"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },

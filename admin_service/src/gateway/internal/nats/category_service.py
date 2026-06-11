@@ -1,9 +1,9 @@
 from src.gateway.internal.interface.Icategory_service import ICategoryService
 from src.infra.schemas.broker.nats import NatsClient
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
-from src.models.schemas.category.create_category_input import CreateCategoryInput
-from src.models.schemas.category.update_category_input import UpdateCategoryInput
-from src.models.schemas.filter.category_filter_input import CategoryFilterInput
+from src.dto.schemas.auth.auth_credentials import AuthCredentials
+from src.schemas.category.create_category_input import CreateCategoryInput
+from src.schemas.category.update_category_input import UpdateCategoryInput
+from src.schemas.filter.category_filter_input import CategoryFilterInput
 from src.infra.exceptions.exceptions import AppBaseException
 import json
 

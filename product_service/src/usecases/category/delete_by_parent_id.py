@@ -1,6 +1,6 @@
 from src.repo.interface.Icategory_repo import ICategoryRepo
-from src.models.schemas.operation.operation_output import OperationOutput
-from src.domain.schemas.category.category_model import CategoryModel
+from src.schemas.operation.operation_output import OperationOutput
+from src.dto.schemas.category.category_model import CategoryModel
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
 class DeleteCategories:

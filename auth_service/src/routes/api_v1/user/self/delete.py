@@ -1,7 +1,7 @@
 from ._router import router 
 from fastapi import Depends, HTTPException
 from src.routes.http_response.responses import ResponseMessage
-from src.domain.schemas.user.user_model import UserModel
+from src.dto.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import user_auth_depend
 from src.repo.interface.Iuser_repo import IUserRepo
 from src.routes.depends.repo_depend import user_repo_depend

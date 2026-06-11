@@ -1,10 +1,10 @@
 from src.gateway.internal.interface.Iorder_service import IOrderService
 from src.infra.schemas.broker.nats import NatsClient
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
-from src.models.schemas.order.modify_order_input import ModifyOrderInput
-from src.models.schemas.filter.order_filter_input import OrderFilterInput
-from src.models.schemas.order.place_order_input import PlaceOrderInput
-from src.models.schemas.order.update_order_input import UpdateOrderInput
+from src.dto.schemas.auth.auth_credentials import AuthCredentials
+from src.schemas.order.modify_order_input import ModifyOrderInput
+from src.schemas.filter.order_filter_input import OrderFilterInput
+from src.schemas.order.place_order_input import PlaceOrderInput
+from src.schemas.order.update_order_input import UpdateOrderInput
 from src.infra.exceptions.exceptions import AppBaseException
 import json
 

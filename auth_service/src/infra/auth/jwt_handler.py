@@ -1,6 +1,6 @@
 import jwt
 from src.infra.schemas.jwt.jwt_params import JWTParams
-from src.domain.schemas.auth.jwt_payload import JWTPayload
+from src.dto.schemas.auth.jwt_payload import JWTPayload
 from src.infra.exceptions.exceptions import InvalidTokenException
 from datetime import datetime, timezone, timedelta
 

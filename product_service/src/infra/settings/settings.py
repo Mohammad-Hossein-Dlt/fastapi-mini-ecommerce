@@ -1,6 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from src.infra.schemas.broker.nats import NatsParams
-from src.domain.enums import Environment, ServiceCommunication, DBStack
+from src.infra.schemas.grpc_schema.params import GrpcParams
+from src.dto.enums import Environment, ServiceCommunication, DBStack
 from src.infra.schemas.database.mongodb import MongodbParams
 from src.infra.schemas.database.sqlalchemy import SqlalchemyParams
 from src.infra.schemas.jwt.jwt_params import JWTParams
@@ -13,8 +14,14 @@ class Settings(BaseSettings):
     AUTH_BASE_URL: str
     
     AUTH_COMMUNICATION_TYPE: ServiceCommunication
+    PRODUCT_COMMUNICATION_TYPE: ServiceCommunication
+    ORDER_COMMUNICATION_TYPE: ServiceCommunication
 
     NATS: NatsParams
+
+    AUTH_GRPC: GrpcParams
+    PRODUCT_GRPC: GrpcParams
+    ORDER_GRPC: GrpcParams
 
     PRODUCT_DB_STACK: DBStack
     MONGODB: MongodbParams    

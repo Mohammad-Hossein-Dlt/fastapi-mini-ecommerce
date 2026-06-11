@@ -1,4 +1,4 @@
-from faststream import Depends
+from .depend import Depends
 from .db_depend import db_client_depend
 
 from sqlalchemy.orm import Session

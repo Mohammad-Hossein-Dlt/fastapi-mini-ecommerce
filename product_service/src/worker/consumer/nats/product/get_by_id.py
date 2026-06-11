@@ -4,7 +4,7 @@ from src.repo.interface.Iproduct_repo import IProductRepo
 from src.worker.depends.repo_depend import product_repo_depend
 from src.repo.interface.Icategory_repo import ICategoryRepo
 from src.worker.depends.repo_depend import category_repo_depend
-from src.domain.schemas.user.user_model import UserModel
+from src.dto.schemas.user.user_model import UserModel
 from src.worker.depends.auth_depend import user_auth_depend
 from src.usecases.product.get_by_id import GetProduct
 from src.infra.exceptions.exceptions import AppBaseException

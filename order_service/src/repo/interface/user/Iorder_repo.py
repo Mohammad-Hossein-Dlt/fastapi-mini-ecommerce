@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from src.domain.schemas.order.order_model import OrderModel
-from src.models.schemas.filter.order_filter_input import OrderFilterInput
+from src.dto.schemas.order.order_model import OrderModel
+from src.schemas.filter.order_filter_input import OrderFilterInput
 
 class IOrderRepo(ABC):
         

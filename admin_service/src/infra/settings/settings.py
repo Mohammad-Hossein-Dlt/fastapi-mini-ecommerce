@@ -1,6 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from src.domain.enums import Environment, ServiceCommunication
+from src.dto.enums import Environment, ServiceCommunication
 from src.infra.schemas.broker.nats import NatsParams
+from src.infra.schemas.grpc_schema.params import GrpcParams
 import os
 
 class Settings(BaseSettings):
@@ -16,6 +17,10 @@ class Settings(BaseSettings):
     ORDER_COMMUNICATION_TYPE: ServiceCommunication
     
     NATS: NatsParams
+    
+    AUTH_GRPC: GrpcParams
+    PRODUCT_GRPC: GrpcParams
+    ORDER_GRPC: GrpcParams
             
     model_config = SettingsConfigDict(
         case_sensitive=False,

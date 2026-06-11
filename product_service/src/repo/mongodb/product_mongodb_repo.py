@@ -1,7 +1,7 @@
 from src.repo.interface.Iproduct_repo import IProductRepo
-from src.domain.schemas.product.product_model import ProductModel
+from src.dto.schemas.product.product_model import ProductModel
 from src.infra.database.mongodb.collections.product_collection import ProductCollection
-from src.models.schemas.filter.product_filter_input import ProductFilterInput
+from src.schemas.filter.product_filter_input import ProductFilterInput
 from src.infra.utils.convert_id import convert_database_id
 from src.infra.exceptions.exceptions import EntityNotFoundError
 

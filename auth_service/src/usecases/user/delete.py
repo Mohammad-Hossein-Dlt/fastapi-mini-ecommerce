@@ -1,6 +1,6 @@
 from src.repo.interface.Iuser_repo import IUserRepo
-from src.domain.schemas.user.user_model import UserModel
-from src.models.schemas.operation.operation_output import OperationOutput
+from src.dto.schemas.user.user_model import UserModel
+from src.schemas.operation.operation_output import OperationOutput
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
 class DeleteUser:

@@ -1,6 +1,6 @@
 from src.gateway.internal.interface.Iauth_service import IAuthService
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
-from src.models.schemas.operation.operation_output import OperationOutput
+from src.dto.schemas.auth.auth_credentials import AuthCredentials
+from src.schemas.operation.operation_output import OperationOutput
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
 class DeleteUser:

@@ -1,5 +1,5 @@
-from src.domain.schemas.user.user_model import UserModel
-from src.domain.enums import Role
+from src.dto.schemas.user.user_model import UserModel
+from src.dto.enums import Role
 from beanie import Document, PydanticObjectId, before_event, Update
 from datetime import datetime, timezone
 

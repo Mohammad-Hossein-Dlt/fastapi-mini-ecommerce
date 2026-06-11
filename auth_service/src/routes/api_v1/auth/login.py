@@ -2,7 +2,7 @@ from ._router import router
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from src.routes.http_response.responses import ResponseMessage
-from src.models.schemas.user.login_user_input import LoginUserInput
+from src.schemas.user.login_user_input import LoginUserInput
 from src.usecases.auth.login import LoginUser
 from src.infra.auth.jwt_handler import JWTHandler
 from src.routes.depends.auth_depend import jwt_handler_depend

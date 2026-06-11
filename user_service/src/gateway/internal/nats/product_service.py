@@ -1,7 +1,7 @@
 from src.gateway.internal.interface.Iproduct_service import IProductService
 from src.infra.schemas.broker.nats import NatsClient
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
-from src.models.schemas.filter.product_filter_input import ProductFilterInput
+from src.dto.schemas.auth.auth_credentials import AuthCredentials
+from src.schemas.filter.product_filter_input import ProductFilterInput
 from src.infra.exceptions.exceptions import AppBaseException
 import json
 

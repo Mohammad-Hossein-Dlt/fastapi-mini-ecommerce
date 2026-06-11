@@ -10,6 +10,10 @@ class AppContextManager:
     @classmethod
     def init_context(cls):
                 
+        AppContext.auth_communication_type = settings.AUTH_COMMUNICATION_TYPE
+        AppContext.product_communication_type = settings.PRODUCT_COMMUNICATION_TYPE
+        AppContext.order_communication_type = settings.ORDER_COMMUNICATION_TYPE
+
         AppContext.broker_client = init_broker_client(settings.NATS)
         AppContext.jwt = JWTHandler(settings.JWT)
         

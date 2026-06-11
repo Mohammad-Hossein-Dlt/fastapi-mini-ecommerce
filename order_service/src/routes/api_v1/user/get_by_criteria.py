@@ -1,10 +1,10 @@
 from ._router import router
 from fastapi import Query, Depends, HTTPException
 from src.routes.http_response.responses import ResponseMessage
-from src.models.schemas.filter.order_filter_input import OrderFilterInput
+from src.schemas.filter.order_filter_input import OrderFilterInput
 from src.repo.interface.user.Iorder_repo import IOrderRepo
 from src.routes.depends.repo_depend import user_order_repo_depend
-from src.domain.schemas.user.user_model import UserModel
+from src.dto.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import user_auth_depend
 from src.usecases.user.order.get_by_criteria import GetOrders
 from src.infra.exceptions.exceptions import AppBaseException

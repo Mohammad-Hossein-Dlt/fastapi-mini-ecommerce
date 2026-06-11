@@ -1,0 +1,18 @@
+syntax = "proto3";
+package user;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/empty.proto";
+
+service IUserAuthService {
+    rpc get_self (google.protobuf.Empty) returns (GetSelfResponse);
+    rpc delete_self (google.protobuf.Empty) returns (DeleteSelfResponse);
+}
+
+message GetSelfResponse {
+    google.protobuf.Struct return_value = 1;
+}
+
+message DeleteSelfResponse {
+    google.protobuf.Struct return_value = 1;
+}

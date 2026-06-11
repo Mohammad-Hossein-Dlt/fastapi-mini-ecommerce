@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
-from src.models.schemas.filter.product_filter_input import ProductFilterInput
+from src.dto.schemas.auth.auth_credentials import AuthCredentials
+from src.schemas.filter.product_filter_input import ProductFilterInput
 
 class IProductService(ABC):
         

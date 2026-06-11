@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from src.domain.schemas.product.product_model import ProductModel
-from src.models.schemas.filter.product_filter_input import ProductFilterInput
+from src.dto.schemas.product.product_model import ProductModel
+from src.schemas.filter.product_filter_input import ProductFilterInput
 
 class IProductRepo(ABC):
         

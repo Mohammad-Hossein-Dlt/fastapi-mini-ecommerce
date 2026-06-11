@@ -1,6 +1,6 @@
 from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
-from src.models.schemas.filter.order_filter_input import OrderFilterInput
-from src.domain.schemas.order.order_model import OrderModel
+from src.schemas.filter.order_filter_input import OrderFilterInput
+from src.dto.schemas.order.order_model import OrderModel
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
 class GetOrders:
@@ -17,8 +17,7 @@ class GetOrders:
     ) -> list[OrderModel]:
         
         try:
-            orders: list[OrderModel] = await self.order_repo.get_by_criteria(criteria)
-            return orders
+            return await self.order_repo.get_by_criteria(criteria)
         except AppBaseException:
             raise
         except:

@@ -2,7 +2,7 @@ from faststream import Depends
 from src.worker.consumer.nats.broker import client
 from src.worker.depends.auth_depend import jwt_handler_depend, refresh_token_depend
 from src.infra.auth.jwt_handler import JWTHandler
-from src.domain.schemas.user.user_model import UserModel
+from src.dto.schemas.user.user_model import UserModel
 from src.usecases.auth.refresh_token import RefreshToken
 from src.infra.exceptions.exceptions import AppBaseException
 

@@ -1,5 +1,5 @@
 from src.repo.interface.Iuser_repo import IUserRepo
-from src.domain.schemas.user.user_model import UserModel
+from src.dto.schemas.user.user_model import UserModel
 from src.infra.database.mongodb.collections.user_collection import UserCollection
 from bson.objectid import ObjectId
 from src.infra.utils.convert_id import convert_database_id

@@ -1,0 +1,16 @@
+syntax = "proto3";
+package product;
+
+import "google/protobuf/struct.proto";
+
+service IProductService {
+    rpc get_by_id (GetByIdRequest) returns (GetByIdResponse);
+}
+
+message GetByIdRequest {
+    string product_id = 1;
+}
+
+message GetByIdResponse {
+    google.protobuf.Struct return_value = 1;
+}

@@ -1,10 +1,10 @@
 from ._router import router
 from fastapi import Depends, HTTPException
 from src.routes.http_response.responses import ResponseMessage
-from src.models.schemas.order.place_order_input import PlaceOrderInput
+from src.schemas.order.place_order_input import PlaceOrderInput
 from src.gateway.internal.interface.Iorder_service import IOrderService
-from src.routes.depends.internal_http_depend import order_service_depend
-from src.domain.schemas.user.user_model import UserModel
+from src.routes.depends.internal_service_depend import order_service_depend
+from src.dto.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import admin_auth_depend
 from src.usecases.user.order.place_order import PlaceOrder
 from src.infra.exceptions.exceptions import AppBaseException

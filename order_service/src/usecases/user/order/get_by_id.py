@@ -1,6 +1,6 @@
 from src.repo.interface.user.Iorder_repo import IOrderRepo
-from src.domain.schemas.user.user_model import UserModel
-from src.domain.schemas.order.order_model import OrderModel
+from src.dto.schemas.user.user_model import UserModel
+from src.dto.schemas.order.order_model import OrderModel
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
 class GetOrder:

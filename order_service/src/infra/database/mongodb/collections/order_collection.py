@@ -1,6 +1,6 @@
-from src.domain.schemas.order.order_model import OrderModel
-from src.domain.enums import Status
-from src.models.schemas.filter.order_filter_input import OrderFilterInput
+from src.dto.schemas.order.order_model import OrderModel
+from src.dto.enums import Status
+from src.schemas.filter.order_filter_input import OrderFilterInput
 from src.infra.utils.convert_id import convert_database_id
 from beanie import Document, PydanticObjectId, before_event, Update
 from datetime import datetime, timezone

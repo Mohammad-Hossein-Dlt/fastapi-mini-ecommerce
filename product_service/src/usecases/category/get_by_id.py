@@ -1,5 +1,5 @@
 from src.repo.interface.Icategory_repo import ICategoryRepo
-from src.domain.schemas.category.category_model import CategoryModel
+from src.dto.schemas.category.category_model import CategoryModel
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
 class GetCategory:

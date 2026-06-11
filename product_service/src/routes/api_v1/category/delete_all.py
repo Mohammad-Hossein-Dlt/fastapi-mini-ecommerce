@@ -4,7 +4,7 @@ from src.routes.http_response.responses import ResponseMessage
 from src.usecases.category.delete_all import DeleteCategories
 from src.repo.interface.Icategory_repo import ICategoryRepo
 from src.routes.depends.repo_depend import category_repo_depend
-from src.domain.schemas.user.user_model import UserModel
+from src.dto.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import admin_auth_depend
 from src.infra.exceptions.exceptions import AppBaseException
 

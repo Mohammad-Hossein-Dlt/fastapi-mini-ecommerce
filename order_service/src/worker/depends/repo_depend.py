@@ -1,4 +1,4 @@
-from faststream import Depends
+from .depend import Depends
 from .db_depend import db_client_depend
 
 from sqlalchemy.orm import Session
@@ -11,7 +11,7 @@ from src.repo.postgresql.admin.order_pg_repo import AdminPgRepo
 from src.repo.interface.user.Iorder_repo import IOrderRepo
 from src.repo.mongodb.user.order_mongodb_repo import OrderMongodbRepo
 from src.repo.postgresql.user.order_pg_repo import OrderPgRepo
-    
+
 def admin_order_repo_depend(
     db_client: AsyncMongoClient | Session = Depends(db_client_depend)
 ) -> IAdminOrderRepo:

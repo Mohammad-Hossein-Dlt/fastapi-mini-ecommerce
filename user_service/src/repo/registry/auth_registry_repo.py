@@ -1,6 +1,6 @@
 from fastapi import Request, Response
 from src.repo.interface.Iauth_repo import IAuthRepo
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
+from src.dto.schemas.auth.auth_credentials import AuthCredentials
 from src.infra.exceptions.exceptions import AuthenticationException
 
 class AuthRegistryRepo(IAuthRepo):

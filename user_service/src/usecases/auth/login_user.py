@@ -1,7 +1,7 @@
 from src.gateway.internal.interface.Iauth_service import IAuthService
 from src.repo.interface.Iauth_repo import IAuthRepo
-from src.models.schemas.user.user_login_input import UserLoginInput
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
+from src.schemas.user.user_login_input import UserLoginInput
+from src.dto.schemas.auth.auth_credentials import AuthCredentials
 from src.infra.exceptions.exceptions import OperationFailureException
 
 class LoginUser:

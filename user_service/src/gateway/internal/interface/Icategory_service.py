@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
-from src.models.schemas.filter.category_filter_input import CategoryFilterInput
+from src.dto.schemas.auth.auth_credentials import AuthCredentials
+from src.schemas.filter.category_filter_input import CategoryFilterInput
 
 class ICategoryService(ABC):
         

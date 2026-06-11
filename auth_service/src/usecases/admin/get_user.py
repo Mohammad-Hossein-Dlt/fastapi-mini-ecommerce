@@ -1,5 +1,5 @@
 from src.repo.interface.Iuser_repo import IUserRepo
-from src.domain.schemas.user.user_model import UserModel
+from src.dto.schemas.user.user_model import UserModel
 from src.infra.exceptions.exceptions import AppBaseException, InvalidRequestException, OperationFailureException
 
 class GetUser:

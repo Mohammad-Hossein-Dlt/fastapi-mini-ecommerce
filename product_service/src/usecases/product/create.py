@@ -1,9 +1,9 @@
 from src.repo.interface.Iproduct_repo import IProductRepo
 from src.repo.interface.Icategory_repo import ICategoryRepo
-from src.models.schemas.product.create_product_input import CreateProductInput
-from src.models.schemas.filter.category_filter_input import CategoryFilterInput
-from src.domain.schemas.product.product_model import ProductModel
-from src.domain.schemas.category.category_model import CategoryModel
+from src.schemas.product.create_product_input import CreateProductInput
+from src.schemas.filter.category_filter_input import CategoryFilterInput
+from src.dto.schemas.product.product_model import ProductModel
+from src.dto.schemas.category.category_model import CategoryModel
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
 class CreateProduct:

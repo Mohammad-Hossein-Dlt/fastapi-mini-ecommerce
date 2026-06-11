@@ -1,5 +1,5 @@
 from src.repo.interface.Icategory_repo import ICategoryRepo
-from src.models.schemas.operation.operation_output import OperationOutput
+from src.schemas.operation.operation_output import OperationOutput
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
 class DeleteCategories:

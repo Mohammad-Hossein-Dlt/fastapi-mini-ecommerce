@@ -2,11 +2,11 @@ from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from src.infra.auth.jwt_handler import JWTHandler
 from src.gateway.internal.interface.Iauth_service import IAuthService
-from .internal_http_depend import auth_service_depend
+from .internal_service_depend import auth_service_depend
 from src.repo.interface.Iauth_repo import IAuthRepo
 from .repo_depend import auth_repo_depend
-from src.domain.schemas.user.user_model import UserModel
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
+from src.dto.schemas.user.user_model import UserModel
+from src.dto.schemas.auth.auth_credentials import AuthCredentials
 from src.usecases.auth.refresh_token import RefreshToken
 from src.usecases.user.self.get_self import GetSelf
 from src.infra.exceptions.exceptions import AppBaseException

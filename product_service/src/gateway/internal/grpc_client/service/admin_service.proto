@@ -1,0 +1,13 @@
+syntax = "proto3";
+package admin;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/empty.proto";
+
+service IAdminAuthService {
+    rpc get_self (google.protobuf.Empty) returns (GetSelfResponse);
+}
+
+message GetSelfResponse {
+    google.protobuf.Struct return_value = 1;
+}

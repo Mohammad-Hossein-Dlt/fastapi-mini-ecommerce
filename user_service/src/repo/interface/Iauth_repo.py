@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
+from src.dto.schemas.auth.auth_credentials import AuthCredentials
 
 class IAuthRepo(ABC):
     

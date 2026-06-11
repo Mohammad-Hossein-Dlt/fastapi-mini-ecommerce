@@ -1,0 +1,69 @@
+syntax = "proto3";
+package product;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/empty.proto";
+
+service IProductService {
+    rpc create (CreateProductInput) returns (CreateResponse);
+    rpc get_by_id (GetByIdRequest) returns (GetByIdResponse);
+    rpc update (UpdateProductInput) returns (UpdateResponse);
+    rpc delete_by_id (DeleteByIdRequest) returns (DeleteByIdResponse);
+    rpc get_by_criteria (ProductFilterInput) returns (GetByCriteriaResponse);
+    rpc delete_all (google.protobuf.Empty) returns (DeleteAllResponse);
+}
+
+message CreateProductInput {
+    google.protobuf.Value category_id = 1;
+    string name = 2;
+    optional string description = 3;
+    optional float price = 4;
+    optional float stock = 5;
+}
+
+message UpdateProductInput {
+    google.protobuf.Value id = 1;
+    optional google.protobuf.Value category_id = 2;
+    optional string name = 3;
+    optional string description = 4;
+    optional float price = 5;
+    optional float stock = 6;
+}
+
+message ProductFilterInput {
+    optional google.protobuf.Value category_id = 1;
+    optional float start_price = 2;
+    optional float end_price = 3;
+}
+
+message CreateResponse {
+    google.protobuf.Struct return_value = 1;
+}
+
+message GetByIdRequest {
+    string product_id = 1;
+}
+
+message GetByIdResponse {
+    google.protobuf.Struct return_value = 1;
+}
+
+message UpdateResponse {
+    google.protobuf.Struct return_value = 1;
+}
+
+message DeleteByIdRequest {
+    string product_id = 1;
+}
+
+message DeleteByIdResponse {
+    google.protobuf.Struct return_value = 1;
+}
+
+message GetByCriteriaResponse {
+    google.protobuf.ListValue return_value = 1;
+}
+
+message DeleteAllResponse {
+    google.protobuf.Struct return_value = 1;
+}

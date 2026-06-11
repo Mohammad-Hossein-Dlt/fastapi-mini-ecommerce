@@ -2,7 +2,7 @@ from faststream import Depends
 from src.worker.consumer.nats.broker import client
 from src.repo.interface.Icategory_repo import ICategoryRepo
 from src.worker.depends.repo_depend import category_repo_depend
-from src.domain.schemas.user.user_model import UserModel
+from src.dto.schemas.user.user_model import UserModel
 from src.worker.depends.auth_depend import admin_auth_depend
 from src.usecases.category.delete_by_id import DeleteCategory
 from src.infra.exceptions.exceptions import AppBaseException

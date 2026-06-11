@@ -1,10 +1,10 @@
 from src.repo.interface.user.Iorder_repo import IOrderRepo
 from src.gateway.internal.interface.Iproduct_service import IProductService
-from src.domain.schemas.user.user_model import UserModel
-from src.models.schemas.order.place_order_input import PlaceOrderInput
-from src.domain.schemas.order.order_model import OrderModel
-from src.domain.schemas.product.product_model import ProductModel
-from src.domain.enums import Status
+from src.dto.schemas.user.user_model import UserModel
+from src.schemas.order.place_order_input import PlaceOrderInput
+from src.dto.schemas.order.order_model import OrderModel
+from src.dto.schemas.product.product_model import ProductModel
+from src.dto.enums import Status
 from src.infra.exceptions.exceptions import AppBaseException, InvalidRequestException, OperationFailureException
 
 class PlaceOrder:

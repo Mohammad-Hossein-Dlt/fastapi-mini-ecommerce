@@ -1,0 +1,64 @@
+syntax = "proto3";
+package admin_order;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+service IAdminOrderService {
+    rpc get_by_id (GetByIdRequest) returns (GetByIdResponse);
+    rpc modify (ModifyOrderInput) returns (ModifyResponse);
+    rpc delete_by_id (DeleteByIdRequest) returns (DeleteByIdResponse);
+    rpc get_by_criteria (OrderFilterInput) returns (GetByCriteriaResponse);
+    rpc delete_by_criteria (OrderFilterInput) returns (DeleteByCriteriaResponse);
+}
+
+enum Status {
+    PENDING = 0;
+    PAID = 1;
+    SHIPPED = 2;
+    DELIVERED = 3;
+    CANCELLED = 4;
+}
+
+message ModifyOrderInput {
+    google.protobuf.Value id = 1;
+    optional Status status = 2;
+}
+
+message OrderFilterInput {
+    optional google.protobuf.Value user_id = 1;
+    optional google.protobuf.Value product_id = 2;
+    optional google.protobuf.ListValue status = 3;
+    optional int32 start_quantity = 4;
+    optional int32 end_quantity = 5;
+    optional google.protobuf.Timestamp start_date = 6;
+    optional google.protobuf.Timestamp end_date = 7;
+}
+
+message GetByIdRequest {
+    string order_id = 1;
+}
+
+message GetByIdResponse {
+    google.protobuf.Struct return_value = 1;
+}
+
+message ModifyResponse {
+    google.protobuf.Struct return_value = 1;
+}
+
+message DeleteByIdRequest {
+    string order_id = 1;
+}
+
+message DeleteByIdResponse {
+    google.protobuf.Struct return_value = 1;
+}
+
+message GetByCriteriaResponse {
+    google.protobuf.ListValue return_value = 1;
+}
+
+message DeleteByCriteriaResponse {
+    google.protobuf.Struct return_value = 1;
+}

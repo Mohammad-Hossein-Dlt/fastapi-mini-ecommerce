@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from src.repo.interface.admin.Iorder_repo import IAdminOrderRepo
-from src.domain.schemas.order.order_model import OrderModel
+from src.dto.schemas.order.order_model import OrderModel
 from src.infra.database.postgresql.models.order_db_model import OrderDBModel
-from src.models.schemas.filter.order_filter_input import OrderFilterInput
+from src.schemas.filter.order_filter_input import OrderFilterInput
 from src.infra.utils.convert_id import convert_database_id
 from src.infra.exceptions.exceptions import EntityNotFoundError
 

@@ -1,6 +1,6 @@
 from src.gateway.internal.interface.Iauth_service import IAuthService
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
-from src.domain.schemas.user.user_model import UserModel
+from src.dto.schemas.auth.auth_credentials import AuthCredentials
+from src.dto.schemas.user.user_model import UserModel
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
 class GetUser:

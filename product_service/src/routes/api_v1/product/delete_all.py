@@ -4,7 +4,7 @@ from src.routes.http_response.responses import ResponseMessage
 from src.usecases.product.delete_all import DeleteProducts
 from src.repo.interface.Iproduct_repo import IProductRepo
 from src.routes.depends.repo_depend import product_repo_depend
-from src.domain.schemas.user.user_model import UserModel
+from src.dto.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import admin_auth_depend
 from src.infra.exceptions.exceptions import AppBaseException
 

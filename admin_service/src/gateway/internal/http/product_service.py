@@ -1,11 +1,11 @@
 import aiohttp
 from src.gateway.internal.interface.Iproduct_service import IProductService
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
-from src.models.schemas.product.create_product_input import CreateProductInput
-from src.models.schemas.product.update_product_input import UpdateProductInput
-from src.models.schemas.filter.product_filter_input import ProductFilterInput
+from src.dto.schemas.auth.auth_credentials import AuthCredentials
+from src.schemas.product.create_product_input import CreateProductInput
+from src.schemas.product.update_product_input import UpdateProductInput
+from src.schemas.filter.product_filter_input import ProductFilterInput
 from src.infra.exceptions.exceptions import AppBaseException
-from src.infra.utils.http_cleaner import clean_outbound_request
+from src.infra.utils.outbound_serializer import outbound_serializer
 
 class ProductHttpService(IProductService):
     
@@ -26,13 +26,13 @@ class ProductHttpService(IProductService):
         
         target_url = self.base_url + "/product/"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             product.model_dump(mode="json"),
         )
         
@@ -57,13 +57,13 @@ class ProductHttpService(IProductService):
         
         target_url = self.base_url + "/product/"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             {
                 "product_id": product_id,
             },
@@ -90,13 +90,13 @@ class ProductHttpService(IProductService):
         
         target_url = self.base_url + "/product/"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             product.model_dump(mode="json"),
         )
         
@@ -121,13 +121,13 @@ class ProductHttpService(IProductService):
         
         target_url = self.base_url + "/product/"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             {
                 "product_id": product_id,
             },
@@ -154,13 +154,13 @@ class ProductHttpService(IProductService):
         
         target_url = self.base_url + "/product/all"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             criteria.model_dump(mode="json"),
         )
         
@@ -184,7 +184,7 @@ class ProductHttpService(IProductService):
         
         target_url = self.base_url + "/product/all"
         
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"{credentials.token_type.title()} {credentials.access_token}",
             },

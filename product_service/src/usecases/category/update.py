@@ -1,6 +1,6 @@
 from src.repo.interface.Icategory_repo import ICategoryRepo
-from src.models.schemas.category.update_category_input import UpdateCategoryInput
-from src.domain.schemas.category.category_model import CategoryModel
+from src.schemas.category.update_category_input import UpdateCategoryInput
+from src.dto.schemas.category.category_model import CategoryModel
 from src.infra.exceptions.exceptions import AppBaseException, EntityNotFoundError, InvalidRequestException, OperationFailureException
 
 class UpdateCategory:

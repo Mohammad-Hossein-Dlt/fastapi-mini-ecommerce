@@ -1,7 +1,7 @@
 import aiohttp
 from src.gateway.internal.interface.Iproduct_service import IProductService
 from src.infra.exceptions.exceptions import AppBaseException
-from src.infra.utils.http_cleaner import clean_outbound_request
+from src.infra.utils.outbound_serializer import outbound_serializer
 
 class ProductHttpService(IProductService):
     
@@ -22,13 +22,13 @@ class ProductHttpService(IProductService):
                 
         target_url = self.base_url + "/product/"
                 
-        headers = clean_outbound_request(
+        headers = outbound_serializer(
             {
                 "Authorization": f"Bearer {access_token}",
             },
         )
         
-        params = clean_outbound_request(
+        params = outbound_serializer(
             {
                 "product_id": product_id,
             },

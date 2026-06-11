@@ -1,6 +1,6 @@
 from src.gateway.internal.interface.Iauth_service import IAuthService
 from src.repo.interface.Iauth_repo import IAuthRepo
-from src.domain.schemas.auth.auth_credentials import AuthCredentials
+from src.dto.schemas.auth.auth_credentials import AuthCredentials
 from src.infra.exceptions.exceptions import OperationFailureException
 
 class RefreshToken:

@@ -1,4 +1,4 @@
-from src.domain.schemas.category.category_model import CategoryModel
+from src.dto.schemas.category.category_model import CategoryModel
 from beanie import Document, PydanticObjectId, before_event, Update
 from datetime import datetime, timezone
 

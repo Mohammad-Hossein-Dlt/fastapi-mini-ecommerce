@@ -1,10 +1,10 @@
 from ._router import router
 from fastapi import Depends, Query, HTTPException
 from src.routes.http_response.responses import ResponseMessage
-from src.models.schemas.product.update_product_input import UpdateProductInput
+from src.schemas.product.update_product_input import UpdateProductInput
 from src.gateway.internal.interface.Iproduct_service import IProductService
-from src.routes.depends.internal_http_depend import product_service_depend
-from src.domain.schemas.user.user_model import UserModel
+from src.routes.depends.internal_service_depend import product_service_depend
+from src.dto.schemas.user.user_model import UserModel
 from src.routes.depends.auth_depend import admin_auth_depend
 from src.usecases.admin.product.update import UpdateProduct
 from src.infra.exceptions.exceptions import AppBaseException

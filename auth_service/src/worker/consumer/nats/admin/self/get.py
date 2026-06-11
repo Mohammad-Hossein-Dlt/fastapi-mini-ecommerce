@@ -1,6 +1,6 @@
 from faststream import Depends
 from src.worker.consumer.nats.broker import client
-from src.domain.schemas.user.user_model import UserModel
+from src.dto.schemas.user.user_model import UserModel
 from src.worker.depends.auth_depend import admin_auth_depend
 from src.infra.exceptions.exceptions import AppBaseException
 

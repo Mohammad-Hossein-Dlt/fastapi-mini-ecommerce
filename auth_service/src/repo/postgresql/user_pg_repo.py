@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from src.repo.interface.Iuser_repo import IUserRepo
-from src.domain.schemas.user.user_model import UserModel
+from src.dto.schemas.user.user_model import UserModel
 from src.infra.database.postgresql.models.user_db_model import UserDBModel
 from src.infra.utils.convert_id import convert_database_id
 from src.infra.exceptions.exceptions import EntityNotFoundError, InvalidRequestException

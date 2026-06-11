@@ -1,6 +1,6 @@
 from faststream import Depends
 from src.worker.consumer.nats.broker import client
-from src.models.schemas.user.login_user_input import LoginUserInput
+from src.schemas.user.login_user_input import LoginUserInput
 from src.worker.depends.auth_depend import jwt_handler_depend, user_repo_depend
 from src.infra.auth.jwt_handler import JWTHandler
 from src.repo.interface.Iuser_repo import IUserRepo

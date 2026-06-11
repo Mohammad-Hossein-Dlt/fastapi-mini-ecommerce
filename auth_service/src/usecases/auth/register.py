@@ -1,6 +1,6 @@
 from src.repo.interface.Iuser_repo import IUserRepo
-from src.models.schemas.user.create_user_input import CreateUserInput
-from src.domain.schemas.user.user_model import UserModel
+from src.schemas.user.create_user_input import CreateUserInput
+from src.dto.schemas.user.user_model import UserModel
 from src.infra.exceptions.exceptions import AppBaseException, OperationFailureException
 
 class RegisterUser:

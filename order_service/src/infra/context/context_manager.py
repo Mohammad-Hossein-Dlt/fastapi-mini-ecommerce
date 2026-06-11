@@ -1,5 +1,6 @@
 from .app_context import AppContext
 from src.infra.settings.settings import settings
+from src.infra.bootstrap.grpc_channel import init_grpc_channel, terminate_grpc_client
 from src.infra.bootstrap.broker import init_broker_client, terminate_broker_client
 from src.infra.bootstrap.database import init_database_client, terminate_database_client
 from aiohttp import ClientSession
@@ -14,6 +15,11 @@ class AppContextManager:
 
         AppContext.auth_communication_type = settings.AUTH_COMMUNICATION_TYPE
         AppContext.product_communication_type = settings.PRODUCT_COMMUNICATION_TYPE
+        AppContext.order_communication_type = settings.ORDER_COMMUNICATION_TYPE
+        
+        AppContext.auth_grpc_channel = init_grpc_channel(settings.AUTH_GRPC)
+        AppContext.product_grpc_channel = init_grpc_channel(settings.PRODUCT_GRPC)
+        AppContext.order_grpc_channel = init_grpc_channel(settings.ORDER_GRPC)
 
         AppContext.broker_client = init_broker_client(settings.NATS)
         
@@ -35,6 +41,10 @@ class AppContextManager:
     async def terminate_context(cls):
         
         print("Shutting down...")
+        
+        # await terminate_grpc_client(AppContext.auth_grpc_channel)
+        # await terminate_grpc_client(AppContext.product_grpc_channel)
+        # await terminate_grpc_client(AppContext.order_grpc_channel)
         
         await terminate_database_client(AppContext.db_client)
         await terminate_broker_client(AppContext.broker_client)

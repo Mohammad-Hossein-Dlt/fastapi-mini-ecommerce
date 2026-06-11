@@ -1,7 +1,7 @@
 from ._router import router
 from fastapi import Body, Depends, HTTPException
 from src.routes.http_response.responses import ResponseMessage
-from src.models.schemas.user.create_user_input import CreateUserInput
+from src.schemas.user.create_user_input import CreateUserInput
 from src.usecases.auth.register import RegisterUser
 from src.repo.interface.Iuser_repo import IUserRepo
 from src.routes.depends.repo_depend import user_repo_depend
